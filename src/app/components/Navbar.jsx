@@ -90,11 +90,7 @@ const Navbar = ({
             {/* CTA Button */}
             <button
               onClick={() => scrollToSection("contact")}
-              className={`px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl ${
-                isDarkMode
-                  ? "bg-blue-600 text-white hover:bg-blue-700"
-                  : "bg-blue-600 text-white hover:bg-blue-700"
-              }`}
+              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md"
             >
               Hire Me
             </button>
@@ -167,7 +163,7 @@ const Navbar = ({
               >
                 <button
                   onClick={() => scrollToSection("contact")}
-                  className="w-full bg-blue-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-blue-700 transition-colors duration-200"
+                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200"
                 >
                   Hire Me
                 </button>

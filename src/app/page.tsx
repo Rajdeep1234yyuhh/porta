@@ -53,9 +53,9 @@ export default function Home() {
     { name: "Next.js", level: 90, icon: "⚡" },
     { name: "React", level: 95, icon: "⚛️" },
     { name: "Shopify/Liquid", level: 85, icon: "🛍️" },
-    { name: "WordPress", level: 80, icon: "📝" },
-    { name: "Python", level: 75, icon: "🐍" },
+    { name: "Tailwind CSS", level: 95, icon: "🎨" },
     { name: "AI/ML", level: 60, icon: "🤖" },
+    { name: "Python", level: 75, icon: "🐍" },
   ];
 
   const projects = [

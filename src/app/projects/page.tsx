@@ -1,73 +1,139 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
-  ArrowLeft,
   ExternalLink,
   Github,
   Filter,
   Search,
   Calendar,
-  Eye,
+  //Eye,
 } from "lucide-react";
 import Link from "next/link";
+import Navbar from "../components/Navbar";
 
 const ProjectShowcase = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
+  // Dark mode state
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  // Mobile menu state
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Scroll position tracking
+  const [scrollY, setScrollY] = useState(0);
+
+  // Initialize dark mode from localStorage on component mount
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    const prefersDark = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches;
+
+    if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+      setIsDarkMode(true);
+      document.documentElement.classList.add("dark");
+    }
+  }, []);
+
+  // Track scroll position
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Toggle theme function
+  const toggleTheme = () => {
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+
+    if (newDarkMode) {
+      document.documentElement.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  };
+
+  // Scroll to section function (adapted for this page)
+  const scrollToSection = (sectionId: string) => {
+    // Close mobile menu if open
+    setIsMenuOpen(false);
+
+    // For this projects page, you might want to scroll to different sections
+    // or navigate to your main portfolio page
+    if (sectionId === "projects") {
+      // Already on projects page, scroll to top
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      // Navigate to main portfolio page with section
+      // Replace '/portfolio' with your actual main page route
+      window.location.href = `/#${sectionId}`;
+    }
+  };
+
   const allProjects = [
     {
       id: 1,
-      title: "E-commerce Platform",
+      title: "Career Assessment Tool",
       description:
-        "Full-stack e-commerce solution built with Next.js and Shopify integration. Features include real-time inventory, payment processing, and admin dashboard.",
-      fullDescription:
-        "A comprehensive e-commerce platform that handles everything from product catalog management to order processing. Built with modern technologies for optimal performance and user experience.",
-      image:
-        "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=500&h=300&fit=crop",
-      tech: ["Next.js", "Shopify", "Stripe", "Tailwind CSS", "TypeScript"],
-      category: "E-commerce",
+        "AI-powered career assessment solution built with Next.js and intelligent backend integration. Features include dynamic skill evaluation, personalized career recommendations, real-time analytics dashboard, and secure user profile management.",
+      //fullDescription: "",
+      image: "mks.png",
+      video: "mks.mp4", // Optional video
+      tech: [
+        "Next.js",
+        "Tailwind CSS",
+        "Node.js",
+        "firebase",
+        "python",
+        "AI",
+        "ML",
+      ],
+      categories: ["AI/ML", "Web Development", "Mobile App"], // Multiple categories
       demo: "#",
-      github: "#",
-      date: "2024",
+      github: "https://github.com/Rajdeep1234yyuhh/mks",
+      date: "2025",
       featured: true,
-      views: "2.5k",
+      //views: "2.5k",
     },
     {
       id: 2,
-      title: "AI-Powered Analytics Dashboard",
+      title: "Analytics Dashboard",
       description:
-        "Modern analytics dashboard with machine learning insights. Provides predictive analytics and data visualization for business intelligence.",
+        "Real-time analytics dashboard built with React and Node.js. Features include interactive data visualizations using Chart.js, secure Firebase authentication.Designed for tracking user behavior, performance metrics, and business KPIs in a sleek, responsive UI.",
       fullDescription:
         "Advanced analytics platform that uses AI to provide business insights, trend analysis, and predictive modeling for data-driven decision making.",
-      image:
-        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop",
-      tech: ["React", "Python", "TensorFlow", "Chart.js", "Django"],
-      category: "AI/ML",
+      //image:"https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop",
+      video: "dashb.mp4",
+      tech: ["React", "Tailwind CSS", "Node.js", "Firebase", "Chart.js"],
+      categories: ["Web Development"],
       demo: "#",
-      github: "#",
-      date: "2024",
+      github: "https://github.com/Rajdeep1234yyuhh/Dashboard",
+      date: "2025",
       featured: true,
-      views: "1.8k",
+      //views: "1.8k",
     },
     {
       id: 3,
-      title: "Custom CMS & Blog Platform",
+      title: "Aekay E-commerce Website",
       description:
-        "Headless CMS built with Next.js and WordPress backend. Features include SEO optimization, content scheduling, and multi-author support.",
+        "Custom e-commerce storefront developed using Shopify and Liquid. Features include responsive design, optimized product listings, seamless cart and checkout flow, and personalized UI enhancements crafted with CSS for an elegant shopping experience.",
       fullDescription:
         "A modern content management system that decouples the frontend and backend for maximum flexibility and performance.",
-      image:
-        "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=500&h=300&fit=crop",
-      tech: ["Next.js", "WordPress", "GraphQL", "MySQL", "Docker"],
-      category: "Web Development",
-      demo: "#",
+      //image:"https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=500&h=300&fit=crop",
+      video: "aekay-ecom.mp4",
+      tech: ["Shopify", "Liquid", "CSS"],
+      categories: ["Web Development", "CMS"],
+      demo: "https://aekay.in/",
       github: "#",
       date: "2024",
       featured: true,
-      views: "3.2k",
+      //views: "3.2k",
     },
     {
       id: 4,
@@ -78,8 +144,9 @@ const ProjectShowcase = () => {
         "Comprehensive real estate platform featuring property listings, virtual tours, client management, and automated marketing workflows.",
       image:
         "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=500&h=300&fit=crop",
+      video: "https://example.com/realestate-demo.mp4",
       tech: ["Vue.js", "Node.js", "MongoDB", "Socket.io", "AWS"],
-      category: "Web Development",
+      categories: ["Web Development", "Real Estate"],
       demo: "#",
       github: "#",
       date: "2023",
@@ -96,7 +163,7 @@ const ProjectShowcase = () => {
       image:
         "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=500&h=300&fit=crop",
       tech: ["Python", "TensorFlow", "Redis", "API Integration", "Docker"],
-      category: "AI/ML",
+      categories: ["AI/ML", "Fintech"],
       demo: "#",
       github: "#",
       date: "2023",
@@ -112,8 +179,9 @@ const ProjectShowcase = () => {
         "Complete restaurant solution featuring QR code menus, online ordering, payment processing, and kitchen management tools.",
       image:
         "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&h=300&fit=crop",
+      video: "https://example.com/restaurant-demo.mp4",
       tech: ["React Native", "Firebase", "Stripe", "Node.js", "Express"],
-      category: "Mobile App",
+      categories: ["Mobile App", "E-commerce"],
       demo: "#",
       github: "#",
       date: "2023",
@@ -130,7 +198,7 @@ const ProjectShowcase = () => {
       image:
         "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=500&h=300&fit=crop",
       tech: ["Next.js", "PostgreSQL", "WebRTC", "AWS", "HIPAA Compliant"],
-      category: "Web Development",
+      categories: ["Web Development", "Healthcare"],
       demo: "#",
       github: "#",
       date: "2023",
@@ -147,7 +215,7 @@ const ProjectShowcase = () => {
       image:
         "https://images.unsplash.com/photo-1611262588024-d12430b98920?w=500&h=300&fit=crop",
       tech: ["React", "Python", "FastAPI", "PostgreSQL", "Redis"],
-      category: "AI/ML",
+      categories: ["AI/ML", "Social Media"],
       demo: "#",
       github: "#",
       date: "2022",
@@ -156,22 +224,24 @@ const ProjectShowcase = () => {
     },
   ];
 
-  const categories = [
-    "All",
-    "Web Development",
-    "AI/ML",
-    "E-commerce",
-    "Mobile App",
-  ];
+  // Extract all unique categories from projects
+  const allUniqueCategories = Array.from(
+    new Set(allProjects.flatMap((project) => project.categories))
+  );
+  const categories = ["All", ...allUniqueCategories];
 
   const filteredProjects = allProjects.filter((project) => {
     const matchesSearch =
       project.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       project.tech.some((tech) =>
         tech.toLowerCase().includes(searchTerm.toLowerCase())
+      ) ||
+      project.categories.some((category) =>
+        category.toLowerCase().includes(searchTerm.toLowerCase())
       );
     const matchesCategory =
-      selectedCategory === "All" || project.category === selectedCategory;
+      selectedCategory === "All" ||
+      project.categories.includes(selectedCategory);
     return matchesSearch && matchesCategory;
   });
 
@@ -180,196 +250,255 @@ const ProjectShowcase = () => {
   );
   const otherProjects = filteredProjects.filter((project) => !project.featured);
 
-  return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4">
-              <Link href="/">
-                <button className="flex items-center text-gray-600 hover:text-gray-900 transition-colors">
-                  <ArrowLeft className="w-5 h-5 mr-2" />
-                  Back to Home
-                </button>
-              </Link>
-              <div className="hidden sm:block w-px h-6 bg-gray-300"></div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Project Showcase
-              </h1>
-            </div>
-            <div className="text-sm text-gray-500">
-              {filteredProjects.length} Projects
-            </div>
+  const ProjectCard = ({ project }: { project: any }) => (
+    <div
+      className={`rounded-xl shadow-lg overflow-hidden transition-all duration-300 border ${
+        isDarkMode
+          ? "bg-gray-800 border-gray-700 hover:border-gray-600"
+          : "bg-white border-gray-200 hover:border-gray-300"
+      }`}
+    >
+      <div className="relative overflow-hidden">
+        {project.video ? (
+          <div className="relative">
+            <video
+              className="w-full h-48 object-cover"
+              poster={project.image}
+              autoPlay
+              muted
+              loop
+            >
+              <source src={project.video} type="video/mp4" />
+            </video>
           </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Search and Filter Section */}
-        <div className="mb-8 bg-white rounded-xl shadow-sm p-6">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search projects or technologies..."
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <div className="flex items-center space-x-4">
-              <Filter className="text-gray-400 w-5 h-5" />
-              <select
-                className="px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-              >
-                {categories.map((category) => (
-                  <option key={category} value={category}>
-                    {category}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-        </div>
-
-        {/* Featured Projects */}
-        {featuredProjects.length > 0 && (
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">
-              Featured Projects
-            </h2>
-            <div className="grid lg:grid-cols-3 gap-8">
-              {featuredProjects.map((project) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  featured={true}
-                />
-              ))}
-            </div>
+        ) : (
+          <img
+            src={project.image}
+            alt={project.title}
+            className="w-full h-48 object-cover"
+          />
+        )}
+        {project.featured && (
+          <div className="absolute top-3 left-3">
+            <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium">
+              Featured
+            </span>
           </div>
         )}
-
-        {/* All Projects */}
-        {otherProjects.length > 0 && (
-          <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">
-              All Projects
-            </h2>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {otherProjects.map((project) => (
-                <ProjectCard
-                  key={project.id}
-                  project={project}
-                  featured={false}
-                />
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* No Results */}
-        {filteredProjects.length === 0 && (
-          <div className="text-center py-12">
-            <div className="text-gray-400 text-6xl mb-4">🔍</div>
-            <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              No projects found
-            </h3>
-            <p className="text-gray-600">
-              Try adjusting your search terms or filters
-            </p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-};
-
-interface ProjectCardProps {
-  project: any;
-  featured: boolean;
-}
-
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, featured }) => {
-  return (
-    <div className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
-      <div className="relative">
-        <img
-          src={project.image}
-          alt={project.title}
-          className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-        />
-        {featured && (
-          <div className="absolute top-3 left-3 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
-            Featured
-          </div>
-        )}
-        <div className="absolute top-3 right-3 flex space-x-2">
-          <div className="bg-black bg-opacity-50 text-white px-2 py-1 rounded text-xs flex items-center">
-            <Eye className="w-3 h-3 mr-1" />
-            {project.views}
-          </div>
-        </div>
       </div>
 
       <div className="p-6">
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
-            {project.title}
-          </h3>
-          <div className="flex items-center text-sm text-gray-500">
-            <Calendar className="w-4 h-4 mr-1" />
-            {project.date}
-          </div>
-        </div>
-
-        <p className="text-gray-600 mb-4 line-clamp-3">{project.description}</p>
-
-        <div className="flex flex-wrap gap-2 mb-4">
-          {project.tech.slice(0, 3).map((tech: string, index: number) => (
+        <div className="flex flex-wrap gap-1 mb-2">
+          {project.categories.map((category: string, index: number) => (
             <span
               key={index}
-              className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full"
+              className={`text-xs px-2 py-1 rounded-full ${
+                isDarkMode
+                  ? "bg-blue-900 text-blue-200"
+                  : "bg-blue-100 text-blue-800"
+              }`}
+            >
+              {category}
+            </span>
+          ))}
+        </div>
+
+        <h3
+          className={`text-xl font-bold mb-2 transition-colors ${
+            isDarkMode ? "text-white" : "text-gray-900"
+          }`}
+        >
+          {project.title}
+        </h3>
+        <p
+          className={`mb-4 text-sm leading-relaxed ${
+            isDarkMode ? "text-gray-300" : "text-gray-700"
+          }`}
+        >
+          {project.description}
+        </p>
+
+        <div className="flex flex-wrap gap-1 mb-4">
+          {project.tech.map((tech: string, index: number) => (
+            <span
+              key={index}
+              className={`text-xs px-2 py-1 rounded ${
+                isDarkMode
+                  ? "bg-gray-700 text-gray-300"
+                  : "bg-gray-100 text-gray-700"
+              }`}
             >
               {tech}
             </span>
           ))}
-          {project.tech.length > 3 && (
-            <span className="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">
-              +{project.tech.length - 3} more
-            </span>
-          )}
         </div>
 
         <div className="flex items-center justify-between">
-          <div className="flex gap-3">
-            <a
-              href={project.demo}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center text-blue-600 hover:text-blue-800 text-sm font-medium"
-            >
-              <ExternalLink className="w-4 h-4 mr-1" />
-              Live Demo
-            </a>
-            <a
-              href={project.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center text-gray-600 hover:text-gray-800 text-sm font-medium"
-            >
-              <Github className="w-4 h-4 mr-1" />
-              Code
-            </a>
+          <div
+            className={`flex items-center space-x-1 text-sm ${
+              isDarkMode ? "text-gray-400" : "text-gray-600"
+            }`}
+          >
+            <Calendar className="h-4 w-4" />
+            <span>{project.date}</span>
           </div>
-          <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-            {project.category}
-          </span>
+          <div className="flex space-x-2">
+            <Link
+              href={project.demo}
+              className="inline-flex items-center space-x-1 bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors text-sm"
+            >
+              <ExternalLink className="h-3 w-3" />
+              <span>Demo</span>
+            </Link>
+            <Link
+              href={project.github}
+              className={`inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg transition-colors text-sm ${
+                isDarkMode
+                  ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                  : "bg-gray-600 text-white hover:bg-gray-700"
+              }`}
+            >
+              <Github className="h-3 w-3" />
+              <span>Code</span>
+            </Link>
+          </div>
         </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div
+      className={`min-h-screen transition-colors duration-300 ${
+        isDarkMode ? "bg-gray-900" : "bg-gray-50"
+      }`}
+    >
+      {/* Header */}
+      <Navbar
+        isDarkMode={isDarkMode}
+        toggleTheme={toggleTheme}
+        isMenuOpen={isMenuOpen}
+        setIsMenuOpen={setIsMenuOpen}
+        scrollY={scrollY}
+        scrollToSection={scrollToSection}
+      />
+
+      {/* Search and Filter */}
+      <div
+        style={{ paddingTop: 100 }}
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+      >
+        <div className="mb-8 space-y-4 md:space-y-0 md:flex md:items-center md:justify-between">
+          <div className="relative flex-1 max-w-md">
+            <Search
+              className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 ${
+                isDarkMode ? "text-gray-400" : "text-gray-600"
+              }`}
+            />
+            <input
+              type="text"
+              placeholder="Search projects, technologies, or categories..."
+              className={`w-full pl-10 pr-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                isDarkMode
+                  ? "bg-gray-800 border-gray-600 text-white placeholder-gray-400"
+                  : "bg-white border-gray-300 text-gray-900 placeholder-gray-600"
+              }`}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+
+          <div className="flex items-center space-x-3">
+            <Filter
+              className={`h-5 w-5 ${
+                isDarkMode ? "text-gray-400" : "text-gray-600"
+              }`}
+            />
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+                isDarkMode
+                  ? "bg-gray-800 border-gray-600 text-white"
+                  : "bg-white border-gray-300 text-gray-900"
+              }`}
+            >
+              {categories.map((category) => (
+                <option
+                  key={category}
+                  value={category}
+                  className={
+                    isDarkMode
+                      ? "text-white bg-gray-800"
+                      : "text-gray-900 bg-white"
+                  }
+                >
+                  {category}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Results Count */}
+        <div className="mb-6">
+          <p className={isDarkMode ? "text-gray-300" : "text-gray-700"}>
+            Showing {filteredProjects.length} of {allProjects.length} projects
+          </p>
+        </div>
+
+        {filteredProjects.length === 0 ? (
+          <div className="text-center py-12">
+            <div
+              className={`text-lg mb-2 ${
+                isDarkMode ? "text-gray-400" : "text-gray-600"
+              }`}
+            >
+              No projects found
+            </div>
+            <p className={isDarkMode ? "text-gray-500" : "text-gray-500"}>
+              Try adjusting your search terms or filters
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-12">
+            {/* Featured Projects */}
+            {featuredProjects.length > 0 && (
+              <div>
+                <h2
+                  className={`text-3xl font-bold mb-8 ${
+                    isDarkMode ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  Featured Projects
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {featuredProjects.map((project) => (
+                    <ProjectCard key={project.id} project={project} />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Other Projects */}
+            {otherProjects.length > 0 && (
+              <div>
+                <h2
+                  className={`text-3xl font-bold mb-8 ${
+                    isDarkMode ? "text-white" : "text-gray-900"
+                  }`}
+                >
+                  All Projects
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                  {otherProjects.map((project) => (
+                    <ProjectCard key={project.id} project={project} />
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
