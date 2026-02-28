@@ -1,13 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+
+const getYoutubeVideoId = (url: string): string | null => {
+  const regexes = [
+    /youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,
+    /youtu\.be\/([a-zA-Z0-9_-]+)/,
+    /youtube\.com\/embed\/([a-zA-Z0-9_-]+)/,
+    /youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/,
+  ];
+  for (const regex of regexes) {
+    const match = url.match(regex);
+    if (match) return match[1];
+  }
+  return null;
+};
 import {
   ExternalLink,
   Github,
-  Filter,
   Search,
   Calendar,
-  //Eye,
+  Star,
+  Code2,
+  Play,
 } from "lucide-react";
 import Link from "next/link";
 import Navbar from "../components/Navbar";
@@ -15,17 +30,15 @@ import Navbar from "../components/Navbar";
 const ProjectShowcase = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-
-  // Dark mode state
   const [isDarkMode, setIsDarkMode] = useState(false);
-
-  // Mobile menu state
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Scroll position tracking
   const [scrollY, setScrollY] = useState(0);
+  // NEW: Track expanded tech stacks by project ID
+  const [expandedTechStacks, setExpandedTechStacks] = useState<Set<number>>(
+    new Set()
+  );
 
-  // Initialize dark mode from localStorage on component mount
+  // Initialize dark mode
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     const prefersDark = window.matchMedia(
@@ -38,14 +51,13 @@ const ProjectShowcase = () => {
     }
   }, []);
 
-  // Track scroll position
+  // Simple scroll tracking
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Toggle theme function
   const toggleTheme = () => {
     const newDarkMode = !isDarkMode;
     setIsDarkMode(newDarkMode);
@@ -59,21 +71,26 @@ const ProjectShowcase = () => {
     }
   };
 
-  // Scroll to section function (adapted for this page)
   const scrollToSection = (sectionId: string) => {
-    // Close mobile menu if open
     setIsMenuOpen(false);
-
-    // For this projects page, you might want to scroll to different sections
-    // or navigate to your main portfolio page
     if (sectionId === "projects") {
-      // Already on projects page, scroll to top
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
-      // Navigate to main portfolio page with section
-      // Replace '/portfolio' with your actual main page route
       window.location.href = `/#${sectionId}`;
     }
+  };
+
+  // NEW: Toggle function for tech stack expansion
+  const toggleTechStack = (projectId: number) => {
+    setExpandedTechStacks((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(projectId)) {
+        newSet.delete(projectId);
+      } else {
+        newSet.add(projectId);
+      }
+      return newSet;
+    });
   };
 
   const allProjects = [
@@ -82,33 +99,30 @@ const ProjectShowcase = () => {
       title: "Career Assessment Tool",
       description:
         "AI-powered career assessment solution built with Next.js and intelligent backend integration. Features include dynamic skill evaluation, personalized career recommendations, real-time analytics dashboard, and secure user profile management.",
-      //fullDescription: "",
-      image: "mks.png",
-      video: "mks.mp4", // Optional video
+      thumbnail: "mks.png",
+      video: "mks.mp4",
       tech: [
         "Next.js",
+        "Firebase",
+        "API Integration",
         "Tailwind CSS",
         "Node.js",
-        "firebase",
-        "python",
+        "Python",
         "AI",
         "ML",
       ],
-      categories: ["AI/ML", "Web Development", "Mobile App"], // Multiple categories
-      demo: "#",
+      categories: ["AI/ML", "Web Development", "Mobile App"],
+      demo: "https://dhiti.ai/",
       github: "https://github.com/Rajdeep1234yyuhh/mks",
       date: "2025",
       featured: true,
-      //views: "2.5k",
     },
     {
       id: 2,
       title: "Analytics Dashboard",
       description:
-        "Real-time analytics dashboard built with React and Node.js. Features include interactive data visualizations using Chart.js, secure Firebase authentication.Designed for tracking user behavior, performance metrics, and business KPIs in a sleek, responsive UI.",
-      fullDescription:
-        "Advanced analytics platform that uses AI to provide business insights, trend analysis, and predictive modeling for data-driven decision making.",
-      //image:"https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&h=300&fit=crop",
+        "Real-time analytics dashboard built with React and Node.js. Features include interactive data visualizations using Chart.js, secure Firebase authentication. Designed for tracking user behavior, performance metrics, and business KPIs in a sleek, responsive UI.",
+      thumbnail: "dashb.png",
       video: "dashb.mp4",
       tech: ["React", "Tailwind CSS", "Node.js", "Firebase", "Chart.js"],
       categories: ["Web Development"],
@@ -116,16 +130,13 @@ const ProjectShowcase = () => {
       github: "https://github.com/Rajdeep1234yyuhh/Dashboard",
       date: "2025",
       featured: true,
-      //views: "1.8k",
     },
     {
       id: 3,
       title: "Aekay E-commerce Website",
       description:
         "Custom e-commerce storefront developed using Shopify and Liquid. Features include responsive design, optimized product listings, seamless cart and checkout flow, and personalized UI enhancements crafted with CSS for an elegant shopping experience.",
-      fullDescription:
-        "A modern content management system that decouples the frontend and backend for maximum flexibility and performance.",
-      //image:"https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=500&h=300&fit=crop",
+      thumbnail: "aekay.png",
       video: "aekay-ecom.mp4",
       tech: ["Shopify", "Liquid", "CSS"],
       categories: ["Web Development", "CMS"],
@@ -133,98 +144,51 @@ const ProjectShowcase = () => {
       github: "#",
       date: "2024",
       featured: true,
-      //views: "3.2k",
     },
     {
       id: 4,
       title: "Real Estate Management System",
       description:
         "Complete property management solution with virtual tours, client portal, and automated workflows for real estate agencies.",
-      fullDescription:
-        "Comprehensive real estate platform featuring property listings, virtual tours, client management, and automated marketing workflows.",
-      image:
-        "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=500&h=300&fit=crop",
-      video: "https://example.com/realestate-demo.mp4",
+      thumbnail: "realestate-thumbnail.jpg",
+      video: "mks.mp4",
       tech: ["Vue.js", "Node.js", "MongoDB", "Socket.io", "AWS"],
       categories: ["Web Development", "Real Estate"],
       demo: "#",
       github: "#",
       date: "2023",
       featured: false,
-      views: "1.4k",
     },
     {
       id: 5,
       title: "Cryptocurrency Trading Bot",
       description:
         "Automated trading bot with machine learning algorithms for cryptocurrency markets. Features risk management and portfolio optimization.",
-      fullDescription:
-        "Advanced trading bot that uses machine learning to analyze market trends and execute trades automatically with built-in risk management.",
-      image:
-        "https://images.unsplash.com/photo-1642790106117-e829e14a795f?w=500&h=300&fit=crop",
+      thumbnail: "crypto-thumbnail.jpg",
+      video: "dashb.mp4",
       tech: ["Python", "TensorFlow", "Redis", "API Integration", "Docker"],
       categories: ["AI/ML", "Fintech"],
       demo: "#",
       github: "#",
       date: "2023",
       featured: false,
-      views: "2.1k",
     },
     {
       id: 6,
       title: "Restaurant Ordering System",
       description:
         "Multi-platform restaurant ordering system with QR code menus, payment integration, and kitchen management dashboard.",
-      fullDescription:
-        "Complete restaurant solution featuring QR code menus, online ordering, payment processing, and kitchen management tools.",
-      image:
-        "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&h=300&fit=crop",
-      video: "https://example.com/restaurant-demo.mp4",
+      thumbnail: "restaurant-thumbnail.jpg",
+      video: "aekay-ecom.mp4",
       tech: ["React Native", "Firebase", "Stripe", "Node.js", "Express"],
       categories: ["Mobile App", "E-commerce"],
       demo: "#",
       github: "#",
       date: "2023",
       featured: false,
-      views: "1.7k",
-    },
-    {
-      id: 7,
-      title: "Healthcare Appointment System",
-      description:
-        "Digital health platform connecting patients with healthcare providers. Features appointment scheduling, telemedicine, and health records.",
-      fullDescription:
-        "Comprehensive healthcare platform that streamlines patient care with appointment scheduling, telemedicine capabilities, and secure health records management.",
-      image:
-        "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=500&h=300&fit=crop",
-      tech: ["Next.js", "PostgreSQL", "WebRTC", "AWS", "HIPAA Compliant"],
-      categories: ["Web Development", "Healthcare"],
-      demo: "#",
-      github: "#",
-      date: "2023",
-      featured: false,
-      views: "2.8k",
-    },
-    {
-      id: 8,
-      title: "Social Media Analytics Tool",
-      description:
-        "AI-powered social media analytics platform that provides insights, content suggestions, and performance tracking across platforms.",
-      fullDescription:
-        "Advanced social media analytics tool that uses AI to analyze content performance, suggest optimal posting times, and track engagement across multiple platforms.",
-      image:
-        "https://images.unsplash.com/photo-1611262588024-d12430b98920?w=500&h=300&fit=crop",
-      tech: ["React", "Python", "FastAPI", "PostgreSQL", "Redis"],
-      categories: ["AI/ML", "Social Media"],
-      demo: "#",
-      github: "#",
-      date: "2022",
-      featured: false,
-      views: "1.9k",
     },
   ];
 
-  // Extract all unique categories from projects
   const allUniqueCategories = Array.from(
     new Set(allProjects.flatMap((project) => project.categories))
   );
@@ -250,249 +214,374 @@ const ProjectShowcase = () => {
   );
   const otherProjects = filteredProjects.filter((project) => !project.featured);
 
-  const ProjectCard = ({ project }: { project: any }) => (
-    <div
-      className={`rounded-xl shadow-lg overflow-hidden transition-all duration-300 border ${
-        isDarkMode
-          ? "bg-gray-800 border-gray-700 hover:border-gray-600"
-          : "bg-white border-gray-200 hover:border-gray-300"
-      }`}
-    >
-      <div className="relative overflow-hidden">
-        {project.video ? (
-          <div className="relative">
+  // Project Card - Shows thumbnail, plays video on hover
+  const ProjectCard = ({ project }: { project: any; isFeatured?: boolean }) => {
+    const [isHovered, setIsHovered] = useState(false);
+    const videoRef = useRef<HTMLVideoElement>(null);
+
+    // Check if this project's tech stack is expanded
+    const isExpanded = expandedTechStacks.has(project.id);
+
+    const youtubeId = project.video ? getYoutubeVideoId(project.video) : null;
+
+    const handleMouseEnter = () => {
+      setIsHovered(true);
+      if (!youtubeId && videoRef.current) {
+        videoRef.current.play().catch(() => {});
+      }
+    };
+
+    const handleMouseLeave = () => {
+      setIsHovered(false);
+      if (!youtubeId && videoRef.current) {
+        videoRef.current.pause();
+        videoRef.current.currentTime = 0;
+      }
+    };
+
+    const handleToggleTechStack = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleTechStack(project.id);
+    };
+
+    return (
+      <div
+        className={`group rounded-2xl overflow-hidden transition-all duration-300 border hover:scale-[1.02] ${
+          isDarkMode
+            ? "bg-gray-800/50 backdrop-blur-sm border-gray-700/50 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/20"
+            : "bg-white border-slate-200 hover:border-purple-300 hover:shadow-2xl hover:shadow-purple-500/10"
+        }`}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      >
+        {/* Thumbnail/Video Container */}
+        <div
+          className={`relative w-full overflow-hidden bg-gradient-to-br from-blue-500/10 to-purple-500/10 ${
+            youtubeId ? "aspect-video" : "h-48"
+          }`}
+        >
+          <div
+            className={`absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10`}
+          ></div>
+
+          {/* Thumbnail Image - Always visible when not hovered */}
+          <img
+            src={project.thumbnail}
+            alt={project.title}
+            className={`w-full h-full object-cover transition-all duration-300 group-hover:scale-110 ${
+              isHovered ? "opacity-0" : "opacity-100"
+            }`}
+          />
+
+          {/* Video - Only visible on hover */}
+          {youtubeId ? (
+            isHovered && (
+              <iframe
+                className="absolute inset-0 w-full h-full"
+                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&loop=1&playlist=${youtubeId}&controls=0${project.videoStartTime ? `&start=${project.videoStartTime}` : ""}`}
+                allow="autoplay; encrypted-media"
+                style={{ border: "none" }}
+              />
+            )
+          ) : (
             <video
-              className="w-full h-48 object-cover"
-              poster={project.image}
-              autoPlay
+              ref={videoRef}
+              className={`absolute inset-0 w-full h-full object-cover transition-all duration-300 group-hover:scale-110 ${
+                isHovered ? "opacity-100" : "opacity-0"
+              }`}
               muted
               loop
+              playsInline
+              preload="none"
             >
               <source src={project.video} type="video/mp4" />
             </video>
-          </div>
-        ) : (
-          <img
-            src={project.image}
-            alt={project.title}
-            className="w-full h-48 object-cover"
-          />
-        )}
-        {project.featured && (
-          <div className="absolute top-3 left-3">
-            <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-2 py-1 rounded-full text-xs font-medium">
-              Featured
-            </span>
-          </div>
-        )}
-      </div>
+          )}
 
-      <div className="p-6">
-        <div className="flex flex-wrap gap-1 mb-2">
-          {project.categories.map((category: string, index: number) => (
-            <span
-              key={index}
-              className={`text-xs px-2 py-1 rounded-full ${
-                isDarkMode
-                  ? "bg-blue-900 text-blue-200"
-                  : "bg-blue-100 text-blue-800"
-              }`}
-            >
-              {category}
-            </span>
-          ))}
+          {/* Play Icon Overlay - Hidden on hover */}
+          {!isHovered && (
+            <div className="absolute inset-0 flex items-center justify-center z-20 pointer-events-none">
+              <div
+                className={`p-4 rounded-full backdrop-blur-sm transition-all duration-300 ${
+                  isDarkMode ? "bg-gray-900/60" : "bg-white/60"
+                }`}
+              >
+                <Play
+                  className={`w-8 h-8 ${
+                    isDarkMode ? "text-white" : "text-gray-900"
+                  }`}
+                  fill="currentColor"
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Category Badge */}
+          <div className="absolute top-2 right-2 flex flex-wrap gap-1 justify-end z-20">
+            {project.categories.slice(0, 2).map((category: string) => (
+              <span
+                key={category}
+                className="px-2 py-0.5 rounded-full text-xs font-medium bg-gradient-to-r from-blue-600/90 to-purple-600/90 text-white backdrop-blur-sm"
+              >
+                {category}
+              </span>
+            ))}
+          </div>
         </div>
 
-        <h3
-          className={`text-xl font-bold mb-2 transition-colors ${
-            isDarkMode ? "text-white" : "text-gray-900"
-          }`}
-        >
-          {project.title}
-        </h3>
-        <p
-          className={`mb-4 text-sm leading-relaxed ${
-            isDarkMode ? "text-gray-300" : "text-gray-700"
-          }`}
-        >
-          {project.description}
-        </p>
-
-        <div className="flex flex-wrap gap-1 mb-4">
-          {project.tech.map((tech: string, index: number) => (
-            <span
-              key={index}
-              className={`text-xs px-2 py-1 rounded ${
-                isDarkMode
-                  ? "bg-gray-700 text-gray-300"
-                  : "bg-gray-100 text-gray-700"
-              }`}
-            >
-              {tech}
-            </span>
-          ))}
-        </div>
-
-        <div className="flex items-center justify-between">
-          <div
-            className={`flex items-center space-x-1 text-sm ${
-              isDarkMode ? "text-gray-400" : "text-gray-600"
+        {/* Content */}
+        <div className="p-5">
+          <h3
+            className={`font-bold text-lg mb-2 line-clamp-1 transition-colors duration-300 ${
+              isDarkMode
+                ? "text-white group-hover:text-purple-300"
+                : "text-slate-900 group-hover:text-purple-700"
             }`}
           >
-            <Calendar className="h-4 w-4" />
-            <span>{project.date}</span>
+            {project.title}
+          </h3>
+
+          <p
+            className={`text-sm line-clamp-2 mb-3 leading-relaxed ${
+              isDarkMode ? "text-gray-400" : "text-slate-600"
+            }`}
+          >
+            {project.description}
+          </p>
+
+          {/* Tech Stack - Expandable (state persists during scroll) */}
+          <div className="flex flex-wrap gap-2 mb-3">
+            {(isExpanded ? project.tech : project.tech.slice(0, 3)).map(
+              (tech: string) => (
+                <span
+                  key={tech}
+                  className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-all duration-200 ${
+                    isDarkMode
+                      ? "bg-blue-500/20 text-blue-400 border border-blue-500/30"
+                      : "bg-blue-50 text-blue-700 border border-blue-200"
+                  }`}
+                >
+                  {tech}
+                </span>
+              )
+            )}
+            {project.tech.length > 3 && (
+              <button
+                onClick={handleToggleTechStack}
+                className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-all duration-200 cursor-pointer hover:scale-105 ${
+                  isDarkMode
+                    ? "bg-gray-700 text-gray-300 border border-gray-600 hover:bg-gray-600"
+                    : "bg-gray-100 text-gray-700 border border-gray-200 hover:bg-gray-200"
+                }`}
+              >
+                {isExpanded ? "Show Less" : `+${project.tech.length - 3} more`}
+              </button>
+            )}
           </div>
-          <div className="flex space-x-2">
-            <Link
-              href={project.demo}
-              className="inline-flex items-center space-x-1 bg-blue-600 text-white px-3 py-1.5 rounded-lg hover:bg-blue-700 transition-colors text-sm"
-            >
-              <ExternalLink className="h-3 w-3" />
-              <span>Demo</span>
-            </Link>
-            <Link
-              href={project.github}
-              className={`inline-flex items-center space-x-1 px-3 py-1.5 rounded-lg transition-colors text-sm ${
-                isDarkMode
-                  ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                  : "bg-gray-600 text-white hover:bg-gray-700"
+
+          {/* Footer */}
+          <div className="flex items-center justify-between pt-3 border-t border-gray-700/30">
+            <div
+              className={`flex items-center gap-1 text-xs ${
+                isDarkMode ? "text-gray-400" : "text-slate-600"
               }`}
             >
-              <Github className="h-3 w-3" />
-              <span>Code</span>
-            </Link>
+              <Calendar className="h-3 w-3" />
+              <span>{project.date}</span>
+            </div>
+            <div className="flex gap-3">
+              <Link
+                href={project.demo}
+                className={`flex items-center gap-1.5 text-sm font-medium transition-colors duration-200 ${
+                  isDarkMode
+                    ? "text-purple-400 hover:text-purple-300"
+                    : "text-purple-600 hover:text-purple-700"
+                }`}
+              >
+                <ExternalLink className="w-4 h-4" />
+                Live Demo
+              </Link>
+              <Link
+                href={project.github}
+                className={`flex items-center gap-1.5 text-sm font-medium transition-colors duration-200 ${
+                  isDarkMode
+                    ? "text-gray-400 hover:text-white"
+                    : "text-slate-600 hover:text-slate-900"
+                }`}
+              >
+                <Github className="w-4 h-4" />
+                Code
+              </Link>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${
-        isDarkMode ? "bg-gray-900" : "bg-gray-50"
+        isDarkMode ? "bg-gray-900" : "bg-slate-50"
       }`}
     >
-      {/* Header */}
-      <Navbar
-        isDarkMode={isDarkMode}
-        toggleTheme={toggleTheme}
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-        scrollY={scrollY}
-        scrollToSection={scrollToSection}
-      />
+      {/* Background Decorative Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div
+          className={`absolute top-40 -left-20 w-96 h-96 rounded-full blur-3xl opacity-20 ${
+            isDarkMode ? "bg-blue-500" : "bg-blue-200"
+          }`}
+        ></div>
+        <div
+          className={`absolute bottom-40 -right-20 w-96 h-96 rounded-full blur-3xl opacity-20 ${
+            isDarkMode ? "bg-purple-500" : "bg-purple-200"
+          }`}
+        ></div>
+      </div>
 
-      {/* Search and Filter */}
-      <div
-        style={{ paddingTop: 100 }}
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
-      >
-        <div className="mb-8 space-y-4 md:space-y-0 md:flex md:items-center md:justify-between">
-          <div className="relative flex-1 max-w-md">
+      {/* Navbar */}
+      <div className="relative z-50">
+        <Navbar
+          isDarkMode={isDarkMode}
+          toggleTheme={toggleTheme}
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+          scrollY={scrollY}
+          scrollToSection={scrollToSection}
+        />
+      </div>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 pt-20 pb-12">
+        {/* Hero Header */}
+        <div className="text-center mb-8">
+          <h1
+            className={`text-3xl md:text-4xl font-bold mb-3 ${
+              isDarkMode ? "text-white" : "text-slate-900"
+            }`}
+          >
+            Featured{" "}
+            <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              Projects
+            </span>
+          </h1>
+          <p
+            className={`text-sm md:text-base max-w-2xl mx-auto ${
+              isDarkMode ? "text-gray-400" : "text-slate-600"
+            }`}
+          >
+            A showcase of my recent work in web development and AI integration
+          </p>
+        </div>
+
+        {/* Search and Filter */}
+        <div className="mb-8 flex flex-col sm:flex-row items-center gap-3">
+          <div className="relative w-full sm:w-80">
             <Search
-              className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 ${
-                isDarkMode ? "text-gray-400" : "text-gray-600"
+              className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${
+                isDarkMode ? "text-gray-400" : "text-slate-600"
               }`}
             />
             <input
               type="text"
-              placeholder="Search projects, technologies, or categories..."
-              className={`w-full pl-10 pr-4 py-3 border-2 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
+              placeholder="Search projects..."
+              className={`w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-sm ${
                 isDarkMode
-                  ? "bg-gray-800 border-gray-600 text-white placeholder-gray-400"
-                  : "bg-white border-gray-300 text-gray-900 placeholder-gray-600"
+                  ? "bg-gray-800/80 border-gray-700/50 text-white placeholder-gray-500"
+                  : "bg-white border-slate-200 text-slate-900 placeholder-slate-500"
               }`}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </div>
 
-          <div className="flex items-center space-x-3">
-            <Filter
-              className={`h-5 w-5 ${
-                isDarkMode ? "text-gray-400" : "text-gray-600"
-              }`}
-            />
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className={`border-2 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors ${
-                isDarkMode
-                  ? "bg-gray-800 border-gray-600 text-white"
-                  : "bg-white border-gray-300 text-gray-900"
-              }`}
-            >
-              {categories.map((category) => (
-                <option
-                  key={category}
-                  value={category}
-                  className={
-                    isDarkMode
-                      ? "text-white bg-gray-800"
-                      : "text-gray-900 bg-white"
-                  }
-                >
-                  {category}
-                </option>
-              ))}
-            </select>
-          </div>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className={`w-full sm:w-auto border rounded-lg px-3 py-2 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-sm ${
+              isDarkMode
+                ? "bg-gray-800/80 border-gray-700/50 text-white"
+                : "bg-white border-slate-200 text-slate-900"
+            }`}
+          >
+            {categories.map((category) => (
+              <option key={category} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
         </div>
 
-        {/* Results Count */}
-        <div className="mb-6">
-          <p className={isDarkMode ? "text-gray-300" : "text-gray-700"}>
-            Showing {filteredProjects.length} of {allProjects.length} projects
-          </p>
-        </div>
-
+        {/* Projects Display */}
         {filteredProjects.length === 0 ? (
-          <div className="text-center py-12">
+          <div className="text-center py-20">
             <div
               className={`text-lg mb-2 ${
-                isDarkMode ? "text-gray-400" : "text-gray-600"
+                isDarkMode ? "text-gray-400" : "text-slate-600"
               }`}
             >
               No projects found
             </div>
-            <p className={isDarkMode ? "text-gray-500" : "text-gray-500"}>
+            <p className={isDarkMode ? "text-gray-500" : "text-slate-500"}>
               Try adjusting your search terms or filters
             </p>
           </div>
         ) : (
-          <div className="space-y-12">
-            {/* Featured Projects */}
+          <div className="space-y-8">
+            {/* Featured Projects Section */}
             {featuredProjects.length > 0 && (
               <div>
-                <h2
-                  className={`text-3xl font-bold mb-8 ${
-                    isDarkMode ? "text-white" : "text-gray-900"
-                  }`}
-                >
-                  Featured Projects
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="flex items-center gap-2 mb-4">
+                  <Star
+                    className={`w-5 h-5 ${
+                      isDarkMode ? "text-blue-400" : "text-blue-600"
+                    }`}
+                  />
+                  <h2
+                    className={`text-xl font-bold ${
+                      isDarkMode ? "text-white" : "text-slate-900"
+                    }`}
+                  >
+                    Featured Projects
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {featuredProjects.map((project) => (
-                    <ProjectCard key={project.id} project={project} />
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      isFeatured={true}
+                    />
                   ))}
                 </div>
               </div>
             )}
 
-            {/* Other Projects */}
+            {/* Other Projects Section */}
             {otherProjects.length > 0 && (
-              <div>
-                <h2
-                  className={`text-3xl font-bold mb-8 ${
-                    isDarkMode ? "text-white" : "text-gray-900"
-                  }`}
-                >
-                  All Projects
-                </h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <div id="more-projects">
+                <div className="flex items-center gap-2 mb-4">
+                  <Code2
+                    className={`w-5 h-5 ${
+                      isDarkMode ? "text-purple-400" : "text-purple-600"
+                    }`}
+                  />
+                  <h2
+                    className={`text-xl font-bold ${
+                      isDarkMode ? "text-white" : "text-slate-900"
+                    }`}
+                  >
+                    More Projects
+                  </h2>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {otherProjects.map((project) => (
-                    <ProjectCard key={project.id} project={project} />
+                    <ProjectCard
+                      key={project.id}
+                      project={project}
+                      isFeatured={false}
+                    />
                   ))}
                 </div>
               </div>

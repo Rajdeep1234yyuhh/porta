@@ -64,7 +64,8 @@ export default function Home() {
       description:
         "AI-powered career assessment solution built with Next.js and intelligent backend integration. Features include dynamic skill evaluation, personalized career recommendations, real-time analytics dashboard, and secure user profile management.",
       mediaType: "video" as const,
-      video: "mks.mp4",
+      video: "https://youtu.be/A_9EQWd8N1A",
+      videoStartTime: 29, // Skip the first 29 seconds of the YouTube video
       image: "/images/ecommerce-thumbnail.jpg", // Fallback poster
       tech: [
         "Next.js",
@@ -75,7 +76,7 @@ export default function Home() {
         "AI",
         "ML",
       ],
-      demo: "#",
+      demo: "https://dhiti.ai/",
       github: "https://github.com/Rajdeep1234yyuhh/mks",
     },
     {

@@ -75,10 +75,10 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
           {skills.map((skill, index) => (
             <div
               key={skill.name}
-              className={`group relative p-6 rounded-2xl transition-all duration-300 cursor-pointer hover:scale-105 ${
+              className={`group relative p-6 rounded-2xl transition-all duration-300 cursor-pointer hover:scale-105 border ${
                 isDarkMode
-                  ? "bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 hover:bg-gray-800 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/20"
-                  : "bg-white border border-slate-200 hover:border-blue-300 hover:shadow-2xl hover:shadow-blue-500/10"
+                  ? "bg-gray-800/50 backdrop-blur-sm border-gray-700/50 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/20"
+                  : "bg-white border-slate-200 hover:border-blue-300 hover:shadow-2xl hover:shadow-blue-500/10"
               }`}
               style={{
                 animationDelay: `${index * 50}ms`,
@@ -92,17 +92,11 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
                 <div
                   className={`w-16 h-16 rounded-xl flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110 ${
                     isDarkMode
-                      ? "bg-gradient-to-br from-gray-700 to-gray-800 group-hover:from-blue-600 group-hover:to-purple-600"
-                      : "bg-gradient-to-br from-slate-100 to-slate-200 group-hover:from-blue-500 group-hover:to-purple-500"
+                      ? "bg-gradient-to-br from-gray-700 to-gray-800 group-hover:from-gray-600 group-hover:to-gray-700"
+                      : "bg-gradient-to-br from-slate-100 to-slate-200 group-hover:from-blue-50 group-hover:to-purple-50"
                   }`}
                 >
-                  <span
-                    className={`text-3xl transition-all duration-300 ${
-                      isDarkMode
-                        ? "group-hover:scale-110"
-                        : "group-hover:brightness-200 group-hover:scale-110"
-                    }`}
-                  >
+                  <span className="text-3xl transition-all duration-300 group-hover:scale-110">
                     {skill.icon}
                   </span>
                 </div>
