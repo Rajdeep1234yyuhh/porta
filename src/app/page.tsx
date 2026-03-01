@@ -8,6 +8,7 @@ import HeroSection from "./components/HeroSection";
 import SkillsSection from "./components/SkillsSection";
 import ProjectSection from "./components/ProjectSection";
 import ServiceSection from "./components/ServiceSection";
+import QuickSolutions from "./components/QuickSolutions";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -80,15 +81,24 @@ export default function Home() {
       github: "https://github.com/Rajdeep1234yyuhh/mks",
     },
     {
-      title: "Analytics Dashboard",
+      title: "Mental Health Assistant Chatbot",
       description:
-        "Real-time analytics dashboard built with React and Node.js. Features include interactive data visualizations using Chart.js, secure Firebase authentication.Designed for tracking user behavior, performance metrics, and business KPIs in a sleek, responsive UI.",
+        "AI-powered mental health assistant chatbot that interacts with users, detects emotions from conversations, and tracks emotional trends over time.",
       mediaType: "video" as const,
-      video: "dashb.mp4",
+      video: "yeco.mp4",
       image: "/images/analytics-dashboard-thumbnail.jpg", // Fallback poster
-      tech: ["React", "Tailwind CSS", "Node.js", "Firebase", "Chart.js"],
-      demo: "#",
-      github: "https://github.com/Rajdeep1234yyuhh/Dashboard",
+      tech: [
+        "React",
+        "Tailwind CSS",
+        "Node.js",
+        "Firebase",
+        "Next.js",
+        "TypeScript",
+        "LLaMA API",
+        "Database Integration",
+      ],
+      demo: "https://yeco-bice.vercel.app/",
+      github: "https://github.com/Rajdeep1234yyuhh/yeco",
     },
     {
       title: "Aekay E-commerce Website",
@@ -151,6 +161,9 @@ export default function Home() {
 
       {/* Services Section */}
       <ServiceSection isDarkMode={isDarkMode} services={services} />
+
+      {/* Quick Solutions Section */}
+      <QuickSolutions isDarkMode={isDarkMode} scrollToSection={scrollToSection} />
 
       {/* Contact Section */}
       <Contact isDarkMode={isDarkMode} />

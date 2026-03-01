@@ -146,10 +146,6 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
 
             const truncatedDescription = truncateText(project.description, 100);
             const shouldShowMoreButton = project.description.length > 100;
-            const ytId =
-              project.mediaType === "video" && project.video
-                ? getYoutubeVideoId(project.video)
-                : null;
 
             return (
               <div
@@ -161,11 +157,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
                 }`}
               >
                 {/* Project Image/Video */}
-                <div
-                  className={`relative w-full overflow-hidden ${
-                    ytId ? "aspect-video" : "h-40"
-                  }`}
-                >
+                <div className="relative w-full aspect-video overflow-hidden">
                   <div
                     className={`absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10`}
                   ></div>
