@@ -9,6 +9,7 @@ import SkillsSection from "./components/SkillsSection";
 import ProjectSection from "./components/ProjectSection";
 import ServiceSection from "./components/ServiceSection";
 import QuickSolutions from "./components/QuickSolutions";
+import QuickFixFAB from "./components/QuickFixFAB";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -168,10 +169,13 @@ export default function Home() {
       {/* Contact Section */}
       <Contact isDarkMode={isDarkMode} />
 
+      {/* Mobile Quick Fix FAB */}
+      <QuickFixFAB isDarkMode={isDarkMode} scrollToSection={scrollToSection} />
+
       {/* Back to Top Button */}
       <button
         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-        className={`fixed bottom-4 right-4 p-3 rounded-full shadow-lg transition-opacity duration-300 ${
+        className={`fixed bottom-4 left-4 p-3 rounded-full shadow-lg transition-opacity duration-300 ${
           scrollY > 300 ? "opacity-100" : "opacity-0"
         } ${isDarkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"}`}
       >
