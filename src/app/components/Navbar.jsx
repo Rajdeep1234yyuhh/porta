@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { Menu, X, Sun, Moon, Phone, ChevronDown } from "lucide-react";
 
 const PHONE = "919999999999"; // same as QuickSolutions — update once here
@@ -47,9 +48,9 @@ const Navbar = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           {/* Professional Brand */}
-          <div className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-3 group/brand">
             <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover/brand:shadow-purple-500/30 transition-shadow duration-300">
                 <span className="text-white font-bold text-lg">R</span>
               </div>
               <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
@@ -59,7 +60,9 @@ const Navbar = ({
             <div className="flex flex-col">
               <span
                 className={`font-bold text-lg transition-colors duration-300 ${
-                  isDarkMode ? "text-white" : "text-slate-900"
+                  isDarkMode
+                    ? "text-white group-hover/brand:text-purple-300"
+                    : "text-slate-900 group-hover/brand:text-purple-700"
                 }`}
               >
                 Rajdeep Kotoky
@@ -72,7 +75,7 @@ const Navbar = ({
                 Full Stack Developer & AI Engineer
               </span>
             </div>
-          </div>
+          </Link>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">

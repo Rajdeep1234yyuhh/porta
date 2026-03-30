@@ -10,6 +10,7 @@ import ProjectSection from "./components/ProjectSection";
 import ServiceSection from "./components/ServiceSection";
 import QuickSolutions from "./components/QuickSolutions";
 import QuickFixFAB from "./components/QuickFixFAB";
+import { featuredProjects } from "./data/projects";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -60,60 +61,6 @@ export default function Home() {
     { name: "Python", level: 75, icon: "🐍" },
   ];
 
-  const projects = [
-    {
-      title: "Career Assessment Tool",
-      description:
-        "AI-powered career assessment solution built with Next.js and intelligent backend integration. Features include dynamic skill evaluation, personalized career recommendations, real-time analytics dashboard, and secure user profile management.",
-      mediaType: "video" as const,
-      video: "https://youtu.be/A_9EQWd8N1A",
-      videoStartTime: 29, // Skip the first 29 seconds of the YouTube video
-      image: "/images/ecommerce-thumbnail.jpg", // Fallback poster
-      tech: [
-        "Next.js",
-        "Tailwind CSS",
-        "Node.js",
-        "firebase",
-        "python",
-        "AI",
-        "ML",
-      ],
-      demo: "https://dhiti.ai/",
-      github: "https://github.com/Rajdeep1234yyuhh/mks",
-    },
-    {
-      title: "Mental Health Assistant Chatbot",
-      description:
-        "AI-powered mental health assistant chatbot that interacts with users, detects emotions from conversations, and tracks emotional trends over time.",
-      mediaType: "video" as const,
-      video: "yeco.mp4",
-      image: "/images/analytics-dashboard-thumbnail.jpg", // Fallback poster
-      tech: [
-        "React",
-        "Tailwind CSS",
-        "Node.js",
-        "Firebase",
-        "Next.js",
-        "TypeScript",
-        "LLaMA API",
-        "Database Integration",
-      ],
-      demo: "https://yeco-bice.vercel.app/",
-      github: "https://github.com/Rajdeep1234yyuhh/yeco",
-    },
-    {
-      title: "Aekay E-commerce Website",
-      description:
-        "Custom e-commerce storefront developed using Shopify and Liquid. Features include responsive design, optimized product listings, seamless cart and checkout flow, and personalized UI enhancements crafted with CSS for an elegant shopping experience.",
-      mediaType: "video" as const,
-      video: "aekay-ecom.mp4",
-      image: "/images/aekay-thumbnail.jpg", // Fallback poster
-      tech: ["Shopify", "Liquid", "CSS"],
-      demo: "https://aekay.in/",
-      github: "#",
-    },
-  ];
-
   const services = [
     {
       icon: <Globe className="w-8 h-8" />,
@@ -158,13 +105,16 @@ export default function Home() {
       <SkillsSection isDarkMode={isDarkMode} skills={skills} />
 
       {/* Projects Section */}
-      <ProjectSection isDarkMode={isDarkMode} projects={projects} />
+      <ProjectSection isDarkMode={isDarkMode} projects={featuredProjects} />
 
       {/* Services Section */}
       <ServiceSection isDarkMode={isDarkMode} services={services} />
 
       {/* Quick Solutions Section */}
-      <QuickSolutions isDarkMode={isDarkMode} scrollToSection={scrollToSection} />
+      <QuickSolutions
+        isDarkMode={isDarkMode}
+        scrollToSection={scrollToSection}
+      />
 
       {/* Contact Section */}
       <Contact isDarkMode={isDarkMode} />
@@ -188,7 +138,7 @@ export default function Home() {
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p>&copy; 2025 Your Name. All rights reserved.</p>
+          <p>&copy; 2025 Rajdeep. All rights reserved.</p>
         </div>
       </footer>
     </div>
