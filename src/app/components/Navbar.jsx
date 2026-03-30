@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { Menu, X, Sun, Moon, Phone, ChevronDown } from "lucide-react";
 
-const PHONE = "919999999999"; // same as QuickSolutions — update once here
+const PHONE = "8638752315"; // same as QuickSolutions — update once here
 
 const WhatsAppIcon = () => (
   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -41,8 +41,8 @@ const Navbar = ({
             ? "bg-gray-900/95 backdrop-blur-xl shadow-xl border-b border-gray-700/60"
             : "bg-white/95 backdrop-blur-xl shadow-xl border-b border-slate-200/60"
           : isDarkMode
-          ? "bg-gray-900/20 backdrop-blur-sm"
-          : "bg-white/20 backdrop-blur-sm"
+            ? "bg-gray-900/20 backdrop-blur-sm"
+            : "bg-white/20 backdrop-blur-sm"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -93,7 +93,7 @@ const Navbar = ({
                   {item}
                   <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300"></span>
                 </button>
-              )
+              ),
             )}
 
             {/* Quick Fix dropdown */}
@@ -107,22 +107,29 @@ const Navbar = ({
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                 Quick Fix
-                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${quickOpen ? "rotate-180" : ""}`} />
+                <ChevronDown
+                  className={`w-3.5 h-3.5 transition-transform duration-200 ${quickOpen ? "rotate-180" : ""}`}
+                />
               </button>
 
               {quickOpen && (
                 <div
                   style={{ animation: "dropIn 0.2s ease both" }}
                   className={`absolute top-full right-0 mt-2 w-44 rounded-xl shadow-xl border overflow-hidden z-50 ${
-                  isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-slate-200"
-                }`}>
+                    isDarkMode
+                      ? "bg-gray-800 border-gray-700"
+                      : "bg-white border-slate-200"
+                  }`}
+                >
                   <a
                     href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setQuickOpen(false)}
                     className={`flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors ${
-                      isDarkMode ? "text-gray-200 hover:bg-gray-700" : "text-slate-700 hover:bg-slate-50"
+                      isDarkMode
+                        ? "text-gray-200 hover:bg-gray-700"
+                        : "text-slate-700 hover:bg-slate-50"
                     }`}
                   >
                     <WhatsAppIcon />
@@ -132,19 +139,28 @@ const Navbar = ({
                     href={`tel:+${PHONE}`}
                     onClick={() => setQuickOpen(false)}
                     className={`flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors border-t ${
-                      isDarkMode ? "text-gray-200 hover:bg-gray-700 border-gray-700" : "text-slate-700 hover:bg-slate-50 border-slate-100"
+                      isDarkMode
+                        ? "text-gray-200 hover:bg-gray-700 border-gray-700"
+                        : "text-slate-700 hover:bg-slate-50 border-slate-100"
                     }`}
                   >
                     <Phone className="w-4 h-4 text-blue-500" />
                     Call Me
                   </a>
                   <button
-                    onClick={() => { scrollToSection("contact"); setQuickOpen(false); }}
+                    onClick={() => {
+                      scrollToSection("contact");
+                      setQuickOpen(false);
+                    }}
                     className={`w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors border-t ${
-                      isDarkMode ? "text-gray-200 hover:bg-gray-700 border-gray-700" : "text-slate-700 hover:bg-slate-50 border-slate-100"
+                      isDarkMode
+                        ? "text-gray-200 hover:bg-gray-700 border-gray-700"
+                        : "text-slate-700 hover:bg-slate-50 border-slate-100"
                     }`}
                   >
-                    <span className="w-4 h-4 flex items-center justify-center text-purple-500">✉</span>
+                    <span className="w-4 h-4 flex items-center justify-center text-purple-500">
+                      ✉
+                    </span>
                     Message
                   </button>
                 </div>
@@ -234,7 +250,7 @@ const Navbar = ({
                   >
                     {item}
                   </button>
-                )
+                ),
               )}
               <div
                 className={`px-6 pt-4 border-t mt-4 space-y-3 ${
@@ -247,21 +263,31 @@ const Navbar = ({
                 >
                   <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                   Quick Fix
-                  <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${quickOpen ? "rotate-180" : ""}`} />
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 transition-transform duration-200 ${quickOpen ? "rotate-180" : ""}`}
+                  />
                 </button>
                 {quickOpen && (
                   <div
                     style={{ animation: "dropIn 0.2s ease both" }}
                     className={`rounded-xl border overflow-hidden ${
-                    isDarkMode ? "bg-gray-700/60 border-gray-600" : "bg-slate-50 border-slate-200"
-                  }`}>
+                      isDarkMode
+                        ? "bg-gray-700/60 border-gray-600"
+                        : "bg-slate-50 border-slate-200"
+                    }`}
+                  >
                     <a
                       href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      onClick={() => { setQuickOpen(false); setIsMenuOpen(false); }}
+                      onClick={() => {
+                        setQuickOpen(false);
+                        setIsMenuOpen(false);
+                      }}
                       className={`flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors ${
-                        isDarkMode ? "text-gray-200 hover:bg-gray-600" : "text-slate-700 hover:bg-slate-100"
+                        isDarkMode
+                          ? "text-gray-200 hover:bg-gray-600"
+                          : "text-slate-700 hover:bg-slate-100"
                       }`}
                     >
                       <WhatsAppIcon />
@@ -269,21 +295,34 @@ const Navbar = ({
                     </a>
                     <a
                       href={`tel:+${PHONE}`}
-                      onClick={() => { setQuickOpen(false); setIsMenuOpen(false); }}
+                      onClick={() => {
+                        setQuickOpen(false);
+                        setIsMenuOpen(false);
+                      }}
                       className={`flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors border-t ${
-                        isDarkMode ? "text-gray-200 hover:bg-gray-600 border-gray-600" : "text-slate-700 hover:bg-slate-100 border-slate-200"
+                        isDarkMode
+                          ? "text-gray-200 hover:bg-gray-600 border-gray-600"
+                          : "text-slate-700 hover:bg-slate-100 border-slate-200"
                       }`}
                     >
                       <Phone className="w-4 h-4 text-blue-500" />
                       Call Me
                     </a>
                     <button
-                      onClick={() => { scrollToSection("contact"); setQuickOpen(false); setIsMenuOpen(false); }}
+                      onClick={() => {
+                        scrollToSection("contact");
+                        setQuickOpen(false);
+                        setIsMenuOpen(false);
+                      }}
                       className={`w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors border-t ${
-                        isDarkMode ? "text-gray-200 hover:bg-gray-600 border-gray-600" : "text-slate-700 hover:bg-slate-100 border-slate-200"
+                        isDarkMode
+                          ? "text-gray-200 hover:bg-gray-600 border-gray-600"
+                          : "text-slate-700 hover:bg-slate-100 border-slate-200"
                       }`}
                     >
-                      <span className="w-4 h-4 flex items-center justify-center text-purple-500">✉</span>
+                      <span className="w-4 h-4 flex items-center justify-center text-purple-500">
+                        ✉
+                      </span>
                       Message
                     </button>
                   </div>
