@@ -90,7 +90,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({
   return (
     <section
       id="quick-solutions"
-      className={`py-16 relative overflow-hidden ${
+      className={`py-8 relative overflow-hidden ${
         isDarkMode ? "bg-gray-950" : "bg-white"
       }`}
     >
@@ -117,15 +117,15 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 mb-4 px-4 py-1.5 rounded-full border text-sm font-semibold
+        <div className="text-center mb-5">
+          <div className="inline-flex items-center gap-2 mb-2 px-3 py-1 rounded-full border text-xs font-semibold
             bg-gradient-to-r from-green-500/10 to-emerald-500/10
             border-green-500/30 text-green-500">
-            <Zap className="w-4 h-4" />
+            <Zap className="w-3.5 h-3.5" />
             Quick Tech Help
           </div>
           <h2
-            className={`text-3xl md:text-4xl font-bold mb-4 ${
+            className={`text-2xl md:text-3xl font-bold mb-1 ${
               isDarkMode ? "text-white" : "text-slate-900"
             }`}
           >
@@ -134,40 +134,33 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({
               Let&apos;s Solve It Fast.
             </span>
           </h2>
-          <p
-            className={`text-sm md:text-base max-w-2xl mx-auto ${
-              isDarkMode ? "text-gray-400" : "text-slate-600"
-            }`}
-          >
-            I offer quick, focused technical help — bugs, reviews, small
-            features, and more. Most are{" "}
-            <span className="font-semibold text-green-500">completely free</span>
-            , and those that aren&apos;t cost almost nothing.
+          <p className={`text-xs max-w-xl mx-auto ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>
+            Quick, focused help — bugs, reviews, small features &amp; more. Most are{" "}
+            <span className="font-semibold text-green-500">free</span>, the rest cost almost nothing.
           </p>
         </div>
 
         {/* Cards Grid */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 mb-5">
           {solutions.map((s) => (
             <div
               key={s.title}
-              className={`group relative rounded-2xl p-5 border transition-all duration-300 hover:scale-[1.02] ${
+              className={`group relative rounded-xl p-4 border transition-all duration-300 hover:scale-[1.02] ${
                 isDarkMode
-                  ? "bg-gray-800/60 border-gray-700/50 hover:border-green-500/40 hover:shadow-xl hover:shadow-green-500/10"
-                  : "bg-slate-50 border-slate-200 hover:border-green-400/60 hover:shadow-xl hover:shadow-green-500/10"
+                  ? "bg-gray-800/60 border-gray-700/50 hover:border-green-500/40 hover:shadow-lg hover:shadow-green-500/10"
+                  : "bg-slate-50 border-slate-200 hover:border-green-400/60 hover:shadow-lg hover:shadow-green-500/10"
               }`}
             >
-              {/* Price badge */}
-              <div className="flex items-start justify-between mb-3">
+              <div className="flex items-center justify-between mb-1.5">
                 <h3
-                  className={`font-bold text-lg ${
+                  className={`font-bold text-sm ${
                     isDarkMode ? "text-white" : "text-slate-900"
                   }`}
                 >
                   {s.title}
                 </h3>
                 <span
-                  className={`text-xs font-bold px-2.5 py-1 rounded-full shrink-0 ml-2 ${
+                  className={`text-xs font-bold px-2 py-0.5 rounded-full shrink-0 ml-2 ${
                     s.tag === "free"
                       ? "bg-green-500/15 text-green-500 border border-green-500/30"
                       : isDarkMode
@@ -180,23 +173,22 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({
               </div>
 
               <p
-                className={`text-sm leading-relaxed mb-4 ${
+                className={`text-xs leading-relaxed mb-2 ${
                   isDarkMode ? "text-gray-400" : "text-slate-600"
                 }`}
               >
                 {s.description}
               </p>
 
-              {/* Examples */}
-              <ul className="space-y-1.5">
+              <ul className="flex flex-wrap gap-x-3 gap-y-1">
                 {s.examples.map((ex) => (
                   <li
                     key={ex}
-                    className={`flex items-center gap-2 text-xs ${
+                    className={`flex items-center gap-1 text-xs ${
                       isDarkMode ? "text-gray-400" : "text-slate-500"
                     }`}
                   >
-                    <CheckCircle className="w-3.5 h-3.5 text-green-500 shrink-0" />
+                    <CheckCircle className="w-3 h-3 text-green-500 shrink-0" />
                     {ex}
                   </li>
                 ))}
@@ -206,7 +198,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({
         </div>
 
         {/* Legend + CTA row */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6 px-2">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2">
           <div className="flex items-center gap-6 text-sm">
             <span className="flex items-center gap-2">
               <span className="w-3 h-3 rounded-full bg-green-500 inline-block" />
