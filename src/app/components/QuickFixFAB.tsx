@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Zap, Phone, MessageCircle, X } from "lucide-react";
+import { Zap, Phone, MessageCircle, X, Info } from "lucide-react";
 
 const PHONE = "8638752315"; // keep in sync with Navbar.jsx
 
@@ -97,6 +97,22 @@ const QuickFixFAB: React.FC<QuickFixFABProps> = ({
           >
             <MessageCircle className="w-5 h-5" />
             Message
+          </button>
+
+          <button
+            onClick={() => {
+              scrollToSection("quick-solutions");
+              setOpen(false);
+            }}
+            style={{
+              animation:
+                "popUpFromButton 0.35s cubic-bezier(0.34,1.56,0.64,1) both",
+              animationDelay: "0ms",
+            }}
+            className={`${optionBase} bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 transition-colors`}
+          >
+            <Info className="w-5 h-5" />
+            Details
           </button>
         </div>
       )}

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, Sun, Moon, Phone, ChevronDown } from "lucide-react";
+import { Menu, X, Sun, Moon, Phone, ChevronDown, Info } from "lucide-react";
 
 const PHONE = "8638752315"; // same as QuickSolutions — update once here
 
@@ -32,6 +32,16 @@ const Navbar = ({
     document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
+
+  const handleQuickDetails = () => {
+    if (window.location.pathname === "/") {
+      scrollToSection("quick-solutions");
+    } else {
+      window.location.href = "/#quick-solutions";
+    }
+    setQuickOpen(false);
+    setIsMenuOpen(false);
+  };
 
   return (
     <nav
@@ -162,6 +172,17 @@ const Navbar = ({
                       ✉
                     </span>
                     Message
+                  </button>
+                  <button
+                    onClick={handleQuickDetails}
+                    className={`w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors border-t ${
+                      isDarkMode
+                        ? "text-gray-200 hover:bg-gray-700 border-gray-700"
+                        : "text-slate-700 hover:bg-slate-50 border-slate-100"
+                    }`}
+                  >
+                    <Info className="w-4 h-4 text-emerald-500" />
+                    Details
                   </button>
                 </div>
               )}
@@ -324,6 +345,17 @@ const Navbar = ({
                         ✉
                       </span>
                       Message
+                    </button>
+                    <button
+                      onClick={handleQuickDetails}
+                      className={`w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors border-t ${
+                        isDarkMode
+                          ? "text-gray-200 hover:bg-gray-600 border-gray-600"
+                          : "text-slate-700 hover:bg-slate-100 border-slate-200"
+                      }`}
+                    >
+                      <Info className="w-4 h-4 text-emerald-500" />
+                      Details
                     </button>
                   </div>
                 )}
