@@ -126,7 +126,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         ></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid md:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* Left Content */}
             <div className="space-y-8">
               <div className="space-y-6">
@@ -235,7 +235,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             </div>
 
             {/* Right Content - Professional Photo + Floating Tech Cards */}
-            <div className="hidden lg:flex justify-center items-center">
+            <div className="hidden md:flex justify-center items-center">
               <div className="relative space-y-8">
                 {/* Professional Photo Section */}
                 <div className="relative mx-auto">

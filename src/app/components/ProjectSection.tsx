@@ -83,7 +83,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
   return (
     <section
       id="projects"
-      className={`py-8 min-h-screen flex items-center relative overflow-hidden ${
+      className={`py-16 sm:py-20 relative overflow-hidden ${
         isDarkMode ? "bg-gray-900" : "bg-slate-50"
       }`}
     >

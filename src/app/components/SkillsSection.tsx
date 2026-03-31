@@ -18,7 +18,7 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
   return (
     <section
       id="skills"
-      className={`min-h-screen flex items-center py-12 relative overflow-hidden ${
+      className={`py-16 sm:py-20 relative overflow-hidden ${
         isDarkMode ? "bg-gray-900" : "bg-slate-50"
       }`}
     >
