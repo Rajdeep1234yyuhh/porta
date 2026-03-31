@@ -10,6 +10,7 @@ import {
   MoreHorizontal,
   ArrowUpRight,
 } from "lucide-react";
+import Image from "next/image";
 import Navbar from "../components/Navbar";
 import { allProjects } from "../data/projects";
 
@@ -58,13 +59,14 @@ const SiteFavicon = ({ url, isDarkMode }: { url: string; isDarkMode: boolean }) 
         isDarkMode ? "bg-gray-700" : "bg-slate-100"
       }`}
     >
-      <img
+      <Image
         src={`https://www.google.com/s2/favicons?domain=${domain}&sz=64`}
         alt={domain}
         width={24}
         height={24}
         onError={() => setFailed(true)}
         className="w-6 h-6 object-contain"
+        unoptimized
       />
     </div>
   );
@@ -131,10 +133,12 @@ const FeaturedCard = ({
             </video>
           )
         ) : (
-          <img
-            src={project.image}
+          <Image
+            src={project.image!}
             alt={project.title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+            fill
+            className="object-cover transition-transform duration-300 group-hover:scale-110"
+            unoptimized
           />
         )}
       </div>
@@ -462,7 +466,7 @@ const ProjectShowcase = () => {
 
   const categories = ["All", "Web Development", "AI/ML", "Shopify"];
 
-  const projectsWithFeatured = allProjects.map((p) => ({ ...p, featured: p.id <= 3 }));
+  const projectsWithFeatured = allProjects.map((p) => ({ ...p, featured: p.id <= 4 }));
 
   const filteredProjects = projectsWithFeatured.filter((project) => {
     const matchesSearch =
