@@ -79,7 +79,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
   return (
     <section
       id="projects"
-      className={`py-16 sm:py-20 relative overflow-hidden ${
+      className={`py-12 sm:py-16 relative overflow-hidden ${
         isDarkMode ? "bg-gray-900" : "bg-slate-50"
       }`}
     >

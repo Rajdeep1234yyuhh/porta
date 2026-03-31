@@ -116,7 +116,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
 
       <section
         id="about"
-        className={`min-h-screen flex items-center pt-20 relative overflow-hidden ${
+        className={`pt-20 pb-8 relative overflow-hidden ${
           isDarkMode ? "bg-gray-900" : "bg-white"
         }`}
       >
@@ -280,7 +280,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             </div>
 
             {/* Right Content - Professional Photo + Floating Tech Cards */}
-            <div className="flex justify-center items-center order-first md:order-none pt-16 pb-14 px-12 sm:px-16 md:p-0">
+            <div className="flex justify-center items-center order-first md:order-none pt-8 pb-4 px-10 sm:px-12 md:p-0">
               <div className="relative">
                 {/* Professional Photo Section */}
                 <div className="relative mx-auto">
