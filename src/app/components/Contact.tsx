@@ -16,7 +16,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
   return (
     <section
       id="contact"
-      className={`py-12 min-h-screen flex items-center relative overflow-hidden ${
+      className={`py-16 sm:py-20 relative overflow-hidden ${
         isDarkMode ? "bg-gray-900" : "bg-slate-50"
       }`}
     >
