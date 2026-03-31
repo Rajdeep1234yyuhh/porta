@@ -102,7 +102,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
 
       <section
         id="about"
-        className={`min-h-screen flex items-center relative overflow-hidden ${
+        className={`min-h-screen flex items-center pt-20 relative overflow-hidden ${
           isDarkMode ? "bg-gray-900" : "bg-white"
         }`}
       >
@@ -235,8 +235,8 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             </div>
 
             {/* Right Content - Professional Photo + Floating Tech Cards */}
-            <div className="hidden md:flex justify-center items-center">
-              <div className="relative space-y-8">
+            <div className="flex justify-center items-center order-first md:order-none pt-16 pb-14 px-12 sm:px-16 md:p-0">
+              <div className="relative">
                 {/* Professional Photo Section */}
                 <div className="relative mx-auto">
                   <div
@@ -247,7 +247,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                     <img
                       src="DP.jpg"
                       alt="Your Professional Photo"
-                      className="w-72 h-80 object-cover rounded-2xl"
+                      className="w-52 h-60 sm:w-64 sm:h-72 md:w-72 md:h-80 object-cover rounded-2xl"
                     />
 
                     {/* Status Badge */}
