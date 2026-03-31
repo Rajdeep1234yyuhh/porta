@@ -130,7 +130,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             {/* Left Content */}
             <div className="space-y-8">
               <div className="space-y-6">
-                <h1 className="text-6xl lg:text-7xl font-bold leading-tight">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
                   <span
                     className={isDarkMode ? "text-white" : "text-slate-900"}
                   >

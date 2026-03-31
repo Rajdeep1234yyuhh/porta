@@ -88,7 +88,7 @@ const Navbar = ({
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-8">
             {["About", "Skills", "Projects", "Services", "Contact"].map(
               (item) => (
                 <button
@@ -214,7 +214,7 @@ const Navbar = ({
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center space-x-2">
+          <div className="lg:hidden flex items-center space-x-2">
             {/* Mobile Theme Toggle */}
             <button
               onClick={toggleTheme}
@@ -251,7 +251,7 @@ const Navbar = ({
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div
-            className={`md:hidden absolute top-full left-4 right-4 backdrop-blur-xl shadow-2xl rounded-2xl mt-2 py-6 border ${
+            className={`lg:hidden absolute top-full left-4 right-4 backdrop-blur-xl shadow-2xl rounded-2xl mt-2 py-6 border ${
               isDarkMode
                 ? "bg-gray-800/95 border-gray-700/60"
                 : "bg-white/95 border-slate-200/60"
