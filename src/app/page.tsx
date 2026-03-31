@@ -10,7 +10,7 @@ import ProjectSection from "./components/ProjectSection";
 import ServiceSection from "./components/ServiceSection";
 import QuickSolutions from "./components/QuickSolutions";
 import QuickFixFAB from "./components/QuickFixFAB";
-import { featuredProjects } from "./data/projects";
+import { allProjects } from "./data/projects";
 
 export default function Home() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -105,7 +105,7 @@ export default function Home() {
       <SkillsSection isDarkMode={isDarkMode} skills={skills} />
 
       {/* Projects Section */}
-      <ProjectSection isDarkMode={isDarkMode} projects={featuredProjects} />
+      <ProjectSection isDarkMode={isDarkMode} projects={allProjects} />
 
       {/* Services Section */}
       <ServiceSection isDarkMode={isDarkMode} services={services} />
