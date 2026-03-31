@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ExternalLink, Mail, Phone, FileText } from "lucide-react";
+import { SiNextdotjs, SiShopify, SiPython } from "react-icons/si";
 
 const PHONE = "8638752315";
 
@@ -423,7 +424,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                 >
                   <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">⚡</span>
+                      <SiNextdotjs size={18} color="#ffffff" />
                     </div>
                     <div>
                       <div
@@ -453,7 +454,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                 >
                   <div className="flex items-center space-x-2">
                     <div className="w-8 h-8 bg-[#96BF48] rounded-lg flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">S</span>
+                      <SiShopify size={18} color="#ffffff" />
                     </div>
                     <div>
                       <div
@@ -482,8 +483,8 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   }`}
                 >
                   <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-pink-600 rounded-lg flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">AI</span>
+                    <div className="w-8 h-8 bg-[#1e3a5f] rounded-lg flex items-center justify-center">
+                      <SiPython size={18} color="#FFD343" />
                     </div>
                     <div>
                       <div
