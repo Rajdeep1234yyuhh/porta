@@ -342,8 +342,8 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   }`}
                 >
                   <div className="flex items-center space-x-2">
-                    <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                      <span className="text-white text-xs font-bold">TS</span>
+                    <div className="w-8 h-8 bg-[#96BF48] rounded-lg flex items-center justify-center">
+                      <span className="text-white text-xs font-bold">S</span>
                     </div>
                     <div>
                       <div
@@ -351,14 +351,14 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                           isDarkMode ? "text-white" : "text-slate-900"
                         }`}
                       >
-                        TypeScript
+                        Shopify
                       </div>
                       <div
                         className={`text-xs ${
                           isDarkMode ? "text-gray-400" : "text-slate-500"
                         }`}
                       >
-                        Type Safety
+                        E-commerce
                       </div>
                     </div>
                   </div>
