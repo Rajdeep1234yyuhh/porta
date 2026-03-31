@@ -53,12 +53,12 @@ export default function Home() {
   };
 
   const skills = [
-    { name: "Next.js", level: 90, icon: "⚡" },
-    { name: "React", level: 95, icon: "⚛️" },
-    { name: "Shopify/Liquid", level: 85, icon: "🛍️" },
-    { name: "Tailwind CSS", level: 95, icon: "🎨" },
-    { name: "AI/ML", level: 60, icon: "🤖" },
-    { name: "Python", level: 75, icon: "🐍" },
+    { name: "Next.js", level: 90, color: "#ffffff", bg: "#000000" },
+    { name: "React", level: 95, color: "#61DAFB", bg: "#20232a" },
+    { name: "Shopify", level: 85, color: "#96BF48", bg: "#1a1a1a" },
+    { name: "Tailwind CSS", level: 95, color: "#38BDF8", bg: "#0f172a" },
+    { name: "Python", level: 75, color: "#FFD343", bg: "#1e3a5f" },
+    { name: "Node.js", level: 80, color: "#68A063", bg: "#1a1a1a" },
   ];
 
   const services = [

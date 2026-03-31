@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { ExternalLink, Mail, Phone } from "lucide-react";
+import { ExternalLink, Mail, Phone, FileText } from "lucide-react";
 
 const PHONE = "8638752315";
 
@@ -10,12 +10,27 @@ interface HeroSectionProps {
   scrollToSection: (sectionId: string) => void;
 }
 
+const TYPING_PHRASES = ["AI/ML Engineer", "Web Developer", "Software Developer", "Shopify Developer"];
+
 const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
   const [projectCount, setProjectCount] = React.useState(0);
   const [yearsCount, setYearsCount] = React.useState(0);
   const [satisfactionCount, setSatisfactionCount] = React.useState(0);
   const [contactOpen, setContactOpen] = React.useState(false);
   const contactRef = React.useRef<HTMLDivElement>(null);
+
+  // Typing effect state
+  const [displayedText, setDisplayedText] = React.useState("");
+  const [phraseIndex, setPhraseIndex] = React.useState(0);
+  const [charIndex, setCharIndex] = React.useState(0);
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const [visible, setVisible] = React.useState(false);
+
+  // Fade-in on mount
+  React.useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 50);
+    return () => clearTimeout(t);
+  }, []);
 
   React.useEffect(() => {
     const handleOutside = (e: MouseEvent) => {
@@ -26,6 +41,39 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
     document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
+
+  // Typing loop
+  React.useEffect(() => {
+    const current = TYPING_PHRASES[phraseIndex];
+    let delay: number;
+
+    if (!isDeleting && charIndex < current.length) {
+      delay = 60;
+    } else if (!isDeleting && charIndex === current.length) {
+      delay = 1800; // pause at end
+    } else if (isDeleting && charIndex > 0) {
+      delay = 35;
+    } else {
+      delay = 300; // pause before next phrase
+    }
+
+    const t = setTimeout(() => {
+      if (!isDeleting && charIndex < current.length) {
+        setDisplayedText(current.slice(0, charIndex + 1));
+        setCharIndex((c) => c + 1);
+      } else if (!isDeleting && charIndex === current.length) {
+        setIsDeleting(true);
+      } else if (isDeleting && charIndex > 0) {
+        setDisplayedText(current.slice(0, charIndex - 1));
+        setCharIndex((c) => c - 1);
+      } else {
+        setIsDeleting(false);
+        setPhraseIndex((i) => (i + 1) % TYPING_PHRASES.length);
+      }
+    }, delay);
+
+    return () => clearTimeout(t);
+  }, [charIndex, isDeleting, phraseIndex]);
 
   React.useEffect(() => {
     // Animate Projects (0 to 50)
@@ -112,6 +160,47 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         .animate-float-slow {
           animation: float-slow 8s ease-in-out infinite;
         }
+
+        @keyframes shimmer {
+          0% { background-position: -200% center; }
+          100% { background-position: 200% center; }
+        }
+
+        .shimmer-text {
+          background: linear-gradient(
+            90deg,
+            #2563eb 0%, #7c3aed 30%, #a78bfa 50%, #7c3aed 70%, #2563eb 100%
+          );
+          background-size: 200% auto;
+          background-clip: text;
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          animation: shimmer 4s linear infinite;
+        }
+
+        @keyframes fadeSlideUp {
+          from { opacity: 0; transform: translateY(24px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-up {
+          opacity: 0;
+          animation: fadeSlideUp 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        @keyframes blink {
+          0%, 100% { opacity: 1; }
+          50%       { opacity: 0; }
+        }
+
+        .cursor-blink {
+          display: inline-block;
+          width: 3px;
+          margin-left: 2px;
+          background: currentColor;
+          animation: blink 0.9s step-end infinite;
+          vertical-align: text-bottom;
+        }
       `}</style>
 
       <section
@@ -142,27 +231,31 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
           <div className="grid md:grid-cols-2 gap-8 lg:gap-16 items-center">
             {/* Left Content */}
-            <div className="space-y-8">
+            <div className={`space-y-8 transition-opacity duration-500 ${visible ? "opacity-100" : "opacity-0"}`}>
               <div className="space-y-6">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight">
-                  <span
-                    className={isDarkMode ? "text-white" : "text-slate-900"}
-                  >
-                    Web
-                  </span>{" "}
-                  <span
-                    className={isDarkMode ? "text-white" : "text-slate-900"}
-                  >
-                    Developer
-                  </span>
-                  <br />
-                  <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                    & AI Engineer
-                  </span>
-                </h1>
+                <div>
+                  <h1 className="font-bold leading-tight">
+                    <span
+                      style={{ animationDelay: "0ms" }}
+                      className={`fade-up block text-2xl sm:text-3xl md:text-4xl font-semibold mb-1 ${
+                        isDarkMode ? "text-gray-300" : "text-slate-700"
+                      }`}
+                    >
+                      I can be your
+                    </span>
+                    <span
+                      style={{ animationDelay: "150ms" }}
+                      className="fade-up block shimmer-text text-3xl sm:text-4xl md:text-5xl lg:text-6xl"
+                    >
+                      {displayedText}
+                      <span className={`cursor-blink ${isDarkMode ? "bg-purple-400" : "bg-blue-600"}`} />
+                    </span>
+                  </h1>
+                </div>
 
                 <p
-                  className={`text-xl leading-relaxed max-w-xl ${
+                  style={{ animationDelay: "300ms" }}
+                  className={`fade-up text-xl leading-relaxed max-w-xl ${
                     isDarkMode ? "text-gray-300" : "text-slate-600"
                   }`}
                 >
@@ -173,7 +266,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               </div>
 
               {/* Stats */}
-              <div className="flex items-center space-x-8 pt-4">
+              <div
+                style={{ animationDelay: "450ms" }}
+                className="fade-up flex items-center space-x-8 pt-4"
+              >
                 <div className="text-center">
                   <div
                     className={`text-3xl font-bold ${
@@ -225,7 +321,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               </div>
 
               {/* CTA Buttons - Professional Design */}
-              <div className="flex flex-col sm:flex-row gap-4 pt-6">
+              <div style={{ animationDelay: "600ms" }} className="fade-up flex flex-col sm:flex-row gap-4 pt-6">
                 <button
                   onClick={() => scrollToSection("projects")}
                   className="group px-7 py-3.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-md transition-all duration-200 font-medium flex items-center justify-center shadow-sm hover:shadow-md"
@@ -233,6 +329,20 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   View My Work
                   <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
                 </button>
+
+                <a
+                  href="/resume.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`group px-7 py-3.5 rounded-md transition-all duration-200 font-medium border-2 flex items-center justify-center ${
+                    isDarkMode
+                      ? "border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/10 hover:border-emerald-400/50"
+                      : "border-emerald-600/30 text-emerald-700 hover:bg-emerald-50 hover:border-emerald-600/50"
+                  }`}
+                >
+                  View Resume
+                  <FileText className="w-4 h-4 ml-2 group-hover:translate-y-[-1px] transition-transform" />
+                </a>
 
                 <div className="relative" ref={contactRef}>
                   {/* Pop-out options */}

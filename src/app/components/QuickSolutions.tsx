@@ -90,8 +90,8 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({
   return (
     <section
       id="quick-solutions"
-      className={`py-8 relative overflow-hidden ${
-        isDarkMode ? "bg-gray-950" : "bg-white"
+      className={`py-12 sm:py-16 relative overflow-hidden ${
+        isDarkMode ? "bg-gray-900" : "bg-emerald-50"
       }`}
     >
       {/* Background accents */}

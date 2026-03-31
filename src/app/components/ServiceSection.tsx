@@ -55,22 +55,14 @@ const ServiceSection: React.FC<ServiceSectionProps> = ({
               What I Offer
             </span>
           </div>
-          <h2
-            className={`text-3xl md:text-4xl font-bold mb-3 ${
-              isDarkMode ? "text-white" : "text-slate-900"
-            }`}
-          >
+          <h2 className={`text-3xl md:text-4xl font-bold mb-3 ${isDarkMode ? "text-white" : "text-slate-900"}`}>
             Professional{" "}
             <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
               Services
             </span>
           </h2>
           <div className="w-24 h-1 mx-auto mb-4 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
-          <p
-            className={`text-sm md:text-base max-w-2xl mx-auto ${
-              isDarkMode ? "text-gray-400" : "text-slate-600"
-            }`}
-          >
+          <p className={`text-sm md:text-base max-w-2xl mx-auto ${isDarkMode ? "text-gray-400" : "text-slate-600"}`}>
             How I can help bring your digital vision to life
           </p>
         </div>
@@ -104,14 +96,10 @@ const ServiceSection: React.FC<ServiceSectionProps> = ({
             return (
               <div
                 key={index}
-                className={`group relative text-center p-6 rounded-2xl transition-all duration-300 border-2 hover:scale-[1.05] ${
+                className={`group relative text-center p-6 rounded-2xl transition-all duration-300 border-2 hover:scale-[1.05] hover:shadow-2xl ${
                   isDarkMode
-                    ? `bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50 hover:shadow-2xl ${
-                        borderGradients[index % 3]
-                      }`
-                    : `bg-gradient-to-br from-white to-slate-50 border-slate-200 hover:shadow-2xl ${
-                        borderGradients[index % 3]
-                      }`
+                    ? `bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50 ${borderGradients[index % 3]}`
+                    : `bg-gradient-to-br from-white to-slate-50 border-slate-200 ${borderGradients[index % 3]}`
                 }`}
               >
                 {/* Icon */}
@@ -125,20 +113,14 @@ const ServiceSection: React.FC<ServiceSectionProps> = ({
 
                 {/* Title */}
                 <h3
-                  className={`text-xl font-bold mb-3 transition-colors duration-300 ${
-                    isDarkMode
-                      ? `text-white ${hoverColors[index % 3]}`
-                      : `text-slate-900 ${hoverColors[index % 3]}`
-                  }`}
+                  className={`text-xl font-bold mb-3 transition-colors duration-300 ${isDarkMode ? "text-white" : "text-slate-900"} ${hoverColors[index % 3]}`}
                 >
                   {service.title}
                 </h3>
 
                 {/* Description */}
                 <p
-                  className={`text-sm leading-relaxed ${
-                    isDarkMode ? "text-gray-300" : "text-slate-600"
-                  }`}
+                  className={`text-sm leading-relaxed ${isDarkMode ? "text-gray-400" : "text-slate-600"}`}
                 >
                   {service.description}
                 </p>

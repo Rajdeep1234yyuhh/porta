@@ -38,6 +38,18 @@ body {
   100% { opacity: 1; transform: translateY(0)    scale(1); }
 }
 
+/* Infinite marquee for tech carousel */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
 /* FAB options — pop upward out of the button */
 @keyframes popUpFromButton {
   0%   { opacity: 0; transform: translateY(16px) scale(0.65); }

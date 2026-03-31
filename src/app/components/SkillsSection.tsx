@@ -1,10 +1,27 @@
 "use client";
 
+import {
+  SiNextdotjs, SiReact, SiShopify, SiTailwindcss, SiPython, SiNodedotjs,
+  SiWordpress, SiJavascript, SiExpress, SiMui, SiFirebase, SiMongodb,
+  SiOpenai, SiHtml5, SiHuggingface, SiPhp, SiFigma,
+} from "react-icons/si";
+import { MdDesignServices, MdWeb } from "react-icons/md";
+
 interface Skill {
   name: string;
   level: number;
-  icon: string;
+  color: string;
+  bg: string;
 }
+
+const ICON_MAP: Record<string, React.ComponentType<{ size?: number; color?: string }>> = {
+  "Next.js": SiNextdotjs,
+  "React": SiReact,
+  "Shopify": SiShopify,
+  "Tailwind CSS": SiTailwindcss,
+  "Python": SiPython,
+  "Node.js": SiNodedotjs,
+};
 
 interface SkillsSectionProps {
   isDarkMode: boolean;
@@ -72,97 +89,154 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
 
         {/* Main Skills Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 mb-12">
-          {skills.map((skill, index) => (
-            <div
-              key={skill.name}
-              className={`group relative p-6 rounded-2xl transition-all duration-300 cursor-pointer hover:scale-105 border ${
-                isDarkMode
-                  ? "bg-gray-800/50 backdrop-blur-sm border-gray-700/50 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/20"
-                  : "bg-white border-slate-200 hover:border-blue-300 hover:shadow-2xl hover:shadow-blue-500/10"
-              }`}
-              style={{
-                animationDelay: `${index * 50}ms`,
-              }}
-            >
-              {/* Gradient Overlay on Hover */}
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-blue-500/0 to-purple-500/0 group-hover:from-blue-500/5 group-hover:to-purple-500/5 transition-all duration-300"></div>
-
-              <div className="relative flex flex-col items-center text-center space-y-3">
-                {/* Icon Container */}
+          {skills.map((skill) => {
+            const Icon = ICON_MAP[skill.name];
+            return (
+              <div
+                key={skill.name}
+                className={`group relative p-6 rounded-2xl cursor-pointer border overflow-hidden
+                  transition-all duration-500 ease-out hover:-translate-y-2
+                  ${isDarkMode
+                    ? "bg-gray-800/50 backdrop-blur-sm border-gray-700/50"
+                    : "bg-white border-slate-200"
+                  }`}
+                style={{
+                  ["--brand" as string]: skill.color,
+                  transition: "transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease",
+                }}
+                onMouseEnter={(e) => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = `0 20px 60px -10px ${skill.color}55`;
+                  (e.currentTarget as HTMLElement).style.borderColor = `${skill.color}66`;
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.boxShadow = "";
+                  (e.currentTarget as HTMLElement).style.borderColor = "";
+                }}
+              >
+                {/* Top brand color line */}
                 <div
-                  className={`w-16 h-16 rounded-xl flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-110 ${
-                    isDarkMode
-                      ? "bg-gradient-to-br from-gray-700 to-gray-800 group-hover:from-gray-600 group-hover:to-gray-700"
-                      : "bg-gradient-to-br from-slate-100 to-slate-200 group-hover:from-blue-50 group-hover:to-purple-50"
-                  }`}
-                >
-                  <span className="text-3xl transition-all duration-300 group-hover:scale-110">
-                    {skill.icon}
-                  </span>
-                </div>
+                  className="absolute top-0 left-0 right-0 h-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-t-2xl"
+                  style={{ background: skill.color }}
+                />
 
-                {/* Skill Name */}
-                <h3
-                  className={`text-sm font-bold transition-colors duration-300 ${
-                    isDarkMode
-                      ? "text-gray-200 group-hover:text-white"
-                      : "text-slate-700 group-hover:text-slate-900"
-                  }`}
-                >
-                  {skill.name}
-                </h3>
+                {/* Shine sweep */}
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                  style={{ background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.06) 50%, transparent 70%)" }}
+                />
 
-                {/* Expert Badge */}
-                <div
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold transition-all duration-300 ${
-                    isDarkMode
-                      ? "bg-green-500/20 text-green-400 border border-green-500/30 group-hover:bg-green-500/30 group-hover:border-green-500/50"
-                      : "bg-green-50 text-green-700 border border-green-200 group-hover:bg-green-100 group-hover:border-green-300"
-                  }`}
-                >
-                  <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-1.5 animate-pulse"></div>
-                  Expert
+                <div className="relative flex flex-col items-center text-center space-y-3">
+                  {/* Icon */}
+                  <div
+                    className="w-16 h-16 rounded-xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6"
+                    style={{ background: skill.bg }}
+                  >
+                    {Icon && (
+                      <Icon
+                        size={32}
+                        color={skill.color}
+                      />
+                    )}
+                  </div>
+
+                  {/* Skill Name */}
+                  <h3
+                    className={`text-sm font-bold transition-all duration-300 group-hover:scale-105 ${
+                      isDarkMode ? "text-gray-200 group-hover:text-white" : "text-slate-700 group-hover:text-slate-900"
+                    }`}
+                  >
+                    {skill.name}
+                  </h3>
+
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
-        {/* Additional Tech Stack */}
-        <div className="text-center">
-          <h3
-            className={`text-2xl font-bold mb-6 ${
-              isDarkMode ? "text-white" : "text-slate-900"
-            }`}
-          >
+        {/* Additional Tech Stack — Marquee */}
+        <div>
+          <h3 className={`text-2xl font-bold mb-6 text-center ${isDarkMode ? "text-white" : "text-slate-900"}`}>
             Additional Technologies
           </h3>
-          <div className="flex flex-wrap justify-center gap-3 max-w-5xl mx-auto">
-            {[
-              "JavaScript",
-              "HTML5",
-              "CSS3",
-              "Tailwind CSS",
-              "Node.js",
-              "MongoDB",
-              "PostgreSQL",
-              "Git",
-              "Docker",
-              "AWS",
-              "Vercel",
-              "Figma",
-            ].map((tech) => (
-              <div
-                key={tech}
-                className={`group px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 cursor-pointer border ${
-                  isDarkMode
-                    ? "bg-gray-800/80 hover:bg-gray-700 text-gray-300 hover:text-white border-gray-700/50 hover:border-blue-500/50 hover:shadow-lg hover:shadow-blue-500/20"
-                    : "bg-white hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50 text-slate-700 hover:text-slate-900 border-slate-200 hover:border-blue-300 hover:shadow-lg"
-                }`}
-              >
-                {tech}
-              </div>
-            ))}
+
+          {/* Fade edges */}
+          <div className="relative overflow-hidden"
+            style={{
+              maskImage: "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
+              WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%)",
+            }}
+          >
+            <div className="flex animate-marquee w-max">
+              {[
+                { name: "WordPress",   Icon: SiWordpress,   color: "#21759B", bg: "#0d3349" },
+                { name: "JavaScript",  Icon: SiJavascript,  color: "#F7DF1E", bg: "#1a1a00" },
+                { name: "Express",     Icon: SiExpress,     color: "#ffffff", bg: "#1a1a1a" },
+                { name: "Node.js",     Icon: SiNodedotjs,   color: "#68A063", bg: "#1a1a1a" },
+                { name: "Tailwind",    Icon: SiTailwindcss, color: "#38BDF8", bg: "#0f172a" },
+                { name: "Material UI", Icon: SiMui,         color: "#007FFF", bg: "#0a1929" },
+                { name: "Firebase",    Icon: SiFirebase,    color: "#FFCA28", bg: "#1a1200" },
+                { name: "MongoDB",     Icon: SiMongodb,     color: "#47A248", bg: "#0d1f0d" },
+                { name: "OpenAI API",  Icon: SiOpenai,      color: "#ffffff", bg: "#1a1a1a" },
+                { name: "LLaMA 2",     Icon: SiHuggingface, color: "#FFD21E", bg: "#1a1400" },
+                { name: "BERT",        Icon: SiHuggingface, color: "#FFD21E", bg: "#1a1400" },
+                { name: "MuRIL",       Icon: SiHuggingface, color: "#FFD21E", bg: "#1a1400" },
+                { name: "HTML5",          Icon: SiHtml5,       color: "#E34F26", bg: "#2a0e00" },
+                { name: "Liquid",         Icon: SiShopify,     color: "#96BF48", bg: "#1a2a0d" },
+                { name: "PHP",            Icon: SiPhp,         color: "#777BB4", bg: "#1a1a2e" },
+                { name: "React",          Icon: SiReact,       color: "#61DAFB", bg: "#20232a" },
+                { name: "Software Design",Icon: MdDesignServices, color: "#a78bfa", bg: "#1e1030" },
+                { name: "Web Design",     Icon: MdWeb,         color: "#34d399", bg: "#0d1f18" },
+                { name: "Figma",          Icon: SiFigma,       color: "#F24E1E", bg: "#2a0a00" },
+                // duplicate for seamless loop
+                { name: "WordPress",      Icon: SiWordpress,   color: "#21759B", bg: "#0d3349" },
+                { name: "JavaScript",     Icon: SiJavascript,  color: "#F7DF1E", bg: "#1a1a00" },
+                { name: "Express",        Icon: SiExpress,     color: "#ffffff", bg: "#1a1a1a" },
+                { name: "Node.js",        Icon: SiNodedotjs,   color: "#68A063", bg: "#1a1a1a" },
+                { name: "Tailwind",       Icon: SiTailwindcss, color: "#38BDF8", bg: "#0f172a" },
+                { name: "Material UI",    Icon: SiMui,         color: "#007FFF", bg: "#0a1929" },
+                { name: "Firebase",       Icon: SiFirebase,    color: "#FFCA28", bg: "#1a1200" },
+                { name: "MongoDB",        Icon: SiMongodb,     color: "#47A248", bg: "#0d1f0d" },
+                { name: "OpenAI API",     Icon: SiOpenai,      color: "#ffffff", bg: "#1a1a1a" },
+                { name: "LLaMA 2",        Icon: SiHuggingface, color: "#FFD21E", bg: "#1a1400" },
+                { name: "BERT",           Icon: SiHuggingface, color: "#FFD21E", bg: "#1a1400" },
+                { name: "MuRIL",          Icon: SiHuggingface, color: "#FFD21E", bg: "#1a1400" },
+                { name: "HTML5",          Icon: SiHtml5,       color: "#E34F26", bg: "#2a0e00" },
+                { name: "Liquid",         Icon: SiShopify,     color: "#96BF48", bg: "#1a2a0d" },
+                { name: "PHP",            Icon: SiPhp,         color: "#777BB4", bg: "#1a1a2e" },
+                { name: "React",          Icon: SiReact,       color: "#61DAFB", bg: "#20232a" },
+                { name: "Software Design",Icon: MdDesignServices, color: "#a78bfa", bg: "#1e1030" },
+                { name: "Web Design",     Icon: MdWeb,         color: "#34d399", bg: "#0d1f18" },
+                { name: "Figma",          Icon: SiFigma,       color: "#F24E1E", bg: "#2a0a00" },
+              ].map((tech, i) => (
+                <div
+                  key={i}
+                  className="flex flex-col items-center gap-2 mx-4 group cursor-default"
+                >
+                  <div
+                    className="w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1"
+                    style={{
+                      background: tech.bg,
+                      boxShadow: `0 0 0 1px ${tech.color}22`,
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 25px -4px ${tech.color}66`;
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 1px ${tech.color}22`;
+                    }}
+                  >
+                    <tech.Icon size={28} color={tech.color} />
+                  </div>
+                  <span
+                    className={`text-xs font-medium whitespace-nowrap transition-colors duration-300 ${
+                      isDarkMode ? "text-gray-500 group-hover:text-gray-300" : "text-slate-400 group-hover:text-slate-700"
+                    }`}
+                  >
+                    {tech.name}
+                  </span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
