@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://yourdomain.com"),
+  metadataBase: new URL("https://rajdeepkotoky.vercel.app"),
   title: "Rajdeep Kotoky — Web Developer & AI/ML Engineer",
   description:
     "Portfolio of Rajdeep Kotoky, a Full Stack Web Developer specializing in Next.js, React, Shopify, and AI/ML integrations.",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     title: "Rajdeep Kotoky — Web Developer & AI/ML Engineer",
     description:
       "Full Stack Web Developer specializing in Next.js, React, Shopify, and AI/ML integrations.",
-    url: "https://yourdomain.com",
+    url: "https://rajdeepkotoky.vercel.app",
     siteName: "Rajdeep Kotoky Portfolio",
     images: [
       {
