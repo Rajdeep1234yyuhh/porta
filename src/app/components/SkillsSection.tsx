@@ -12,6 +12,8 @@ interface Skill {
   level: number;
   color: string;
   bg: string;
+  lightBg?: string;
+  lightColor?: string;
 }
 
 const ICON_MAP: Record<string, React.ComponentType<{ size?: number; color?: string }>> = {
@@ -128,12 +130,12 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
                   {/* Icon */}
                   <div
                     className="w-16 h-16 rounded-xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6"
-                    style={{ background: skill.bg }}
+                    style={{ background: isDarkMode ? skill.bg : (skill.lightBg ?? skill.bg) }}
                   >
                     {Icon && (
                       <Icon
                         size={32}
-                        color={skill.color}
+                        color={isDarkMode ? skill.color : (skill.lightColor ?? skill.color)}
                       />
                     )}
                   </div>
@@ -168,45 +170,45 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
           >
             <div className="flex animate-marquee w-max">
               {[
-                { name: "WordPress",   Icon: SiWordpress,   color: "#21759B", bg: "#0d3349" },
-                { name: "JavaScript",  Icon: SiJavascript,  color: "#F7DF1E", bg: "#1a1a00" },
-                { name: "Express",     Icon: SiExpress,     color: "#ffffff", bg: "#1a1a1a" },
-                { name: "Node.js",     Icon: SiNodedotjs,   color: "#68A063", bg: "#1a1a1a" },
-                { name: "Tailwind",    Icon: SiTailwindcss, color: "#38BDF8", bg: "#0f172a" },
-                { name: "Material UI", Icon: SiMui,         color: "#007FFF", bg: "#0a1929" },
-                { name: "Firebase",    Icon: SiFirebase,    color: "#FFCA28", bg: "#1a1200" },
-                { name: "MongoDB",     Icon: SiMongodb,     color: "#47A248", bg: "#0d1f0d" },
-                { name: "OpenAI API",  Icon: SiOpenai,      color: "#ffffff", bg: "#1a1a1a" },
-                { name: "LLaMA 2",     Icon: SiHuggingface, color: "#FFD21E", bg: "#1a1400" },
-                { name: "BERT",        Icon: SiHuggingface, color: "#FFD21E", bg: "#1a1400" },
-                { name: "MuRIL",       Icon: SiHuggingface, color: "#FFD21E", bg: "#1a1400" },
-                { name: "HTML5",          Icon: SiHtml5,       color: "#E34F26", bg: "#2a0e00" },
-                { name: "Liquid",         Icon: SiShopify,     color: "#96BF48", bg: "#1a2a0d" },
-                { name: "PHP",            Icon: SiPhp,         color: "#777BB4", bg: "#1a1a2e" },
-                { name: "React",          Icon: SiReact,       color: "#61DAFB", bg: "#20232a" },
-                { name: "Software Design",Icon: MdDesignServices, color: "#a78bfa", bg: "#1e1030" },
-                { name: "Web Design",     Icon: MdWeb,         color: "#34d399", bg: "#0d1f18" },
-                { name: "Figma",          Icon: SiFigma,       color: "#F24E1E", bg: "#2a0a00" },
+                { name: "WordPress",      Icon: SiWordpress,      color: "#21759B", bg: "#0d3349", lightBg: "#e8f4fb", lightColor: "#21759B" },
+                { name: "JavaScript",     Icon: SiJavascript,     color: "#F7DF1E", bg: "#1a1a00", lightBg: "#fefce8", lightColor: "#a16207" },
+                { name: "Express",        Icon: SiExpress,        color: "#ffffff", bg: "#1a1a1a", lightBg: "#f1f1f1", lightColor: "#333333" },
+                { name: "Node.js",        Icon: SiNodedotjs,      color: "#68A063", bg: "#1a1a1a", lightBg: "#edf5e8", lightColor: "#166534" },
+                { name: "Tailwind",       Icon: SiTailwindcss,    color: "#38BDF8", bg: "#0f172a", lightBg: "#e0f4fe", lightColor: "#0284c7" },
+                { name: "Material UI",    Icon: SiMui,            color: "#007FFF", bg: "#0a1929", lightBg: "#e8f3ff", lightColor: "#0059b3" },
+                { name: "Firebase",       Icon: SiFirebase,       color: "#FFCA28", bg: "#1a1200", lightBg: "#fffbea", lightColor: "#b45309" },
+                { name: "MongoDB",        Icon: SiMongodb,        color: "#47A248", bg: "#0d1f0d", lightBg: "#edf7ed", lightColor: "#166534" },
+                { name: "OpenAI API",     Icon: SiOpenai,         color: "#ffffff", bg: "#1a1a1a", lightBg: "#f1f1f1", lightColor: "#111111" },
+                { name: "LLaMA 2",        Icon: SiHuggingface,    color: "#FFD21E", bg: "#1a1400", lightBg: "#fffbea", lightColor: "#92400e" },
+                { name: "BERT",           Icon: SiHuggingface,    color: "#FFD21E", bg: "#1a1400", lightBg: "#fffbea", lightColor: "#92400e" },
+                { name: "MuRIL",          Icon: SiHuggingface,    color: "#FFD21E", bg: "#1a1400", lightBg: "#fffbea", lightColor: "#92400e" },
+                { name: "HTML5",          Icon: SiHtml5,          color: "#E34F26", bg: "#2a0e00", lightBg: "#fef0eb", lightColor: "#c2410c" },
+                { name: "Liquid",         Icon: SiShopify,        color: "#96BF48", bg: "#1a2a0d", lightBg: "#eef6e0", lightColor: "#4a7a10" },
+                { name: "PHP",            Icon: SiPhp,            color: "#777BB4", bg: "#1a1a2e", lightBg: "#f0f0f9", lightColor: "#4f46e5" },
+                { name: "React",          Icon: SiReact,          color: "#61DAFB", bg: "#20232a", lightBg: "#e0f8fe", lightColor: "#0891b2" },
+                { name: "Software Design",Icon: MdDesignServices, color: "#a78bfa", bg: "#1e1030", lightBg: "#f5f0ff", lightColor: "#7c3aed" },
+                { name: "Web Design",     Icon: MdWeb,            color: "#34d399", bg: "#0d1f18", lightBg: "#ecfdf5", lightColor: "#059669" },
+                { name: "Figma",          Icon: SiFigma,          color: "#F24E1E", bg: "#2a0a00", lightBg: "#fef0eb", lightColor: "#c2410c" },
                 // duplicate for seamless loop
-                { name: "WordPress",      Icon: SiWordpress,   color: "#21759B", bg: "#0d3349" },
-                { name: "JavaScript",     Icon: SiJavascript,  color: "#F7DF1E", bg: "#1a1a00" },
-                { name: "Express",        Icon: SiExpress,     color: "#ffffff", bg: "#1a1a1a" },
-                { name: "Node.js",        Icon: SiNodedotjs,   color: "#68A063", bg: "#1a1a1a" },
-                { name: "Tailwind",       Icon: SiTailwindcss, color: "#38BDF8", bg: "#0f172a" },
-                { name: "Material UI",    Icon: SiMui,         color: "#007FFF", bg: "#0a1929" },
-                { name: "Firebase",       Icon: SiFirebase,    color: "#FFCA28", bg: "#1a1200" },
-                { name: "MongoDB",        Icon: SiMongodb,     color: "#47A248", bg: "#0d1f0d" },
-                { name: "OpenAI API",     Icon: SiOpenai,      color: "#ffffff", bg: "#1a1a1a" },
-                { name: "LLaMA 2",        Icon: SiHuggingface, color: "#FFD21E", bg: "#1a1400" },
-                { name: "BERT",           Icon: SiHuggingface, color: "#FFD21E", bg: "#1a1400" },
-                { name: "MuRIL",          Icon: SiHuggingface, color: "#FFD21E", bg: "#1a1400" },
-                { name: "HTML5",          Icon: SiHtml5,       color: "#E34F26", bg: "#2a0e00" },
-                { name: "Liquid",         Icon: SiShopify,     color: "#96BF48", bg: "#1a2a0d" },
-                { name: "PHP",            Icon: SiPhp,         color: "#777BB4", bg: "#1a1a2e" },
-                { name: "React",          Icon: SiReact,       color: "#61DAFB", bg: "#20232a" },
-                { name: "Software Design",Icon: MdDesignServices, color: "#a78bfa", bg: "#1e1030" },
-                { name: "Web Design",     Icon: MdWeb,         color: "#34d399", bg: "#0d1f18" },
-                { name: "Figma",          Icon: SiFigma,       color: "#F24E1E", bg: "#2a0a00" },
+                { name: "WordPress",      Icon: SiWordpress,      color: "#21759B", bg: "#0d3349", lightBg: "#e8f4fb", lightColor: "#21759B" },
+                { name: "JavaScript",     Icon: SiJavascript,     color: "#F7DF1E", bg: "#1a1a00", lightBg: "#fefce8", lightColor: "#a16207" },
+                { name: "Express",        Icon: SiExpress,        color: "#ffffff", bg: "#1a1a1a", lightBg: "#f1f1f1", lightColor: "#333333" },
+                { name: "Node.js",        Icon: SiNodedotjs,      color: "#68A063", bg: "#1a1a1a", lightBg: "#edf5e8", lightColor: "#166534" },
+                { name: "Tailwind",       Icon: SiTailwindcss,    color: "#38BDF8", bg: "#0f172a", lightBg: "#e0f4fe", lightColor: "#0284c7" },
+                { name: "Material UI",    Icon: SiMui,            color: "#007FFF", bg: "#0a1929", lightBg: "#e8f3ff", lightColor: "#0059b3" },
+                { name: "Firebase",       Icon: SiFirebase,       color: "#FFCA28", bg: "#1a1200", lightBg: "#fffbea", lightColor: "#b45309" },
+                { name: "MongoDB",        Icon: SiMongodb,        color: "#47A248", bg: "#0d1f0d", lightBg: "#edf7ed", lightColor: "#166534" },
+                { name: "OpenAI API",     Icon: SiOpenai,         color: "#ffffff", bg: "#1a1a1a", lightBg: "#f1f1f1", lightColor: "#111111" },
+                { name: "LLaMA 2",        Icon: SiHuggingface,    color: "#FFD21E", bg: "#1a1400", lightBg: "#fffbea", lightColor: "#92400e" },
+                { name: "BERT",           Icon: SiHuggingface,    color: "#FFD21E", bg: "#1a1400", lightBg: "#fffbea", lightColor: "#92400e" },
+                { name: "MuRIL",          Icon: SiHuggingface,    color: "#FFD21E", bg: "#1a1400", lightBg: "#fffbea", lightColor: "#92400e" },
+                { name: "HTML5",          Icon: SiHtml5,          color: "#E34F26", bg: "#2a0e00", lightBg: "#fef0eb", lightColor: "#c2410c" },
+                { name: "Liquid",         Icon: SiShopify,        color: "#96BF48", bg: "#1a2a0d", lightBg: "#eef6e0", lightColor: "#4a7a10" },
+                { name: "PHP",            Icon: SiPhp,            color: "#777BB4", bg: "#1a1a2e", lightBg: "#f0f0f9", lightColor: "#4f46e5" },
+                { name: "React",          Icon: SiReact,          color: "#61DAFB", bg: "#20232a", lightBg: "#e0f8fe", lightColor: "#0891b2" },
+                { name: "Software Design",Icon: MdDesignServices, color: "#a78bfa", bg: "#1e1030", lightBg: "#f5f0ff", lightColor: "#7c3aed" },
+                { name: "Web Design",     Icon: MdWeb,            color: "#34d399", bg: "#0d1f18", lightBg: "#ecfdf5", lightColor: "#059669" },
+                { name: "Figma",          Icon: SiFigma,          color: "#F24E1E", bg: "#2a0a00", lightBg: "#fef0eb", lightColor: "#c2410c" },
               ].map((tech, i) => (
                 <div
                   key={i}
@@ -215,17 +217,17 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
                   <div
                     className="w-14 h-14 rounded-xl flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-1"
                     style={{
-                      background: tech.bg,
-                      boxShadow: `0 0 0 1px ${tech.color}22`,
+                      background: isDarkMode ? tech.bg : tech.lightBg,
+                      boxShadow: `0 0 0 1px ${isDarkMode ? tech.color : tech.lightColor}22`,
                     }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 25px -4px ${tech.color}66`;
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 25px -4px ${isDarkMode ? tech.color : tech.lightColor}66`;
                     }}
                     onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 1px ${tech.color}22`;
+                      (e.currentTarget as HTMLElement).style.boxShadow = `0 0 0 1px ${isDarkMode ? tech.color : tech.lightColor}22`;
                     }}
                   >
-                    <tech.Icon size={28} color={tech.color} />
+                    <tech.Icon size={28} color={isDarkMode ? tech.color : tech.lightColor} />
                   </div>
                   <span
                     className={`text-xs font-medium whitespace-nowrap transition-colors duration-300 ${

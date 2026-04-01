@@ -53,12 +53,12 @@ export default function Home() {
   };
 
   const skills = [
-    { name: "Next.js", level: 90, color: "#ffffff", bg: "#000000" },
-    { name: "React", level: 95, color: "#61DAFB", bg: "#20232a" },
-    { name: "Shopify", level: 85, color: "#96BF48", bg: "#1a1a1a" },
-    { name: "Tailwind CSS", level: 95, color: "#38BDF8", bg: "#0f172a" },
-    { name: "Python", level: 75, color: "#FFD343", bg: "#1e3a5f" },
-    { name: "Node.js", level: 80, color: "#68A063", bg: "#1a1a1a" },
+    { name: "Next.js",     level: 90, color: "#ffffff", bg: "#000000", lightBg: "#f0f0f0", lightColor: "#000000" },
+    { name: "React",       level: 95, color: "#61DAFB", bg: "#20232a", lightBg: "#e0f8fe", lightColor: "#0891b2" },
+    { name: "Shopify",     level: 85, color: "#96BF48", bg: "#1a1a1a", lightBg: "#eef6e0", lightColor: "#4a7a10" },
+    { name: "Tailwind CSS",level: 95, color: "#38BDF8", bg: "#0f172a", lightBg: "#e0f4fe", lightColor: "#0284c7" },
+    { name: "Python",      level: 75, color: "#FFD343", bg: "#1e3a5f", lightBg: "#fef9e7", lightColor: "#b45309" },
+    { name: "Node.js",     level: 80, color: "#68A063", bg: "#1a1a1a", lightBg: "#edf5e8", lightColor: "#166534" },
   ];
 
   const services = [
