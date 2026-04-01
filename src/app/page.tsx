@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Code, Database, Globe } from "lucide-react";
 import Contact from "./components/Contact";
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
@@ -61,26 +60,6 @@ export default function Home() {
     { name: "Node.js",     level: 80, color: "#68A063", bg: "#1a1a1a", lightBg: "#edf5e8", lightColor: "#166534" },
   ];
 
-  const services = [
-    {
-      icon: <Globe className="w-8 h-8" />,
-      title: "Web Development",
-      description:
-        "Custom websites and web applications using modern frameworks like Next.js and React.",
-    },
-    {
-      icon: <Database className="w-8 h-8" />,
-      title: "E-commerce Solutions",
-      description:
-        "Shopify stores, custom e-commerce platforms, and payment gateway integrations.",
-    },
-    {
-      icon: <Code className="w-8 h-8" />,
-      title: "AI/ML Integration",
-      description:
-        "Machine learning solutions and AI-powered features for web applications.",
-    },
-  ];
 
   return (
     <div
@@ -108,7 +87,7 @@ export default function Home() {
       <ProjectSection isDarkMode={isDarkMode} projects={allProjects} />
 
       {/* Services Section */}
-      <ServiceSection isDarkMode={isDarkMode} services={services} />
+      <ServiceSection isDarkMode={isDarkMode} />
 
       {/* Quick Solutions Section */}
       <QuickSolutions
