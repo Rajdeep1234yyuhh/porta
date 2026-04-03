@@ -54,6 +54,20 @@ export const metadata: Metadata = {
   },
 };
 
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Rajdeep Kotoky",
+  url: "https://rajdeepkotoky.vercel.app",
+  image: "https://rajdeepkotoky.vercel.app/og-image.jpg",
+  jobTitle: "Full Stack Developer & AI/ML Engineer",
+  sameAs: [
+    "https://github.com/Rajdeep1234yyuhh",
+    "https://www.linkedin.com/in/rajdeep-kotoky-2273561a0/",
+  ],
+  knowsAbout: ["Next.js", "React", "Shopify", "Tailwind CSS", "Python", "Node.js", "AI/ML"],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -64,6 +78,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <LenisProvider>{children}</LenisProvider>
       </body>
     </html>
