@@ -1,5 +1,5 @@
-import CubeWorld from "../components/CubeWorld";
+import CubePageClient from "../components/CubePageClient";
 
 export default function CubePage() {
-  return <CubeWorld />;
+  return <CubePageClient />;
 }
