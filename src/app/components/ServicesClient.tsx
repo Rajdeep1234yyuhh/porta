@@ -191,7 +191,7 @@ export default function ServicesClient() {
         </p>
         <Link
           href="/#contact"
-          className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-md transition-all duration-200 hover:scale-105"
+          className={`inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-semibold transition-all duration-200 ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-gray-900 text-white hover:bg-gray-800"}`}
         >
           Get In Touch
         </Link>

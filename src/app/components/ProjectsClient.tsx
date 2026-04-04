@@ -552,7 +552,7 @@ export default function ProjectsClient() {
                 onClick={() => setSelectedCategory(category)}
                 className={`px-4 py-1.5 rounded-full text-sm font-medium border transition-all duration-200 ${
                   active
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white border-transparent shadow-sm"
+                    ? isDarkMode ? "bg-white text-gray-900 border-transparent" : "bg-gray-900 text-white border-transparent"
                     : isDarkMode
                     ? "bg-gray-800/60 border-gray-700/50 text-gray-300 hover:border-purple-500/50 hover:text-white"
                     : "bg-white border-slate-200 text-slate-600 hover:border-purple-300 hover:text-purple-700"

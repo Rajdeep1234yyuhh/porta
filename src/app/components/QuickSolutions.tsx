@@ -221,10 +221,8 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({
             {/* Single trigger button */}
             <button
               onClick={() => setContactOpen((o) => !o)}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white text-sm
-                bg-gradient-to-r from-green-500 to-emerald-600
-                hover:from-green-600 hover:to-emerald-700
-                shadow-md hover:shadow-green-500/30 transition-all duration-200 hover:scale-105"
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold text-white text-sm bg-green-600 hover:bg-green-500 active:translate-y-[3px] transition-all duration-100"
+              style={{ boxShadow: "0 4px 0 0 #166534" }}
             >
               <Zap className="w-4 h-4" />
               Get Help Now
@@ -242,7 +240,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({
                   href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ animation: "popFromButton 0.35s cubic-bezier(0.34,1.56,0.64,1) both", animationDelay: "0ms" }}
+                  style={{ animation: "popFromButton 0.35s cubic-bezier(0.16, 1, 0.3, 1) both", animationDelay: "0ms" }}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-white text-sm
                     bg-[#25D366] hover:bg-[#1ebe5d]
                     shadow-md hover:shadow-[#25D366]/30 transition-colors duration-200 hover:scale-105"
@@ -254,17 +252,15 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({
                 </a>
                 <a
                   href={`tel:+${PHONE}`}
-                  style={{ animation: "popFromButton 0.35s cubic-bezier(0.34,1.56,0.64,1) both", animationDelay: "90ms" }}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-white text-sm
-                    bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700
-                    shadow-md hover:shadow-blue-500/30 transition-colors duration-200 hover:scale-105"
+                  style={{ animation: "popFromButton 0.35s cubic-bezier(0.16, 1, 0.3, 1) both", animationDelay: "90ms" }}
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-white text-sm bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
                 >
                   <Phone className="w-4 h-4" />
                   Call Me
                 </a>
                 <button
                   onClick={() => { scrollToSection("contact"); setContactOpen(false); }}
-                  style={{ animation: "popFromButton 0.35s cubic-bezier(0.34,1.56,0.64,1) both", animationDelay: "180ms" }}
+                  style={{ animation: "popFromButton 0.35s cubic-bezier(0.16, 1, 0.3, 1) both", animationDelay: "180ms" }}
                   className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-white text-sm
                     bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700
                     shadow-md hover:shadow-purple-500/30 transition-colors duration-200 hover:scale-105"

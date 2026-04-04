@@ -2,9 +2,12 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
-import { Menu, X, Sun, Moon, Phone, ChevronDown, Info } from "lucide-react";
+import {
+  Sun, Moon, Menu, X, Home, User, Code2, FolderOpen,
+  Briefcase, Mail, Zap, Phone, Info, ChevronDown,
+} from "lucide-react";
 
-const PHONE = "8638752315"; // same as QuickSolutions — update once here
+const PHONE = "8638752315";
 
 const WhatsAppIcon = () => (
   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -12,365 +15,273 @@ const WhatsAppIcon = () => (
   </svg>
 );
 
-const Navbar = ({
-  isDarkMode,
-  toggleTheme,
-  isMenuOpen,
-  setIsMenuOpen,
-  scrollY,
-  scrollToSection,
-}) => {
+const DockItem = ({ icon: Icon, label, onClick, active, isDarkMode }) => (
+  <button
+    onClick={onClick}
+    className={`group relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200
+      ${active
+        ? "bg-violet-600 text-white shadow-lg shadow-violet-500/30"
+        : isDarkMode
+          ? "text-gray-400 hover:text-white hover:bg-white/10"
+          : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+      }`}
+  >
+    <Icon className="w-5 h-5" />
+    <span className={`pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-150 border ${
+      isDarkMode ? "bg-gray-900 text-white border-white/10" : "bg-gray-900 text-white border-gray-700"
+    }`}>
+      {label}
+    </span>
+  </button>
+);
+
+const Navbar = ({ isDarkMode, toggleTheme, isMenuOpen, setIsMenuOpen, scrollY, scrollToSection }) => {
+  const [activeSection, setActiveSection] = useState("home");
   const [quickOpen, setQuickOpen] = useState(false);
   const quickRef = useRef(null);
 
+  const navItems = [
+    { label: "Home",     icon: Home,       section: "home" },
+    { label: "About",    icon: User,       section: "about" },
+    { label: "Skills",   icon: Code2,      section: "skills" },
+    { label: "Projects", icon: FolderOpen, section: "projects" },
+    { label: "Services", icon: Briefcase,  section: "services" },
+    { label: "Contact",  icon: Mail,       section: "contact" },
+  ];
+
+  // Track active section on scroll
+  useEffect(() => {
+    const handler = () => {
+      const sections = ["about", "skills", "projects", "services", "contact"];
+      let current = "home";
+      for (const id of sections) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= 120) current = id;
+      }
+      setActiveSection(current);
+    };
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => window.removeEventListener("scroll", handler);
+  }, []);
+
   useEffect(() => {
     const handleOutside = (e) => {
-      if (quickRef.current && !quickRef.current.contains(e.target)) {
-        setQuickOpen(false);
-      }
+      if (quickRef.current && !quickRef.current.contains(e.target)) setQuickOpen(false);
     };
     document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
   }, []);
 
-  const handleQuickDetails = () => {
-    if (window.location.pathname === "/") {
-      scrollToSection("quick-solutions");
+  const handleNav = (section) => {
+    if (section === "home") {
+      if (window.location.pathname === "/") window.scrollTo({ top: 0, behavior: "smooth" });
+      else window.location.href = "/";
     } else {
-      window.location.href = "/#quick-solutions";
+      scrollToSection(section);
     }
+    setIsMenuOpen(false);
+  };
+
+  const handleQuickDetails = () => {
+    if (window.location.pathname === "/") scrollToSection("quick-solutions");
+    else window.location.href = "/#quick-solutions";
     setQuickOpen(false);
     setIsMenuOpen(false);
   };
 
   return (
-    <nav
-      className={`fixed w-full z-50 transition-all duration-500 ${
-        scrollY > 50
-          ? isDarkMode
-            ? "bg-gray-900/95 backdrop-blur-xl shadow-xl border-b border-gray-700/60"
-            : "bg-white/95 backdrop-blur-xl shadow-xl border-b border-slate-200/60"
-          : isDarkMode
-            ? "bg-gray-900/20 backdrop-blur-sm"
-            : "bg-white/20 backdrop-blur-sm"
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-2">
-          {/* Professional Brand */}
-          <Link href="/" className="flex items-center space-x-3 group/brand">
-            <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg group-hover/brand:shadow-purple-500/30 transition-shadow duration-300">
-                <span className="text-white font-bold text-lg">R</span>
-              </div>
-              <div className="absolute -top-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white flex items-center justify-center">
-                <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse"></div>
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <span
-                className={`font-bold text-lg transition-colors duration-300 ${
-                  isDarkMode
-                    ? "text-white group-hover/brand:text-purple-300"
-                    : "text-slate-900 group-hover/brand:text-purple-700"
-                }`}
+    <>
+      {/* ── Desktop: floating dock ── */}
+      <div className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 hidden lg:flex items-center gap-1 px-3 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 ${
+        isDarkMode
+          ? "bg-gray-900/85 border-white/10"
+          : "bg-white/90 border-gray-200/80 shadow-gray-200/60"
+      }`}>
+
+        {/* Nav icons */}
+        {navItems.map(({ label, icon, section }) => (
+          <DockItem
+            key={section}
+            icon={icon}
+            label={label}
+            active={activeSection === section}
+            onClick={() => handleNav(section)}
+            isDarkMode={isDarkMode}
+          />
+        ))}
+
+        {/* Divider */}
+        <div className="w-px h-6 bg-white/10 mx-1" />
+
+        {/* Quick Fix */}
+        <div className="relative" ref={quickRef}>
+          <button
+            onClick={() => setQuickOpen((o) => !o)}
+            className={`group relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}
+          >
+            <Zap className="w-5 h-5" />
+            <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-0.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 border border-white/10">
+              Quick Fix
+            </span>
+          </button>
+          {quickOpen && (
+            <div
+              style={{ animation: "dropIn 0.18s ease both" }}
+              className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-44 rounded-xl shadow-2xl border overflow-hidden z-50 bg-gray-900 border-white/10"
+            >
+              <a
+                href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
+                target="_blank" rel="noopener noreferrer"
+                onClick={() => setQuickOpen(false)}
+                className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 transition-colors"
               >
-                Rajdeep Kotoky
-              </span>
-              <span
-                className={`text-xs font-medium transition-colors duration-300 ${
-                  isDarkMode ? "text-gray-300" : "text-slate-500"
-                }`}
+                <WhatsAppIcon /> WhatsApp
+              </a>
+              <a
+                href={`tel:+${PHONE}`}
+                onClick={() => setQuickOpen(false)}
+                className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors"
               >
-                Full Stack Developer & AI Engineer
-              </span>
+                <Phone className="w-4 h-4 text-blue-400" /> Call Me
+              </a>
+              <button
+                onClick={() => { scrollToSection("contact"); setQuickOpen(false); }}
+                className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors"
+              >
+                <Mail className="w-4 h-4 text-purple-400" /> Message
+              </button>
+              <button
+                onClick={handleQuickDetails}
+                className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors"
+              >
+                <Info className="w-4 h-4 text-emerald-400" /> Details
+              </button>
             </div>
+          )}
+        </div>
+
+        {/* Divider */}
+        <div className="w-px h-6 bg-white/10 mx-1" />
+
+        {/* Theme toggle */}
+        <button
+          onClick={toggleTheme}
+          className={`group relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}
+        >
+          {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-0.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 border border-white/10">
+            {isDarkMode ? "Light" : "Dark"}
+          </span>
+        </button>
+
+        {/* Divider */}
+        <div className="w-px h-6 bg-white/10 mx-1" />
+
+        {/* Hire Me */}
+        <button
+          onClick={() => scrollToSection("contact")}
+          className={`px-4 py-1.5 rounded-xl text-sm font-semibold border transition-all duration-200 ${isDarkMode ? "border-white/20 text-white hover:bg-white hover:text-gray-900" : "border-gray-900/20 text-gray-900 hover:bg-gray-900 hover:text-white"}`}
+        >
+          Hire Me
+        </button>
+      </div>
+
+      {/* ── Mobile: top bar ── */}
+      <nav className="fixed w-full z-50 lg:hidden">
+        <div className={`flex items-center justify-between px-4 py-3 transition-all duration-300 ${
+          scrollY > 50 ? "bg-gray-900/95 backdrop-blur-xl shadow-xl border-b border-white/10" : "bg-transparent"
+        }`}>
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-violet-600 rounded-lg flex items-center justify-center shadow-lg">
+              <span className="text-white font-bold text-sm">R</span>
+            </div>
+            <span className={`font-semibold text-sm ${isDarkMode ? "text-white" : "text-gray-900"}`}>
+              Rajdeep Kotoky
+            </span>
           </Link>
 
-          {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center space-x-8">
-            {["About", "Skills", "Projects", "Services", "Contact"].map(
-              (item) => (
-                <button
-                  key={item}
-                  onClick={() => scrollToSection(item.toLowerCase())}
-                  className={`relative font-semibold transition-all duration-300 hover:scale-105 group ${
-                    isDarkMode
-                      ? "text-gray-300 hover:text-blue-400"
-                      : "text-slate-700 hover:text-blue-600"
-                  }`}
-                >
-                  {item}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 group-hover:w-full transition-all duration-300"></span>
-                </button>
-              ),
-            )}
-
-            {/* Quick Fix dropdown */}
-            <div className="relative" ref={quickRef}>
-              <button
-                onClick={() => setQuickOpen((o) => !o)}
-                className="flex items-center gap-1.5 px-4 py-2 rounded-lg font-semibold text-sm text-white
-                  bg-gradient-to-r from-green-500 to-emerald-600
-                  hover:from-green-600 hover:to-emerald-700
-                  shadow-sm hover:shadow-green-500/30 transition-all duration-200 hover:scale-105"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                Quick Fix
-                <ChevronDown
-                  className={`w-3.5 h-3.5 transition-transform duration-200 ${quickOpen ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              {quickOpen && (
-                <div
-                  style={{ animation: "dropIn 0.2s ease both" }}
-                  className={`absolute top-full right-0 mt-2 w-44 rounded-xl shadow-xl border overflow-hidden z-50 ${
-                    isDarkMode
-                      ? "bg-gray-800 border-gray-700"
-                      : "bg-white border-slate-200"
-                  }`}
-                >
-                  <a
-                    href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setQuickOpen(false)}
-                    className={`flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors ${
-                      isDarkMode
-                        ? "text-gray-200 hover:bg-gray-700"
-                        : "text-slate-700 hover:bg-slate-50"
-                    }`}
-                  >
-                    <WhatsAppIcon />
-                    WhatsApp
-                  </a>
-                  <a
-                    href={`tel:+${PHONE}`}
-                    onClick={() => setQuickOpen(false)}
-                    className={`flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors border-t ${
-                      isDarkMode
-                        ? "text-gray-200 hover:bg-gray-700 border-gray-700"
-                        : "text-slate-700 hover:bg-slate-50 border-slate-100"
-                    }`}
-                  >
-                    <Phone className="w-4 h-4 text-blue-500" />
-                    Call Me
-                  </a>
-                  <button
-                    onClick={() => {
-                      scrollToSection("contact");
-                      setQuickOpen(false);
-                    }}
-                    className={`w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors border-t ${
-                      isDarkMode
-                        ? "text-gray-200 hover:bg-gray-700 border-gray-700"
-                        : "text-slate-700 hover:bg-slate-50 border-slate-100"
-                    }`}
-                  >
-                    <span className="w-4 h-4 flex items-center justify-center text-purple-500">
-                      ✉
-                    </span>
-                    Message
-                  </button>
-                  <button
-                    onClick={handleQuickDetails}
-                    className={`w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors border-t ${
-                      isDarkMode
-                        ? "text-gray-200 hover:bg-gray-700 border-gray-700"
-                        : "text-slate-700 hover:bg-slate-50 border-slate-100"
-                    }`}
-                  >
-                    <Info className="w-4 h-4 text-emerald-500" />
-                    Details
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {/* Theme Toggle */}
+          <div className="flex items-center gap-2">
             <button
               onClick={toggleTheme}
-              className={`p-2 rounded-xl transition-all duration-300 hover:scale-105 ${
-                isDarkMode
-                  ? "text-gray-300 hover:text-yellow-400 hover:bg-gray-800"
-                  : "text-slate-700 hover:text-blue-600 hover:bg-slate-100"
-              }`}
+              className={`p-2 rounded-lg transition-colors ${isDarkMode ? "text-gray-300 hover:text-white" : "text-gray-600 hover:text-gray-900"}`}
             >
-              {isDarkMode ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
-              )}
+              {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-
-            {/* CTA Button */}
-            <button
-              onClick={() => scrollToSection("contact")}
-              className="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md"
-            >
-              Hire Me
-            </button>
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center space-x-2">
-            {/* Mobile Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className={`p-2 rounded-xl transition-all duration-300 ${
-                isDarkMode
-                  ? "text-gray-300 hover:text-yellow-400 hover:bg-gray-800"
-                  : "text-slate-700 hover:text-blue-600 hover:bg-slate-100"
-              }`}
-            >
-              {isDarkMode ? (
-                <Sun className="w-5 h-5" />
-              ) : (
-                <Moon className="w-5 h-5" />
-              )}
-            </button>
-
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`p-2 rounded-xl transition-all duration-300 ${
-                isDarkMode
-                  ? "text-gray-300 hover:text-blue-400 hover:bg-gray-800"
-                  : "text-slate-700 hover:text-blue-600 hover:bg-slate-100"
-              }`}
+              className={`p-2 rounded-lg transition-colors ${isDarkMode ? "text-gray-300 hover:text-white" : "text-gray-600 hover:text-gray-900"}`}
             >
-              {isMenuOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
         {isMenuOpen && (
           <div
-            className={`lg:hidden absolute top-full left-4 right-4 backdrop-blur-xl shadow-2xl rounded-2xl mt-2 py-6 border ${
-              isDarkMode
-                ? "bg-gray-800/95 border-gray-700/60"
-                : "bg-white/95 border-slate-200/60"
-            }`}
+            style={{ animation: "dropIn 0.18s ease both" }}
+            className="mx-3 mt-1 rounded-2xl border border-white/10 bg-gray-900/95 backdrop-blur-xl shadow-2xl overflow-hidden"
           >
-            <div className="space-y-1">
-              {["About", "Skills", "Projects", "Services", "Contact"].map(
-                (item) => (
-                  <button
-                    key={item}
-                    onClick={() => scrollToSection(item.toLowerCase())}
-                    className={`block w-full text-left px-6 py-3 transition-all duration-200 font-medium rounded-xl mx-2 ${
-                      isDarkMode
-                        ? "text-gray-300 hover:text-blue-400 hover:bg-gray-700/50"
-                        : "text-slate-700 hover:text-blue-600 hover:bg-blue-50/50"
-                    }`}
-                  >
-                    {item}
-                  </button>
-                ),
-              )}
-              <div
-                className={`px-6 pt-4 border-t mt-4 space-y-3 ${
-                  isDarkMode ? "border-gray-700" : "border-slate-200"
-                }`}
+            {navItems.map(({ label, icon: Icon, section }) => (
+              <button
+                key={section}
+                onClick={() => handleNav(section)}
+                className="flex items-center gap-3 w-full px-5 py-3.5 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
               >
-                <button
-                  onClick={() => setQuickOpen((o) => !o)}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-200"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                  Quick Fix
-                  <ChevronDown
-                    className={`w-3.5 h-3.5 transition-transform duration-200 ${quickOpen ? "rotate-180" : ""}`}
-                  />
-                </button>
-                {quickOpen && (
-                  <div
-                    style={{ animation: "dropIn 0.2s ease both" }}
-                    className={`rounded-xl border overflow-hidden ${
-                      isDarkMode
-                        ? "bg-gray-700/60 border-gray-600"
-                        : "bg-slate-50 border-slate-200"
-                    }`}
+                <Icon className="w-4 h-4" /> {label}
+              </button>
+            ))}
+            <div className="border-t border-white/10 p-4 flex flex-col gap-3">
+              <button
+                onClick={() => setQuickOpen((o) => !o)}
+                className="flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-xl bg-white/10 text-white text-sm font-semibold hover:bg-white/15 transition-colors"
+              >
+                <Zap className="w-4 h-4" />
+                Quick Fix
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${quickOpen ? "rotate-180" : ""}`} />
+              </button>
+              {quickOpen && (
+                <div className="rounded-xl border border-white/10 overflow-hidden">
+                  <a
+                    href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
+                    target="_blank" rel="noopener noreferrer"
+                    onClick={() => { setQuickOpen(false); setIsMenuOpen(false); }}
+                    className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 transition-colors"
                   >
-                    <a
-                      href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => {
-                        setQuickOpen(false);
-                        setIsMenuOpen(false);
-                      }}
-                      className={`flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors ${
-                        isDarkMode
-                          ? "text-gray-200 hover:bg-gray-600"
-                          : "text-slate-700 hover:bg-slate-100"
-                      }`}
-                    >
-                      <WhatsAppIcon />
-                      WhatsApp
-                    </a>
-                    <a
-                      href={`tel:+${PHONE}`}
-                      onClick={() => {
-                        setQuickOpen(false);
-                        setIsMenuOpen(false);
-                      }}
-                      className={`flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors border-t ${
-                        isDarkMode
-                          ? "text-gray-200 hover:bg-gray-600 border-gray-600"
-                          : "text-slate-700 hover:bg-slate-100 border-slate-200"
-                      }`}
-                    >
-                      <Phone className="w-4 h-4 text-blue-500" />
-                      Call Me
-                    </a>
-                    <button
-                      onClick={() => {
-                        scrollToSection("contact");
-                        setQuickOpen(false);
-                        setIsMenuOpen(false);
-                      }}
-                      className={`w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors border-t ${
-                        isDarkMode
-                          ? "text-gray-200 hover:bg-gray-600 border-gray-600"
-                          : "text-slate-700 hover:bg-slate-100 border-slate-200"
-                      }`}
-                    >
-                      <span className="w-4 h-4 flex items-center justify-center text-purple-500">
-                        ✉
-                      </span>
-                      Message
-                    </button>
-                    <button
-                      onClick={handleQuickDetails}
-                      className={`w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium transition-colors border-t ${
-                        isDarkMode
-                          ? "text-gray-200 hover:bg-gray-600 border-gray-600"
-                          : "text-slate-700 hover:bg-slate-100 border-slate-200"
-                      }`}
-                    >
-                      <Info className="w-4 h-4 text-emerald-500" />
-                      Details
-                    </button>
-                  </div>
-                )}
-                <button
-                  onClick={() => scrollToSection("contact")}
-                  className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-6 py-3 rounded-lg font-medium transition-all duration-200"
-                >
-                  Hire Me
-                </button>
-              </div>
+                    <WhatsAppIcon /> WhatsApp
+                  </a>
+                  <a
+                    href={`tel:+${PHONE}`}
+                    onClick={() => { setQuickOpen(false); setIsMenuOpen(false); }}
+                    className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors"
+                  >
+                    <Phone className="w-4 h-4 text-blue-400" /> Call Me
+                  </a>
+                  <button
+                    onClick={() => { scrollToSection("contact"); setQuickOpen(false); setIsMenuOpen(false); }}
+                    className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors"
+                  >
+                    <Mail className="w-4 h-4 text-purple-400" /> Message
+                  </button>
+                  <button
+                    onClick={handleQuickDetails}
+                    className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors"
+                  >
+                    <Info className="w-4 h-4 text-emerald-400" /> Details
+                  </button>
+                </div>
+              )}
+              <button
+                onClick={() => { scrollToSection("contact"); setIsMenuOpen(false); }}
+                className="w-full px-4 py-2.5 rounded-xl border border-white/20 text-white text-sm font-semibold hover:bg-white hover:text-gray-900 transition-all duration-200"
+              >
+                Hire Me
+              </button>
             </div>
           </div>
         )}
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 };
+
 export default Navbar;

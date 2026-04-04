@@ -265,7 +265,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
             {/* CTA Button */}
             <a
               href="mailto:your@email.com"
-              className="group inline-flex items-center w-full justify-center px-7 py-3.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md"
+              className={`group inline-flex items-center w-full justify-center px-7 py-3.5 rounded-lg font-medium transition-all duration-200 ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-gray-900 text-white hover:bg-gray-800"}`}
             >
               Start a Conversation
               <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />

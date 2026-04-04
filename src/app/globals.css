@@ -27,15 +27,14 @@ body {
 
 /* "Pop from button" — used by Quick Fix contact options */
 @keyframes popFromButton {
-  0%   { opacity: 0; transform: translateY(-14px) scale(0.65); }
-  60%  { transform: translateY(3px) scale(1.04); }
-  100% { opacity: 1; transform: translateY(0)   scale(1); }
+  from { opacity: 0; transform: translateY(-10px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* Navbar dropdown slide-in */
 @keyframes dropIn {
-  0%   { opacity: 0; transform: translateY(-6px) scale(0.96); }
-  100% { opacity: 1; transform: translateY(0)    scale(1); }
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }
 
 /* Infinite marquee for tech carousel */
@@ -52,7 +51,6 @@ body {
 
 /* FAB options — pop upward out of the button */
 @keyframes popUpFromButton {
-  0%   { opacity: 0; transform: translateY(16px) scale(0.65); }
-  60%  { transform: translateY(-4px) scale(1.04); }
-  100% { opacity: 1; transform: translateY(0)    scale(1); }
+  from { opacity: 0; transform: translateY(10px) scale(0.88); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
 }

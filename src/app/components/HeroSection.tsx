@@ -325,7 +325,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               <div style={{ animationDelay: "600ms" }} className="fade-up flex flex-col sm:flex-row gap-4 pt-6">
                 <button
                   onClick={() => scrollToSection("projects")}
-                  className="group px-7 py-3.5 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-md transition-all duration-200 font-medium flex items-center justify-center shadow-sm hover:shadow-md"
+                  className={`group px-7 py-3.5 rounded-md transition-all duration-200 font-medium flex items-center justify-center active:scale-95 ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-gray-900 text-white hover:bg-gray-800"}`}
                 >
                   View My Work
                   <ExternalLink className="w-4 h-4 ml-2 group-hover:translate-x-0.5 transition-transform" />
