@@ -441,6 +441,7 @@ function Background3D() {
 
 // ── Cube ─────────────────────────────────────────────────────────────────────
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function Cube({ active, dragDelta, isOpen, onOpen, onClose }: {
   active: number;
   dragDelta: React.RefObject<{ x: number; y: number }>;

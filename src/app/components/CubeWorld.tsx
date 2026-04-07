@@ -463,7 +463,7 @@ export default function CubeWorld() {
     } else {
       goTo(0);
     }
-  }, [currentFace, goTo]);
+  }, [currentFace, goTo, horizontalFaces]);
 
   const goRight = useCallback(() => {
     const idx = horizontalFaces.indexOf(currentFace);
@@ -473,7 +473,7 @@ export default function CubeWorld() {
     } else {
       goTo(0);
     }
-  }, [currentFace, goTo]);
+  }, [currentFace, goTo, horizontalFaces]);
 
   const goUp = useCallback(() => goTo(4), [goTo]);
   const goDown = useCallback(() => goTo(5), [goTo]);
