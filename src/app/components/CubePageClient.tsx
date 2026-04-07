@@ -606,10 +606,8 @@ export default function CubePageClient() {
     if (!el) return;
     const block = (e: TouchEvent) => e.preventDefault();
     el.addEventListener("touchmove", block, { passive: false });
-    el.addEventListener("touchstart", block, { passive: false });
     return () => {
       el.removeEventListener("touchmove", block);
-      el.removeEventListener("touchstart", block);
     };
   }, []);
 
