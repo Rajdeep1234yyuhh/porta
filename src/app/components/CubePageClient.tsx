@@ -645,7 +645,7 @@ export default function CubePageClient() {
       isDragging.current = true;
       lastPointer.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
       lastMidpoint.current = null;
-    } else if (e.touches.length === 2) {
+    } else if (e.touches.length === 2 && window.matchMedia("(max-width: 640px)").matches) {
       isDragging.current = false;
       const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
       const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
@@ -663,7 +663,7 @@ export default function CubePageClient() {
         y:  (e.touches[0].clientY - lastPointer.current.y) * 0.012,
       };
       lastPointer.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    } else if (e.touches.length === 2 && lastMidpoint.current !== null) {
+    } else if (e.touches.length === 2 && lastMidpoint.current !== null && window.matchMedia("(max-width: 640px)").matches) {
       // Track midpoint movement → free rotation in any direction
       const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
       const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
