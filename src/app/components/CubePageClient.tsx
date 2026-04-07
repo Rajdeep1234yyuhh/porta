@@ -591,13 +591,27 @@ function Scene({ active, dragDelta, isOpen, onOpen, onClose }: {
 export default function CubePageClient() {
   const [active, setActive] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
-  const dragDelta   = useRef({ x: 0, y: 0 });
-  const isDragging  = useRef(false);
-  const lastPointer = useRef({ x: 0, y: 0 });
+  const dragDelta      = useRef({ x: 0, y: 0 });
+  const isDragging     = useRef(false);
+  const lastPointer    = useRef({ x: 0, y: 0 });
   const lastPinch      = useRef<number | null>(null);
   const lastMidpoint   = useRef<{ x: number; y: number } | null>(null);
+  const canvasWrapRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setIsOpen(false); }, [active]);
+
+  // Prevent page scroll on touch — must be non-passive so preventDefault works
+  useEffect(() => {
+    const el = canvasWrapRef.current;
+    if (!el) return;
+    const block = (e: TouchEvent) => e.preventDefault();
+    el.addEventListener("touchmove", block, { passive: false });
+    el.addEventListener("touchstart", block, { passive: false });
+    return () => {
+      el.removeEventListener("touchmove", block);
+      el.removeEventListener("touchstart", block);
+    };
+  }, []);
 
   useEffect(() => {
     let last = 0;
@@ -718,6 +732,7 @@ export default function CubePageClient() {
 
       {/* Canvas */}
       <div
+        ref={canvasWrapRef}
         className="cube-canvas-wrap"
         style={{ position:"absolute", inset:0, cursor: isOpen ? "default" : isDragging.current ? "grabbing" : "grab" }}
         onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}
