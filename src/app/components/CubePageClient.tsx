@@ -442,9 +442,10 @@ function Background3D() {
 // ── Cube ─────────────────────────────────────────────────────────────────────
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-function Cube({ active, dragDelta, isOpen, onOpen, onClose }: {
+function Cube({ active, dragDelta, twistDelta, isOpen, onOpen, onClose }: {
   active: number;
   dragDelta: React.RefObject<{ x: number; y: number }>;
+  twistDelta: React.RefObject<number>;
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
@@ -471,9 +472,14 @@ function Cube({ active, dragDelta, isOpen, onOpen, onClose }: {
       if (dragDelta.current.x !== 0 || dragDelta.current.y !== 0) {
         const qHoriz = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,1,0), dragDelta.current.x);
         const qVert  = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1,0,0), dragDelta.current.y);
-        // Both left-multiplied (world space) → consistent on every face
         dragQ.current.premultiply(qHoriz.multiply(qVert));
         dragDelta.current.x = 0; dragDelta.current.y = 0;
+      }
+      // Twist (Z rotation from two-finger rotate on mobile)
+      if (twistDelta.current !== 0) {
+        const qTwist = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0,0,1), twistDelta.current);
+        dragQ.current.premultiply(qTwist);
+        twistDelta.current = 0;
       }
     }
 
@@ -550,9 +556,10 @@ function Cube({ active, dragDelta, isOpen, onOpen, onClose }: {
 
 // ── Scene ─────────────────────────────────────────────────────────────────────
 
-function Scene({ active, dragDelta, isOpen, onOpen, onClose }: {
+function Scene({ active, dragDelta, twistDelta, isOpen, onOpen, onClose }: {
   active: number;
   dragDelta: React.RefObject<{ x: number; y: number }>;
+  twistDelta: React.RefObject<number>;
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
@@ -574,7 +581,7 @@ function Scene({ active, dragDelta, isOpen, onOpen, onClose }: {
 
       <Background3D />
 
-      <Cube active={active} dragDelta={dragDelta} isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
+      <Cube active={active} dragDelta={dragDelta} twistDelta={twistDelta} isOpen={isOpen} onOpen={onOpen} onClose={onClose} />
 
       {/* Flying cards – world space so they stay in front of camera */}
       {cards.slice(0,3).map((card, i) => (
@@ -596,6 +603,8 @@ export default function CubePageClient() {
   const lastPointer    = useRef({ x: 0, y: 0 });
   const lastPinch      = useRef<number | null>(null);
   const lastMidpoint   = useRef<{ x: number; y: number } | null>(null);
+  const lastAngle      = useRef<number | null>(null);
+  const twistDelta     = useRef(0);
   const canvasWrapRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setIsOpen(false); }, [active]);
@@ -653,6 +662,7 @@ export default function CubePageClient() {
       const dx = e.touches[0].clientX - e.touches[1].clientX;
       const dy = e.touches[0].clientY - e.touches[1].clientY;
       lastPinch.current = Math.sqrt(dx*dx+dy*dy);
+      lastAngle.current  = Math.atan2(dy, dx);
     }
   };
   const onTouchMove = (e: React.TouchEvent) => {
@@ -664,23 +674,36 @@ export default function CubePageClient() {
       };
       lastPointer.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
     } else if (e.touches.length === 2 && lastMidpoint.current !== null && window.matchMedia("(max-width: 640px)").matches) {
-      // Track midpoint movement → free rotation in any direction
       const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
       const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+      // Midpoint delta → X/Y rotation (pan both fingers)
       dragDelta.current = {
-        x:  (mx - lastMidpoint.current.x) * 0.012,
-        y:  (my - lastMidpoint.current.y) * 0.012,
+        x: (mx - lastMidpoint.current.x) * 0.012,
+        y: (my - lastMidpoint.current.y) * 0.012,
       };
       lastMidpoint.current = { x: mx, y: my };
+
       const dx = e.touches[0].clientX - e.touches[1].clientX;
       const dy = e.touches[0].clientY - e.touches[1].clientY;
       lastPinch.current = Math.sqrt(dx*dx+dy*dy);
+
+      // Angle delta → Z rotation (twist fingers)
+      const angle = Math.atan2(dy, dx);
+      if (lastAngle.current !== null) {
+        let dAngle = angle - lastAngle.current;
+        // Wrap to [-π, π]
+        if (dAngle >  Math.PI) dAngle -= Math.PI * 2;
+        if (dAngle < -Math.PI) dAngle += Math.PI * 2;
+        twistDelta.current += dAngle * 0.7;
+      }
+      lastAngle.current = angle;
     }
   };
   const onTouchEnd = () => {
     isDragging.current = false;
     lastPinch.current = null;
     lastMidpoint.current = null;
+    lastAngle.current = null;
   };
 
   const s = SECTIONS[active];
@@ -742,7 +765,7 @@ export default function CubePageClient() {
           style={{ position:"absolute", inset:0, background:"transparent" }}
           shadows
         >
-          <Scene active={active} dragDelta={dragDelta} isOpen={isOpen} onOpen={() => setIsOpen(true)} onClose={() => setIsOpen(false)} />
+          <Scene active={active} dragDelta={dragDelta} twistDelta={twistDelta} isOpen={isOpen} onOpen={() => setIsOpen(true)} onClose={() => setIsOpen(false)} />
         </Canvas>
       </div>
     </div>
