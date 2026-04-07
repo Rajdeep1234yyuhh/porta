@@ -692,8 +692,8 @@ export default function CubePageClient() {
 
       // Average both finger deltas → feels like gripping two sides simultaneously
       dragDelta.current = {
-        x: -(dx0 + dx1) * 0.5 * 0.012,
-        y: -(dy0 + dy1) * 0.5 * 0.012,
+        x: (dx0 + dx1) * 0.5 * 0.012,
+        y: (dy0 + dy1) * 0.5 * 0.012,
       };
 
       // Twist: angle change between fingers → Z rotation
