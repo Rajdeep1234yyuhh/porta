@@ -605,9 +605,8 @@ export default function CubePageClient() {
   const lastMidpoint   = useRef<{ x: number; y: number } | null>(null);
   const lastAngle      = useRef<number | null>(null);
   const twistDelta     = useRef(0);
-  // Per-finger tracking for independent two-hand rotation
-  const finger0        = useRef<{ x: number; y: number } | null>(null);
-  const finger1        = useRef<{ x: number; y: number } | null>(null);
+  // Track fingers by identifier so swapping indices doesn't corrupt deltas
+  const fingerMap      = useRef<Map<number, { x: number; y: number }>>(new Map());
   const canvasWrapRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setIsOpen(false); }, [active]);
@@ -658,14 +657,12 @@ export default function CubePageClient() {
     if (e.touches.length === 1) {
       isDragging.current = true;
       lastPointer.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      finger0.current = null;
-      finger1.current = null;
+      fingerMap.current.clear();
     } else if (e.touches.length === 2 && isMobile()) {
       isDragging.current = false;
-      // Track each finger independently
-      finger0.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      finger1.current = { x: e.touches[1].clientX, y: e.touches[1].clientY };
-      // Also track midpoint + angle for twist
+      // Store by identifier so index swaps don't corrupt deltas
+      fingerMap.current.set(e.touches[0].identifier, { x: e.touches[0].clientX, y: e.touches[0].clientY });
+      fingerMap.current.set(e.touches[1].identifier, { x: e.touches[1].clientX, y: e.touches[1].clientY });
       const dx = e.touches[0].clientX - e.touches[1].clientX;
       const dy = e.touches[0].clientY - e.touches[1].clientY;
       lastAngle.current = Math.atan2(dy, dx);
@@ -681,22 +678,27 @@ export default function CubePageClient() {
         y: (e.touches[0].clientY - lastPointer.current.y) * 0.012,
       };
       lastPointer.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    } else if (e.touches.length === 2 && finger0.current && finger1.current && isMobile()) {
-      // Each finger drives rotation independently — average their contributions
-      // Finger 0 delta
-      const dx0 = e.touches[0].clientX - finger0.current.x;
-      const dy0 = e.touches[0].clientY - finger0.current.y;
-      // Finger 1 delta
-      const dx1 = e.touches[1].clientX - finger1.current.x;
-      const dy1 = e.touches[1].clientY - finger1.current.y;
-
-      // Average both finger deltas → feels like gripping two sides simultaneously
-      dragDelta.current = {
-        x: (dx0 + dx1) * 0.5 * 0.012,
-        y: (dy0 + dy1) * 0.5 * 0.012,
-      };
-
-      // Twist: angle change between fingers → Z rotation
+    } else if (e.touches.length === 2 && fingerMap.current.size === 2 && isMobile()) {
+      let totalDx = 0, totalDy = 0, count = 0;
+      // Each finger delta computed against its own last position (by identifier)
+      for (let i = 0; i < e.touches.length; i++) {
+        const t = e.touches[i];
+        const prev = fingerMap.current.get(t.identifier);
+        if (prev) {
+          totalDx += t.clientX - prev.x;
+          totalDy += t.clientY - prev.y;
+          count++;
+        }
+        // Update stored position for this finger
+        fingerMap.current.set(t.identifier, { x: t.clientX, y: t.clientY });
+      }
+      if (count > 0) {
+        dragDelta.current = {
+          x: (totalDx / count) * 0.012,
+          y: (totalDy / count) * 0.012,
+        };
+      }
+      // Twist from angle change between the two fingers
       const adx = e.touches[0].clientX - e.touches[1].clientX;
       const ady = e.touches[0].clientY - e.touches[1].clientY;
       const angle = Math.atan2(ady, adx);
@@ -707,10 +709,6 @@ export default function CubePageClient() {
         twistDelta.current += dAngle * 0.7;
       }
       lastAngle.current = angle;
-
-      // Update per-finger positions
-      finger0.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      finger1.current = { x: e.touches[1].clientX, y: e.touches[1].clientY };
       lastPinch.current = Math.sqrt(adx*adx+ady*ady);
     }
   };
@@ -720,8 +718,7 @@ export default function CubePageClient() {
     lastPinch.current = null;
     lastMidpoint.current = null;
     lastAngle.current = null;
-    finger0.current = null;
-    finger1.current = null;
+    fingerMap.current.clear();
   };
 
   const s = SECTIONS[active];
