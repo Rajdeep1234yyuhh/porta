@@ -605,6 +605,9 @@ export default function CubePageClient() {
   const lastMidpoint   = useRef<{ x: number; y: number } | null>(null);
   const lastAngle      = useRef<number | null>(null);
   const twistDelta     = useRef(0);
+  // Per-finger tracking for independent two-hand rotation
+  const finger0        = useRef<{ x: number; y: number } | null>(null);
+  const finger1        = useRef<{ x: number; y: number } | null>(null);
   const canvasWrapRef  = useRef<HTMLDivElement>(null);
 
   useEffect(() => { setIsOpen(false); }, [active]);
@@ -648,62 +651,77 @@ export default function CubePageClient() {
   };
   const onMouseUp = () => { isDragging.current = false; };
 
+  const isMobile = () => window.matchMedia("(max-width: 640px)").matches;
+
   const onTouchStart = (e: React.TouchEvent) => {
     if (isOpen) return;
     if (e.touches.length === 1) {
       isDragging.current = true;
       lastPointer.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-      lastMidpoint.current = null;
-    } else if (e.touches.length === 2 && window.matchMedia("(max-width: 640px)").matches) {
+      finger0.current = null;
+      finger1.current = null;
+    } else if (e.touches.length === 2 && isMobile()) {
       isDragging.current = false;
-      const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-      const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-      lastMidpoint.current = { x: mx, y: my };
+      // Track each finger independently
+      finger0.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      finger1.current = { x: e.touches[1].clientX, y: e.touches[1].clientY };
+      // Also track midpoint + angle for twist
       const dx = e.touches[0].clientX - e.touches[1].clientX;
       const dy = e.touches[0].clientY - e.touches[1].clientY;
+      lastAngle.current = Math.atan2(dy, dx);
       lastPinch.current = Math.sqrt(dx*dx+dy*dy);
-      lastAngle.current  = Math.atan2(dy, dx);
     }
   };
+
   const onTouchMove = (e: React.TouchEvent) => {
     if (isOpen) return;
     if (e.touches.length === 1 && isDragging.current) {
       dragDelta.current = {
-        x:  (e.touches[0].clientX - lastPointer.current.x) * 0.012,
-        y:  (e.touches[0].clientY - lastPointer.current.y) * 0.012,
+        x: (e.touches[0].clientX - lastPointer.current.x) * 0.012,
+        y: (e.touches[0].clientY - lastPointer.current.y) * 0.012,
       };
       lastPointer.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
-    } else if (e.touches.length === 2 && lastMidpoint.current !== null && window.matchMedia("(max-width: 640px)").matches) {
-      const mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-      const my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-      // Midpoint delta → X/Y rotation (pan both fingers)
+    } else if (e.touches.length === 2 && finger0.current && finger1.current && isMobile()) {
+      // Each finger drives rotation independently — average their contributions
+      // Finger 0 delta
+      const dx0 = e.touches[0].clientX - finger0.current.x;
+      const dy0 = e.touches[0].clientY - finger0.current.y;
+      // Finger 1 delta
+      const dx1 = e.touches[1].clientX - finger1.current.x;
+      const dy1 = e.touches[1].clientY - finger1.current.y;
+
+      // Average both finger deltas → feels like gripping two sides simultaneously
       dragDelta.current = {
-        x: (mx - lastMidpoint.current.x) * 0.012,
-        y: (my - lastMidpoint.current.y) * 0.012,
+        x: (dx0 + dx1) * 0.5 * 0.012,
+        y: (dy0 + dy1) * 0.5 * 0.012,
       };
-      lastMidpoint.current = { x: mx, y: my };
 
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      lastPinch.current = Math.sqrt(dx*dx+dy*dy);
-
-      // Angle delta → Z rotation (twist fingers)
-      const angle = Math.atan2(dy, dx);
+      // Twist: angle change between fingers → Z rotation
+      const adx = e.touches[0].clientX - e.touches[1].clientX;
+      const ady = e.touches[0].clientY - e.touches[1].clientY;
+      const angle = Math.atan2(ady, adx);
       if (lastAngle.current !== null) {
         let dAngle = angle - lastAngle.current;
-        // Wrap to [-π, π]
         if (dAngle >  Math.PI) dAngle -= Math.PI * 2;
         if (dAngle < -Math.PI) dAngle += Math.PI * 2;
         twistDelta.current += dAngle * 0.7;
       }
       lastAngle.current = angle;
+
+      // Update per-finger positions
+      finger0.current = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      finger1.current = { x: e.touches[1].clientX, y: e.touches[1].clientY };
+      lastPinch.current = Math.sqrt(adx*adx+ady*ady);
     }
   };
+
   const onTouchEnd = () => {
     isDragging.current = false;
     lastPinch.current = null;
     lastMidpoint.current = null;
     lastAngle.current = null;
+    finger0.current = null;
+    finger1.current = null;
   };
 
   const s = SECTIONS[active];
