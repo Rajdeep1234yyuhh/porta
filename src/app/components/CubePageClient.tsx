@@ -912,6 +912,119 @@ function Background3D() {
   );
 }
 
+// ── Mobile 3-D Navbar ────────────────────────────────────────────────────────
+
+function MobileNavTile({
+  section,
+  index,
+  isActive,
+  onClick,
+}: {
+  section: { label: string; icon: string; color: string };
+  index: number;
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const groupRef = useRef<THREE.Group>(null);
+  const matRef = useRef<THREE.MeshStandardMaterial>(null);
+  const t = useRef(Math.random() * Math.PI * 2);
+
+  const col = index % 3;
+  const row = Math.floor(index / 3);
+  const baseX = (col - 1) * 1.16;
+  const baseY = row === 0 ? 0.42 : -0.42;
+
+  useFrame((_, delta) => {
+    t.current += delta;
+    if (groupRef.current) {
+      groupRef.current.position.x = baseX;
+      groupRef.current.position.y =
+        baseY + Math.sin(t.current * 0.65 + index * 0.9) * 0.022;
+      groupRef.current.rotation.x = THREE.MathUtils.lerp(
+        groupRef.current.rotation.x,
+        isActive ? -0.14 : -0.04,
+        delta * 6,
+      );
+    }
+    if (matRef.current) {
+      matRef.current.emissiveIntensity = THREE.MathUtils.lerp(
+        matRef.current.emissiveIntensity,
+        isActive ? 0.32 + Math.sin(t.current * 1.6) * 0.1 : 0,
+        delta * 6,
+      );
+    }
+  });
+
+  return (
+    <group ref={groupRef} onClick={(e) => { e.stopPropagation(); onClick(); }}>
+      <RoundedBox args={[1.02, 0.6, 0.11]} radius={0.07} smoothness={3}>
+        <meshStandardMaterial
+          ref={matRef}
+          color={isActive ? section.color : "#14142a"}
+          metalness={0.78}
+          roughness={0.18}
+          emissive={section.color}
+          emissiveIntensity={0}
+        />
+      </RoundedBox>
+      {/* top accent stripe */}
+      <mesh position={[0, 0.3, 0.057]}>
+        <planeGeometry args={[0.82, 0.022]} />
+        <meshBasicMaterial
+          color={section.color}
+          transparent
+          opacity={isActive ? 1 : 0.3}
+        />
+      </mesh>
+      <Text
+        position={[0, 0.09, 0.062]}
+        fontSize={0.185}
+        color={isActive ? "#ffffff" : section.color}
+        anchorX="center"
+        anchorY="middle"
+      >
+        {section.icon}
+      </Text>
+      <Text
+        position={[0, -0.14, 0.062]}
+        fontSize={0.082}
+        color={isActive ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.3)"}
+        anchorX="center"
+        anchorY="middle"
+        letterSpacing={0.05}
+      >
+        {section.label.toUpperCase()}
+      </Text>
+    </group>
+  );
+}
+
+function MobileNavScene({
+  active,
+  setActive,
+}: {
+  active: number;
+  setActive: (i: number) => void;
+}) {
+  return (
+    <>
+      <ambientLight intensity={1.9} />
+      <directionalLight position={[0, 5, 6]} intensity={1.3} />
+      <pointLight position={[0, 1, 4]} intensity={0.7} color="#a78bfa" />
+      <pointLight position={[0, -1, 3]} intensity={0.3} color="#60a5fa" />
+      {SECTIONS.map((sec, i) => (
+        <MobileNavTile
+          key={i}
+          section={sec}
+          index={i}
+          isActive={active === i}
+          onClick={() => setActive(i)}
+        />
+      ))}
+    </>
+  );
+}
+
 // ── Cube ─────────────────────────────────────────────────────────────────────
 
 function Cube({
@@ -1306,12 +1419,13 @@ export default function CubePageClient() {
             top: 0 !important;
             left: 0 !important;
             right: 0 !important;
-            bottom: 45% !important;
-            height: 55% !important;
+            bottom: 44% !important;
+            height: 56% !important;
           }
-          .cube-dots { top: auto !important; bottom: 42% !important; transform: none !important; flex-direction: row !important; right: 50% !important; transform: translateX(50%) !important; }
-          .cube-label { bottom: 6px !important; }
+          .cube-dots { display: none !important; }
+          .cube-label { display: none !important; }
           .cube-back { top: 14px !important; left: 14px !important; }
+          .mobile-nav-3d { display: block !important; }
         }
       `}</style>
 
@@ -1435,6 +1549,30 @@ export default function CubePageClient() {
             onOpen={() => setIsOpen(true)}
             onClose={() => setIsOpen(false)}
           />
+        </Canvas>
+      </div>
+
+      {/* Mobile 3D Navbar — bottom 44%, desktop: hidden */}
+      <div
+        className="mobile-nav-3d"
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "43%",
+          display: "none",
+          zIndex: 5,
+          background:
+            "linear-gradient(to bottom, transparent 0%, rgba(8,4,22,0.55) 18%, rgba(8,4,22,0.85) 100%)",
+        }}
+      >
+        <Canvas
+          camera={{ position: [0, 0, 3.6], fov: 54 }}
+          gl={{ antialias: true, alpha: true }}
+          style={{ background: "transparent", width: "100%", height: "100%" }}
+        >
+          <MobileNavScene active={active} setActive={setActive} />
         </Canvas>
       </div>
     </div>
