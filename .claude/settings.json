@@ -9,7 +9,8 @@
       "Bash(cmd /c \"taskkill /F /IM node.exe\")",
       "Bash(cmd /c \"taskkill /F /IM node.exe 2>&1\")",
       "Bash(powershell -Command \"Stop-Process -Name node -Force -ErrorAction SilentlyContinue; Write-Host ''Done''\")",
-      "Bash(powershell -Command \"Stop-Process -Name node -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 2; echo done\")"
+      "Bash(powershell -Command \"Stop-Process -Name node -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 2; echo done\")",
+      "Bash(powershell -Command \"Stop-Process -Name node -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 2\")"
     ]
   }
 }

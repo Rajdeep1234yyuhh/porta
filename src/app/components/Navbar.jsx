@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
-  Sun, Moon, Menu, X, Home, User, Code2, FolderOpen,
+  Sun, Moon, Menu, X, Home, Code2, FolderOpen,
   Briefcase, Mail, Zap, Phone, Info, ChevronDown,
 } from "lucide-react";
 
@@ -35,34 +35,17 @@ const DockItem = ({ icon: Icon, label, onClick, active, isDarkMode }) => (
   </button>
 );
 
-const Navbar = ({ isDarkMode, toggleTheme, isMenuOpen, setIsMenuOpen, scrollY, scrollToSection }) => {
-  const [activeSection, setActiveSection] = useState("home");
+const Navbar = ({ isDarkMode, toggleTheme, isMenuOpen, setIsMenuOpen, scrollY, scrollToSection, activeSection = "home" }) => {
   const [quickOpen, setQuickOpen] = useState(false);
   const quickRef = useRef(null);
 
   const navItems = [
     { label: "Home",     icon: Home,       section: "home" },
-    { label: "About",    icon: User,       section: "about" },
     { label: "Skills",   icon: Code2,      section: "skills" },
     { label: "Projects", icon: FolderOpen, section: "projects" },
     { label: "Services", icon: Briefcase,  section: "services" },
     { label: "Contact",  icon: Mail,       section: "contact" },
   ];
-
-  // Track active section on scroll
-  useEffect(() => {
-    const handler = () => {
-      const sections = ["about", "skills", "projects", "services", "contact"];
-      let current = "home";
-      for (const id of sections) {
-        const el = document.getElementById(id);
-        if (el && el.getBoundingClientRect().top <= 120) current = id;
-      }
-      setActiveSection(current);
-    };
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
 
   useEffect(() => {
     const handleOutside = (e) => {
@@ -225,7 +208,11 @@ const Navbar = ({ isDarkMode, toggleTheme, isMenuOpen, setIsMenuOpen, scrollY, s
               <button
                 key={section}
                 onClick={() => handleNav(section)}
-                className="flex items-center gap-3 w-full px-5 py-3.5 text-sm font-medium text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
+                className={`flex items-center gap-3 w-full px-5 py-3.5 text-sm font-medium transition-colors ${
+                  activeSection === section
+                    ? "text-violet-400 bg-violet-500/10"
+                    : "text-gray-300 hover:text-white hover:bg-white/10"
+                }`}
               >
                 <Icon className="w-4 h-4" /> {label}
               </button>

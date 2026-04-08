@@ -206,7 +206,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
 
       <section
         id="about"
-        className={`pt-20 pb-8 relative overflow-hidden ${
+        className={`h-full pt-20 pb-8 relative overflow-y-auto ${
           isDarkMode ? "bg-gray-900" : "bg-white"
         }`}
       >

@@ -162,6 +162,7 @@ export default function HomeClient() {
         setIsMenuOpen={setIsMenuOpen}
         scrollY={current * 100}
         scrollToSection={scrollToSection}
+        activeSection={SECTION_IDS[current]}
       />
 
       {/* ── Full-screen vertical slider ── */}
@@ -181,46 +182,52 @@ export default function HomeClient() {
           touchStartY.current = null;
         }}
       >
-        {/* Slide track — moves vertically */}
+        {/* Slide 0: Hero */}
         <div
-          className="transition-transform duration-500 ease-in-out will-change-transform"
-          style={{ transform: `translateY(-${current * 100}vh)` }}
+          className="absolute inset-0 transition-transform duration-700 ease-in-out will-change-transform overflow-hidden"
+          style={{ transform: `translateY(${(0 - current) * 100}vh)` }}
         >
-          {/* Slide 0: Hero */}
-          <div className="h-screen w-full overflow-hidden flex flex-col">
-            <HeroSection
-              isDarkMode={isDarkMode}
-              scrollToSection={scrollToSection}
-            />
-          </div>
+          <HeroSection isDarkMode={isDarkMode} scrollToSection={scrollToSection} />
+        </div>
 
-          {/* Slide 1: Skills */}
-          <div className="h-screen w-full overflow-hidden flex flex-col">
-            <SkillsSection isDarkMode={isDarkMode} skills={skills} />
-          </div>
+        {/* Slide 1: Skills */}
+        <div
+          className="absolute inset-0 transition-transform duration-700 ease-in-out will-change-transform overflow-hidden"
+          style={{ transform: `translateY(${(1 - current) * 100}vh)` }}
+        >
+          <SkillsSection isDarkMode={isDarkMode} skills={skills} />
+        </div>
 
-          {/* Slide 2: Projects */}
-          <div className="h-screen w-full overflow-hidden flex flex-col">
-            <ProjectSection isDarkMode={isDarkMode} projects={allProjects} />
-          </div>
+        {/* Slide 2: Projects */}
+        <div
+          className="absolute inset-0 transition-transform duration-700 ease-in-out will-change-transform overflow-hidden"
+          style={{ transform: `translateY(${(2 - current) * 100}vh)` }}
+        >
+          <ProjectSection isDarkMode={isDarkMode} projects={allProjects} />
+        </div>
 
-          {/* Slide 3: Services */}
-          <div className="h-screen w-full overflow-hidden flex flex-col">
-            <ServiceSection isDarkMode={isDarkMode} />
-          </div>
+        {/* Slide 3: Services */}
+        <div
+          className="absolute inset-0 transition-transform duration-700 ease-in-out will-change-transform overflow-hidden"
+          style={{ transform: `translateY(${(3 - current) * 100}vh)` }}
+        >
+          <ServiceSection isDarkMode={isDarkMode} />
+        </div>
 
-          {/* Slide 4: Quick Solutions */}
-          <div className="h-screen w-full overflow-hidden flex flex-col">
-            <QuickSolutions
-              isDarkMode={isDarkMode}
-              scrollToSection={scrollToSection}
-            />
-          </div>
+        {/* Slide 4: Quick Solutions */}
+        <div
+          className="absolute inset-0 transition-transform duration-700 ease-in-out will-change-transform overflow-hidden"
+          style={{ transform: `translateY(${(4 - current) * 100}vh)` }}
+        >
+          <QuickSolutions isDarkMode={isDarkMode} scrollToSection={scrollToSection} />
+        </div>
 
-          {/* Slide 5: Contact */}
-          <div className="h-screen w-full overflow-hidden flex flex-col">
-            <Contact isDarkMode={isDarkMode} />
-          </div>
+        {/* Slide 5: Contact */}
+        <div
+          className="absolute inset-0 transition-transform duration-700 ease-in-out will-change-transform overflow-hidden"
+          style={{ transform: `translateY(${(5 - current) * 100}vh)` }}
+        >
+          <Contact isDarkMode={isDarkMode} />
         </div>
 
         {/* ── Right side nav dots ── */}
