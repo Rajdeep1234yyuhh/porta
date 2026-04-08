@@ -917,12 +917,14 @@ function Background3D() {
 function Cube({
   active,
   dragDelta,
+  twistDelta,
   isOpen,
   onOpen,
   onClose,
 }: {
   active: number;
   dragDelta: React.RefObject<{ x: number; y: number }>;
+  twistDelta: React.RefObject<number>;
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
@@ -958,6 +960,15 @@ function Cube({
         dragQ.current.premultiply(qHoriz.multiply(qVert));
         dragDelta.current.x = 0;
         dragDelta.current.y = 0;
+      }
+      // Twist (Z rotation from two-finger rotate on mobile)
+      if (twistDelta.current !== 0) {
+        const qTwist = new THREE.Quaternion().setFromAxisAngle(
+          new THREE.Vector3(0, 0, 1),
+          twistDelta.current,
+        );
+        dragQ.current.premultiply(qTwist);
+        twistDelta.current = 0;
       }
     }
 
@@ -1059,12 +1070,14 @@ function Cube({
 function Scene({
   active,
   dragDelta,
+  twistDelta,
   isOpen,
   onOpen,
   onClose,
 }: {
   active: number;
   dragDelta: React.RefObject<{ x: number; y: number }>;
+  twistDelta: React.RefObject<number>;
   isOpen: boolean;
   onOpen: () => void;
   onClose: () => void;
@@ -1099,6 +1112,7 @@ function Scene({
       <Cube
         active={active}
         dragDelta={dragDelta}
+        twistDelta={twistDelta}
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
@@ -1130,6 +1144,8 @@ export default function CubePageClient() {
   const lastPointer = useRef({ x: 0, y: 0 });
   const lastPinch = useRef<number | null>(null);
   const lastMidpoint = useRef<{ x: number; y: number } | null>(null);
+  const lastAngle = useRef<number | null>(null);
+  const twistDelta = useRef(0);
   // Track fingers by identifier so swapping indices doesn't corrupt deltas
   const fingerMap = useRef<Map<number, { x: number; y: number }>>(new Map());
   const canvasWrapRef = useRef<HTMLDivElement>(null);
@@ -1206,6 +1222,7 @@ export default function CubePageClient() {
       });
       const dx = e.touches[0].clientX - e.touches[1].clientX;
       const dy = e.touches[0].clientY - e.touches[1].clientY;
+      lastAngle.current = Math.atan2(dy, dx);
       lastPinch.current = Math.sqrt(dx * dx + dy * dy);
     }
   };
@@ -1249,6 +1266,14 @@ export default function CubePageClient() {
       }
       const adx = e.touches[0].clientX - e.touches[1].clientX;
       const ady = e.touches[0].clientY - e.touches[1].clientY;
+      const angle = Math.atan2(ady, adx);
+      if (lastAngle.current !== null) {
+        let dAngle = angle - lastAngle.current;
+        if (dAngle > Math.PI) dAngle -= Math.PI * 2;
+        if (dAngle < -Math.PI) dAngle += Math.PI * 2;
+        twistDelta.current -= dAngle * 0.7; // negated to match natural rotation
+      }
+      lastAngle.current = angle;
       lastPinch.current = Math.sqrt(adx * adx + ady * ady);
     }
   };
@@ -1257,6 +1282,7 @@ export default function CubePageClient() {
     isDragging.current = false;
     lastPinch.current = null;
     lastMidpoint.current = null;
+    lastAngle.current = null;
     fingerMap.current.clear();
   };
 
@@ -1404,6 +1430,7 @@ export default function CubePageClient() {
           <Scene
             active={active}
             dragDelta={dragDelta}
+            twistDelta={twistDelta}
             isOpen={isOpen}
             onOpen={() => setIsOpen(true)}
             onClose={() => setIsOpen(false)}
