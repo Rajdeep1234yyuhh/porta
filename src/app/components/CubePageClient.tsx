@@ -237,13 +237,7 @@ function SkillBadgesWithLogos({
 
 // ── Home face ─────────────────────────────────────────────────────────────────
 
-function HomeFaceInner({
-  isActive,
-  onOpen,
-}: {
-  isActive: boolean;
-  onOpen: () => void;
-}) {
+function HomeFaceInner() {
   const photoTexture = useTexture("/DP.jpg");
 
   // Active face — left half: photo + badges. Right half: name/info/button.
@@ -393,10 +387,7 @@ function HomeFaceInner({
       >
         India · Open to work
       </Text>
-      <group
-        position={[0.75, -0.97, 0.006]}
-        onClick={(e) => { e.stopPropagation(); if (isActive) onOpen(); }}
-      >
+      <group position={[0.75, -0.97, 0.006]}>
         {/* 3D body — raised slab */}
         <RoundedBox args={[1.14, 0.27, 0.055]} radius={0.055} smoothness={4}>
           <meshStandardMaterial
@@ -543,7 +534,87 @@ function OtherFaceContent({
   );
 }
 
-// ── Info panel — slides up from below into cube position when open ────────────
+// ── Staggered info card ───────────────────────────────────────────────────────
+
+function InfoCard({
+  card,
+  color,
+  index,
+  isOpen,
+}: {
+  card: CardItem;
+  color: string;
+  index: number;
+  isOpen: boolean;
+}) {
+  const ref = useRef<THREE.Group>(null);
+  const prog = useRef({ val: 0, vel: 0 });
+  const delay = index * 0.09;
+  const timer = useRef(0);
+
+  useFrame((_, delta) => {
+    if (!ref.current) return;
+    if (isOpen) {
+      timer.current += delta;
+      // Wait for panel to reach ~70% of its journey before cards appear
+      if (timer.current < 0.18 + delay) {
+        ref.current.scale.setScalar(0.001);
+        return;
+      }
+      const force = 320 * (1 - prog.current.val) - 22 * prog.current.vel;
+      prog.current.vel += force * delta;
+      prog.current.val += prog.current.vel * delta;
+    } else {
+      timer.current = 0;
+      prog.current.val = THREE.MathUtils.lerp(prog.current.val, 0, delta * 16);
+      prog.current.vel = 0;
+    }
+    const p = Math.max(0.001, prog.current.val);
+    ref.current.scale.setScalar(p);
+    // subtle upward rise as they expand
+    ref.current.position.y = THREE.MathUtils.lerp(-0.15, 0, Math.min(prog.current.val, 1));
+  });
+
+  const xPos = [-1.0, 0, 1.0][index] ?? 0;
+
+  return (
+    <group ref={ref} position={[xPos, 0.18, 0.07]}>
+      {/* Card body */}
+      <RoundedBox args={[0.88, 1.48, 0.07]} radius={0.07} smoothness={4}>
+        <meshStandardMaterial color="#0f0f22" metalness={0.75} roughness={0.22} />
+      </RoundedBox>
+      {/* Glass tint overlay */}
+      <mesh position={[0, 0, 0.037]}>
+        <planeGeometry args={[0.88, 1.48]} />
+        <meshBasicMaterial color={color} transparent opacity={0.06} />
+      </mesh>
+      {/* Top accent bar */}
+      <mesh position={[0, 0.71, 0.038]}>
+        <planeGeometry args={[0.78, 0.045]} />
+        <meshBasicMaterial color={color} transparent opacity={0.9} />
+      </mesh>
+      {/* Left edge glow line */}
+      <mesh position={[-0.42, 0, 0.038]}>
+        <planeGeometry args={[0.006, 1.3]} />
+        <meshBasicMaterial color={color} transparent opacity={0.4} />
+      </mesh>
+      <Text position={[0, 0.47, 0.042]} fontSize={0.115} color="#ffffff" anchorX="center" anchorY="middle" letterSpacing={0.03} maxWidth={0.78} textAlign="center">
+        {card.title}
+      </Text>
+      <mesh position={[0, 0.3, 0.042]}>
+        <planeGeometry args={[0.65, 0.003]} />
+        <meshBasicMaterial color="rgba(255,255,255,0.12)" />
+      </mesh>
+      {card.lines.map((line, j) => (
+        <Text key={j} position={[0, 0.14 - j * 0.2, 0.042]} fontSize={0.082} color="#94a3b8" anchorX="center" anchorY="middle" maxWidth={0.78} textAlign="center">
+          {line}
+        </Text>
+      ))}
+    </group>
+  );
+}
+
+// ── Info panel — face expands toward camera ───────────────────────────────────
 
 function InfoPanel({
   isOpen,
@@ -555,128 +626,94 @@ function InfoPanel({
   onClose: () => void;
 }) {
   const ref = useRef<THREE.Group>(null);
-  const posY = useRef({ val: -6, vel: 0 });
-  const opac = useRef(0);
+  // Z: starts at cube face position (-0.7 = cube back z + face offset), ends at 2.2 (in front of camera)
+  const posZ = useRef({ val: -0.7, vel: 0 });
+  const scaleS = useRef({ val: 0.32, vel: 0 });
+  const wasOpen = useRef(false);
 
   useFrame((_, delta) => {
     if (!ref.current) return;
-    const targetY = isOpen ? 0 : -6;
-    const stiffness = 220,
-      damping = 22;
-    const force =
-      stiffness * (targetY - posY.current.val) - damping * posY.current.vel;
-    posY.current.vel += force * delta;
-    posY.current.val += posY.current.vel * delta;
-    opac.current = THREE.MathUtils.lerp(
-      opac.current,
-      isOpen ? 1 : 0,
-      delta * (isOpen ? 5 : 12),
-    );
-    ref.current.position.y = posY.current.val;
-    ref.current.visible = opac.current > 0.01;
+
+    // Reset to start position when newly opened
+    if (isOpen && !wasOpen.current) {
+      posZ.current.val = -0.7;
+      posZ.current.vel = 0;
+      scaleS.current.val = 0.32;
+      scaleS.current.vel = 0;
+    }
+    wasOpen.current = isOpen;
+
+    // Spring Z — zooms from cube face toward camera
+    const tZ = isOpen ? 2.2 : -0.7;
+    const zForce = 240 * (tZ - posZ.current.val) - 22 * posZ.current.vel;
+    posZ.current.vel += zForce * delta;
+    posZ.current.val += posZ.current.vel * delta;
+
+    // Spring scale — grows from face-sized (0.32) to full (1.0) with slight overshoot
+    const tS = isOpen ? 1 : 0.32;
+    const sForce = 260 * (tS - scaleS.current.val) - 20 * scaleS.current.vel;
+    scaleS.current.vel += sForce * delta;
+    scaleS.current.val += scaleS.current.vel * delta;
+
+    ref.current.position.z = posZ.current.val;
+    ref.current.scale.setScalar(Math.max(0.001, scaleS.current.val));
+    ref.current.visible = isOpen || scaleS.current.val > 0.05;
   });
 
   const s = SECTIONS[active];
   const cards = SECTION_CARDS[active] ?? [];
 
   return (
-    <group ref={ref} position={[0, -6, 0]}>
-      {/* Panel background */}
-      <RoundedBox
-        args={[3.1, 3.1, 0.12]}
-        radius={0.1}
-        smoothness={4}
-        position={[0, 0, -0.08]}
-      >
-        <meshStandardMaterial color="#10101e" metalness={0.8} roughness={0.2} />
+    <group ref={ref} position={[0, 0, -0.7]}>
+      {/* ── Backdrop — deep metallic slab ── */}
+      <RoundedBox args={[3.15, 3.15, 0.1]} radius={0.1} smoothness={5} position={[0, 0, -0.1]}>
+        <meshStandardMaterial color="#0c0c1e" metalness={0.9} roughness={0.15} />
       </RoundedBox>
-      {/* Top color bar */}
-      <mesh position={[0, 1.52, 0.02]}>
-        <planeGeometry args={[3.1, 0.06]} />
+      {/* Glass inner layer */}
+      <mesh position={[0, 0, -0.04]}>
+        <planeGeometry args={[3.08, 3.08]} />
+        <meshBasicMaterial color={s.color} transparent opacity={0.04} />
+      </mesh>
+      {/* Top glow bar */}
+      <mesh position={[0, 1.535, -0.04]}>
+        <planeGeometry args={[3.15, 0.07]} />
         <meshBasicMaterial color={s.color} />
       </mesh>
-      {/* Section title */}
-      <Text
-        position={[0, 1.22, 0.07]}
-        fontSize={0.22}
-        color="#ffffff"
-        anchorX="center"
-        anchorY="middle"
-        letterSpacing={0.08}
-      >
+      {/* Outer edge highlights — four thin lines */}
+      {/* top */}
+      <mesh position={[0, 1.57, -0.03]}><planeGeometry args={[3.15, 0.008]} /><meshBasicMaterial color="#c4b5fd" transparent opacity={0.6} /></mesh>
+      {/* left */}
+      <mesh position={[-1.572, 0, -0.03]}><planeGeometry args={[0.008, 3.15]} /><meshBasicMaterial color="#c4b5fd" transparent opacity={0.25} /></mesh>
+      {/* right */}
+      <mesh position={[1.572, 0, -0.03]}><planeGeometry args={[0.008, 3.15]} /><meshBasicMaterial color="#c4b5fd" transparent opacity={0.25} /></mesh>
+      {/* bottom */}
+      <mesh position={[0, -1.57, -0.03]}><planeGeometry args={[3.15, 0.008]} /><meshBasicMaterial color="#c4b5fd" transparent opacity={0.15} /></mesh>
+
+      {/* Section label */}
+      <Text position={[0, 1.25, 0.006]} fontSize={0.2} color="#ffffff" anchorX="center" anchorY="middle" letterSpacing={0.1}>
         {s.label.toUpperCase()}
       </Text>
-      <mesh position={[0, 1.0, 0.07]}>
-        <planeGeometry args={[2.6, 0.003]} />
-        <meshBasicMaterial color={s.color} transparent opacity={0.4} />
+      <mesh position={[0, 1.04, 0.006]}>
+        <planeGeometry args={[2.7, 0.004]} />
+        <meshBasicMaterial color={s.color} transparent opacity={0.5} />
       </mesh>
-      {/* Cards — 3 in a row */}
+
+      {/* Staggered cards */}
       {cards.slice(0, 3).map((card, i) => (
-        <group key={i} position={[-1.0 + i * 1.0, 0.24, 0.07]}>
-          <RoundedBox args={[0.88, 1.52, 0.06]} radius={0.07} smoothness={3}>
-            <meshStandardMaterial
-              color="#1a1a30"
-              metalness={0.6}
-              roughness={0.3}
-            />
-          </RoundedBox>
-          <mesh position={[0, 0.73, 0.034]}>
-            <planeGeometry args={[0.88, 0.04]} />
-            <meshBasicMaterial color={s.color} transparent opacity={0.8} />
-          </mesh>
-          <Text
-            position={[0, 0.52, 0.038]}
-            fontSize={0.115}
-            color="#ffffff"
-            anchorX="center"
-            anchorY="middle"
-            letterSpacing={0.02}
-            maxWidth={0.82}
-            textAlign="center"
-          >
-            {card.title}
-          </Text>
-          {card.lines.map((line, j) => (
-            <Text
-              key={j}
-              position={[0, 0.28 - j * 0.2, 0.038]}
-              fontSize={0.085}
-              color="#94a3b8"
-              anchorX="center"
-              anchorY="middle"
-              maxWidth={0.82}
-              textAlign="center"
-            >
-              {line}
-            </Text>
-          ))}
-        </group>
+        <InfoCard key={`${active}-${i}`} card={card} color={s.color} index={i} isOpen={isOpen} />
       ))}
+
       {/* Close button */}
-      <group
-        position={[0, -1.3, 0.07]}
-        onClick={(e) => {
-          e.stopPropagation();
-          onClose();
-        }}
-      >
-        <RoundedBox args={[1.1, 0.28, 0.04]} radius={0.07} smoothness={3}>
-          <meshStandardMaterial
-            color="#1e1e36"
-            metalness={0.5}
-            roughness={0.4}
-            emissive="#ffffff"
-            emissiveIntensity={0.04}
-          />
+      <group position={[0, -1.35, 0.006]} onClick={(e) => { e.stopPropagation(); onClose(); }}>
+        <RoundedBox args={[1.18, 0.3, 0.055]} radius={0.06} smoothness={4}>
+          <meshStandardMaterial color="#16162a" metalness={0.8} roughness={0.2} emissive="#7c3aed" emissiveIntensity={0.1} />
         </RoundedBox>
-        <Text
-          position={[0, 0, 0.026]}
-          fontSize={0.095}
-          color="rgba(255,255,255,0.55)"
-          anchorX="center"
-          anchorY="middle"
-          letterSpacing={0.12}
-        >
+        {/* top highlight */}
+        <mesh position={[0, 0.14, 0.03]}>
+          <planeGeometry args={[1.14, 0.005]} />
+          <meshBasicMaterial color="#a78bfa" transparent opacity={0.6} />
+        </mesh>
+        <Text position={[0, 0, 0.034]} fontSize={0.09} color="#ffffff" anchorX="center" anchorY="middle" letterSpacing={0.14}>
           CLOSE ✕
         </Text>
       </group>
@@ -1016,7 +1053,7 @@ function Cube({
       {/* Face 0 – Home */}
       <group position={[0, 0, 1.52]}>
         <Suspense fallback={null}>
-          <HomeFaceInner isActive={active === 0} onOpen={onOpen} />
+          <HomeFaceInner />
         </Suspense>
       </group>
 

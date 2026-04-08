@@ -8,7 +8,8 @@
       "Read(//c/Users/asus/AppData/Local/Temp/claude/d--porta-porta/3a142db9-c711-4075-9811-bc7b2381a7d0/tasks//**)",
       "Bash(cmd /c \"taskkill /F /IM node.exe\")",
       "Bash(cmd /c \"taskkill /F /IM node.exe 2>&1\")",
-      "Bash(powershell -Command \"Stop-Process -Name node -Force -ErrorAction SilentlyContinue; Write-Host ''Done''\")"
+      "Bash(powershell -Command \"Stop-Process -Name node -Force -ErrorAction SilentlyContinue; Write-Host ''Done''\")",
+      "Bash(powershell -Command \"Stop-Process -Name node -Force -ErrorAction SilentlyContinue; Start-Sleep -Seconds 2; echo done\")"
     ]
   }
 }

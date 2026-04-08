@@ -28,7 +28,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
   return (
     <section
       id="contact"
-      className={`py-12 sm:py-16 relative overflow-hidden ${
+      className={`h-full py-12 sm:py-16 relative overflow-y-auto ${
         isDarkMode ? "bg-gray-900" : "bg-slate-50"
       }`}
     >
@@ -48,7 +48,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-10">
+        <div className="text-center mt-10 mb-10">
           <div className="inline-block mb-3">
             <span
               className={`text-sm font-semibold tracking-wider uppercase px-4 py-2 rounded-full ${
@@ -70,14 +70,6 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
               Together
             </span>
           </h2>
-          <p
-            className={`text-sm md:text-base max-w-2xl mx-auto ${
-              isDarkMode ? "text-gray-400" : "text-slate-600"
-            }`}
-          >
-            Ready to start your next project? I&apos;m here to help bring your
-            ideas to life.
-          </p>
         </div>
 
         {/* Contact Grid */}
@@ -150,7 +142,9 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                       : "bg-white border-slate-200 hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-600 hover:border-blue-300 hover:shadow-lg"
                   } group`}
                 >
-                  <span className={`w-5 h-5 ${isDarkMode ? "text-gray-300 group-hover:text-white" : "text-slate-600 group-hover:text-white"}`}>
+                  <span
+                    className={`w-5 h-5 ${isDarkMode ? "text-gray-300 group-hover:text-white" : "text-slate-600 group-hover:text-white"}`}
+                  >
                     <GithubIcon />
                   </span>
                 </a>
@@ -164,7 +158,9 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                       : "bg-white border-slate-200 hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-600 hover:border-blue-300 hover:shadow-lg"
                   } group`}
                 >
-                  <span className={`w-5 h-5 ${isDarkMode ? "text-gray-300 group-hover:text-white" : "text-slate-600 group-hover:text-white"}`}>
+                  <span
+                    className={`w-5 h-5 ${isDarkMode ? "text-gray-300 group-hover:text-white" : "text-slate-600 group-hover:text-white"}`}
+                  >
                     <LinkedinIcon />
                   </span>
                 </a>
