@@ -299,11 +299,6 @@ function HomeFaceInner({
         </Suspense>
       </TextureErrorBoundary>
 
-      {/* Vertical divider */}
-      <mesh position={[0, 0, 0.003]}>
-        <planeGeometry args={[0.004, 2.9]} />
-        <meshBasicMaterial color="#7c3aed" transparent opacity={0.35} />
-      </mesh>
 
       {/* ── Right half ── */}
       <Text
@@ -400,18 +395,32 @@ function HomeFaceInner({
       </Text>
       <group
         position={[0.75, -0.97, 0.006]}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (isActive) onOpen();
-        }}
+        onClick={(e) => { e.stopPropagation(); if (isActive) onOpen(); }}
       >
-        <RoundedBox args={[1.14, 0.27, 0.02]} radius={0.06} smoothness={3}>
-          <meshBasicMaterial color="rgba(255,255,255,0.12)" />
+        {/* 3D body — raised slab */}
+        <RoundedBox args={[1.14, 0.27, 0.055]} radius={0.055} smoothness={4}>
+          <meshStandardMaterial
+            color="#1a0a30"
+            metalness={0.7}
+            roughness={0.25}
+            emissive="#7c3aed"
+            emissiveIntensity={0.18}
+          />
         </RoundedBox>
+        {/* Top face colour overlay */}
+        <mesh position={[0, 0, 0.029]}>
+          <planeGeometry args={[1.1, 0.23]} />
+          <meshBasicMaterial color="#7c3aed" transparent opacity={0.22} />
+        </mesh>
+        {/* Top edge highlight */}
+        <mesh position={[0, 0.105, 0.029]}>
+          <planeGeometry args={[1.1, 0.006]} />
+          <meshBasicMaterial color="#c4b5fd" transparent opacity={0.55} />
+        </mesh>
         <Text
-          position={[0, 0, 0.014]}
+          position={[0, 0, 0.036]}
           fontSize={0.082}
-          color="rgba(255,255,255,0.75)"
+          color="#ffffff"
           anchorX="center"
           anchorY="middle"
           letterSpacing={0.14}
@@ -1003,11 +1012,6 @@ function Cube({
           envMapIntensity={1.2}
         />
       </RoundedBox>
-      {/* Single subtle edge */}
-      <lineSegments>
-        <edgesGeometry args={[new THREE.BoxGeometry(3.02, 3.02, 3.02)]} />
-        <lineBasicMaterial color="#7c3aed" transparent opacity={0.35} />
-      </lineSegments>
 
       {/* Face 0 – Home */}
       <group position={[0, 0, 1.52]}>
