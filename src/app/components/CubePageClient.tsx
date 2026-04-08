@@ -137,11 +137,8 @@ const SKILL_INITIALS = ["N", "R", "S", "T", "P", "N"];
 // Key changes whenever logo paths change — forces error boundary reset in dev
 const LOGOS_KEY = SKILL_LOGOS.join("|");
 
-// Load portrait once at module level — never disposed by R3F lifecycle
-const photoTexture = new THREE.TextureLoader().load("/DP.jpg");
-photoTexture.colorSpace = THREE.SRGBColorSpace;
-
-// Preload logos into useTexture cache
+// Preload into useTexture cache so texture survives face switches
+useTexture.preload("/DP.jpg");
 SKILL_LOGOS.forEach((p) => useTexture.preload(p));
 
 function SkillBadge({
@@ -247,6 +244,7 @@ function HomeFaceInner({
   isActive: boolean;
   onOpen: () => void;
 }) {
+  const photoTexture = useTexture("/DP.jpg");
 
   // Active face — left half: photo + badges. Right half: name/info/button.
   // Left half center x = -0.75, right half center x = +0.75
