@@ -137,6 +137,13 @@ const SKILL_INITIALS = ["N", "R", "S", "T", "P", "N"];
 // Key changes whenever logo paths change — forces error boundary reset in dev
 const LOGOS_KEY = SKILL_LOGOS.join("|");
 
+// Load portrait once at module level — never disposed by R3F lifecycle
+const photoTexture = new THREE.TextureLoader().load("/DP.jpg");
+photoTexture.colorSpace = THREE.SRGBColorSpace;
+
+// Preload logos into useTexture cache
+SKILL_LOGOS.forEach((p) => useTexture.preload(p));
+
 function SkillBadge({
   x,
   y,
@@ -240,43 +247,6 @@ function HomeFaceInner({
   isActive: boolean;
   onOpen: () => void;
 }) {
-  const photo = useTexture("/DP.jpg");
-
-  // Non-active: flat face — no protruding door panels
-  if (!isActive) {
-    return (
-      <>
-        <mesh position={[0, 0.2, 0.002]}>
-          <planeGeometry args={[2.85, 2.55]} />
-          <meshBasicMaterial map={photo} toneMapped={false} />
-        </mesh>
-        <mesh position={[0, 0.2, 0.004]}>
-          <planeGeometry args={[2.85, 2.55]} />
-          <meshBasicMaterial color="#0a0a16" transparent opacity={0.55} />
-        </mesh>
-        <Text
-          position={[0, -0.88, 0.006]}
-          fontSize={0.18}
-          color="rgba(255,255,255,0.7)"
-          anchorX="center"
-          anchorY="middle"
-          letterSpacing={0.04}
-        >
-          Rajdeep Kotoky
-        </Text>
-        <Text
-          position={[0, -1.12, 0.006]}
-          fontSize={0.09}
-          color="rgba(255,255,255,0.35)"
-          anchorX="center"
-          anchorY="middle"
-          letterSpacing={0.03}
-        >
-          Full Stack · AI Engineer
-        </Text>
-      </>
-    );
-  }
 
   // Active face — left half: photo + badges. Right half: name/info/button.
   // Left half center x = -0.75, right half center x = +0.75
@@ -317,7 +287,7 @@ function HomeFaceInner({
       {/* Portrait photo */}
       <mesh position={[-0.75, 0.42, 0.004]}>
         <planeGeometry args={[1.2, 1.58]} />
-        <meshBasicMaterial map={photo} toneMapped={false} />
+        <meshBasicMaterial map={photoTexture} toneMapped={false} />
       </mesh>
       {/* Skill badges — centered under photo, x offset from left-half center */}
       <TextureErrorBoundary key={LOGOS_KEY} fallback={fallback}>
