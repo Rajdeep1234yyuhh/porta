@@ -32,18 +32,10 @@ const tagColors = [
 
 export default function ServicesClient() {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     setIsDarkMode(saved === "dark");
-  }, []);
-
-  useEffect(() => {
-    const handleScroll = () => setScrollY(window.scrollY);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -74,7 +66,6 @@ export default function ServicesClient() {
     } else {
       window.location.href = `/#${id}`;
     }
-    setIsMenuOpen(false);
   };
 
   return (
@@ -82,9 +73,6 @@ export default function ServicesClient() {
       <Navbar
         isDarkMode={isDarkMode}
         toggleTheme={toggleTheme}
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-        scrollY={scrollY}
         scrollToSection={scrollToSection}
       />
 

@@ -21,7 +21,6 @@ const SECTION_IDS = [
 ];
 
 export default function HomeClient() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
@@ -62,7 +61,6 @@ export default function HomeClient() {
     (sectionId: string) => {
       const idx = SECTION_IDS.indexOf(sectionId);
       if (idx !== -1) goTo(idx);
-      setIsMenuOpen(false);
     },
     [goTo],
   );
@@ -173,9 +171,6 @@ export default function HomeClient() {
       <Navbar
         isDarkMode={isDarkMode}
         toggleTheme={toggleTheme}
-        isMenuOpen={isMenuOpen}
-        setIsMenuOpen={setIsMenuOpen}
-        scrollY={current * 100}
         scrollToSection={scrollToSection}
         activeSection={SECTION_IDS[current]}
       />

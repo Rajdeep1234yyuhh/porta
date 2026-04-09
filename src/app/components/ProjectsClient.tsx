@@ -382,8 +382,6 @@ export default function ProjectsClient() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [hasScrolled, setHasScrolled] = useState(false);
   const [expandedTechStacks, setExpandedTechStacks] = useState<Set<number>>(new Set());
   const [expandedDescriptions, setExpandedDescriptions] = useState<Set<number>>(new Set());
 
@@ -394,24 +392,6 @@ export default function ProjectsClient() {
       setIsDarkMode(true);
       document.documentElement.classList.add("dark");
     }
-  }, []);
-
-  useEffect(() => {
-    let frameId = 0;
-    const handleScroll = () => {
-      if (frameId) return;
-      frameId = window.requestAnimationFrame(() => {
-        frameId = 0;
-        const nextHasScrolled = window.scrollY > 50;
-        setHasScrolled((prev) => (prev === nextHasScrolled ? prev : nextHasScrolled));
-      });
-    };
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-    return () => {
-      if (frameId) window.cancelAnimationFrame(frameId);
-      window.removeEventListener("scroll", handleScroll);
-    };
   }, []);
 
   const toggleTheme = () => {
@@ -427,7 +407,6 @@ export default function ProjectsClient() {
   };
 
   const scrollToSection = (sectionId: string) => {
-    setIsMenuOpen(false);
     if (sectionId === "projects") {
       window.scrollTo({ top: 0, behavior: "smooth" });
     } else {
@@ -490,9 +469,6 @@ export default function ProjectsClient() {
         <Navbar
           isDarkMode={isDarkMode}
           toggleTheme={toggleTheme}
-          isMenuOpen={isMenuOpen}
-          setIsMenuOpen={setIsMenuOpen}
-          scrollY={hasScrolled ? 100 : 0}
           scrollToSection={scrollToSection}
         />
       </div>
