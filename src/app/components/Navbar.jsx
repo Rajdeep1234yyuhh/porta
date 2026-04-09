@@ -235,22 +235,29 @@ const Navbar = ({
 
       {/* ── Mobile: floating dock (same style as desktop, top-center) ── */}
       <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex lg:hidden items-center gap-0.5 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border bg-gray-900/90 border-white/10">
-        {navItems.map(({ label, icon: Icon, section }) => (
-          <button
-            key={section}
-            onClick={() => handleNav(section)}
-            className={`group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 ${
-              activeSection === section
-                ? "bg-violet-600 text-white shadow-lg shadow-violet-500/30"
-                : "text-gray-400 hover:text-white hover:bg-white/10"
-            }`}
-          >
-            <Icon className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />
-            <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">
-              {label}
-            </span>
-          </button>
-        ))}
+        {navItems.map(({ label, icon: Icon, section }) => {
+          const isActive = activeSection === section;
+          return (
+            <button
+              key={section}
+              onClick={() => handleNav(section)}
+              className={`group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 ${
+                isActive
+                  ? "bg-violet-600 text-white shadow-lg shadow-violet-500/30"
+                  : "text-gray-400 hover:text-white hover:bg-white/10"
+              }`}
+            >
+              <Icon className={`w-4 h-4 transition-transform duration-200 ${isActive ? "" : "group-hover:-translate-y-1.5"}`} />
+              <span className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow transition-all duration-200 ${
+                isActive
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0"
+              }`}>
+                {label}
+              </span>
+            </button>
+          );
+        })}
 
         <div className="w-px h-5 bg-white/10 mx-0.5" />
 
@@ -264,8 +271,12 @@ const Navbar = ({
                 : "text-gray-400 hover:text-white hover:bg-white/10"
             }`}
           >
-            <Zap className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />
-            <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">Quick Fix</span>
+            <Zap className={`w-4 h-4 transition-transform duration-200 ${activeSection === "quick-solutions" ? "" : "group-hover:-translate-y-1.5"}`} />
+            <span className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow transition-all duration-200 ${
+              activeSection === "quick-solutions"
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0"
+            }`}>Quick Fix</span>
           </button>
           {quickOpen && (
             <div
@@ -280,6 +291,9 @@ const Navbar = ({
               </a>
               <button onClick={() => { scrollToSection("contact"); setQuickOpen(false); }} className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors">
                 <Mail className="w-4 h-4 text-purple-400" /> Message
+              </button>
+              <button onClick={handleQuickDetails} className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors">
+                <Info className="w-4 h-4 text-emerald-400" /> Details
               </button>
             </div>
           )}
