@@ -153,7 +153,7 @@ export default function HomeClient() {
   ];
 
   // Navbar height — slides rest below this, but travel past it when animating
-  const NAV_H = 76;
+  const NAV_H = 84;
 
   return (
     <div
@@ -190,10 +190,10 @@ export default function HomeClient() {
             key={i}
             className="fixed overflow-hidden rounded-2xl will-change-transform shadow-2xl"
             style={{
-              top: NAV_H,
-              left: 8,
-              right: 8,
-              bottom: 8,
+              top: NAV_H + 8,
+              left: 32,
+              right: 32,
+              bottom: 20,
               zIndex: isEntering ? 11 : 10,
               transform: `translateY(calc(${i - current} * 100vh))`,
               transition: "transform 650ms cubic-bezier(0.87, 0, 0.13, 1)",
