@@ -18,7 +18,7 @@ const WhatsAppIcon = () => (
 const DockItem = ({ icon: Icon, label, onClick, active, isDarkMode }) => (
   <button
     onClick={onClick}
-    className={`group relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200
+    className={`group relative flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200
       ${active
         ? "bg-violet-600 text-white shadow-lg shadow-violet-500/30"
         : isDarkMode
@@ -26,10 +26,8 @@ const DockItem = ({ icon: Icon, label, onClick, active, isDarkMode }) => (
           : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
       }`}
   >
-    <Icon className="w-5 h-5" />
-    <span className={`pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md px-2 py-0.5 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-150 border ${
-      isDarkMode ? "bg-gray-900 text-white border-white/10" : "bg-gray-900 text-white border-gray-700"
-    }`}>
+    <Icon className="w-4 h-4 shrink-0" />
+    <span className={`text-xs font-medium whitespace-nowrap ${active ? "text-white" : ""}`}>
       {label}
     </span>
   </button>
@@ -56,18 +54,12 @@ const Navbar = ({ isDarkMode, toggleTheme, isMenuOpen, setIsMenuOpen, scrollY, s
   }, []);
 
   const handleNav = (section) => {
-    if (section === "home") {
-      if (window.location.pathname === "/") window.scrollTo({ top: 0, behavior: "smooth" });
-      else window.location.href = "/";
-    } else {
-      scrollToSection(section);
-    }
+    scrollToSection(section);
     setIsMenuOpen(false);
   };
 
   const handleQuickDetails = () => {
-    if (window.location.pathname === "/") scrollToSection("quick-solutions");
-    else window.location.href = "/#quick-solutions";
+    scrollToSection("quick-solutions");
     setQuickOpen(false);
     setIsMenuOpen(false);
   };
@@ -75,7 +67,7 @@ const Navbar = ({ isDarkMode, toggleTheme, isMenuOpen, setIsMenuOpen, scrollY, s
   return (
     <>
       {/* ── Desktop: floating dock ── */}
-      <div className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 hidden lg:flex items-center gap-1 px-3 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 ${
+      <div className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 hidden lg:flex items-center gap-0.5 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 ${
         isDarkMode
           ? "bg-gray-900/85 border-white/10"
           : "bg-white/90 border-gray-200/80 shadow-gray-200/60"
@@ -100,12 +92,16 @@ const Navbar = ({ isDarkMode, toggleTheme, isMenuOpen, setIsMenuOpen, scrollY, s
         <div className="relative" ref={quickRef}>
           <button
             onClick={() => setQuickOpen((o) => !o)}
-            className={`group relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}
+            className={`group relative flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 ${
+              activeSection === "quick-solutions"
+                ? "bg-violet-600 text-white shadow-lg shadow-violet-500/30"
+                : isDarkMode
+                  ? "text-gray-400 hover:text-white hover:bg-white/10"
+                  : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+            }`}
           >
-            <Zap className="w-5 h-5" />
-            <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-0.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 border border-white/10">
-              Quick Fix
-            </span>
+            <Zap className="w-4 h-4 shrink-0" />
+            <span className="text-xs font-medium whitespace-nowrap">Quick Fix</span>
           </button>
           {quickOpen && (
             <div
@@ -149,12 +145,10 @@ const Navbar = ({ isDarkMode, toggleTheme, isMenuOpen, setIsMenuOpen, scrollY, s
         {/* Theme toggle */}
         <button
           onClick={toggleTheme}
-          className={`group relative flex items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}
+          className={`flex items-center gap-1.5 px-3 py-2 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}
         >
-          {isDarkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-          <span className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-md bg-gray-900 px-2 py-0.5 text-xs font-medium text-white opacity-0 group-hover:opacity-100 transition-opacity duration-150 border border-white/10">
-            {isDarkMode ? "Light" : "Dark"}
-          </span>
+          {isDarkMode ? <Sun className="w-4 h-4 shrink-0" /> : <Moon className="w-4 h-4 shrink-0" />}
+          <span className="text-xs font-medium">{isDarkMode ? "Light" : "Dark"}</span>
         </button>
 
         {/* Divider */}

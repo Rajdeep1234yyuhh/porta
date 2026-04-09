@@ -19,14 +19,6 @@ const SECTION_IDS = [
   "quick-solutions",
   "contact",
 ];
-const SECTION_LABELS = [
-  "Home",
-  "Skills",
-  "Projects",
-  "Services",
-  "Solutions",
-  "Contact",
-];
 
 export default function HomeClient() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -61,7 +53,7 @@ export default function HomeClient() {
       if (clamped === current) return;
       setAnimating(true);
       setCurrent(clamped);
-      setTimeout(() => setAnimating(false), 520);
+      setTimeout(() => setAnimating(false), 750);
     },
     [animating, current],
   );
@@ -151,9 +143,32 @@ export default function HomeClient() {
     },
   ];
 
+  const slides = [
+    <HeroSection key="hero" isDarkMode={isDarkMode} scrollToSection={scrollToSection} />,
+    <SkillsSection key="skills" isDarkMode={isDarkMode} skills={skills} />,
+    <ProjectSection key="projects" isDarkMode={isDarkMode} projects={allProjects} />,
+    <ServiceSection key="services" isDarkMode={isDarkMode} />,
+    <QuickSolutions key="quick" isDarkMode={isDarkMode} scrollToSection={scrollToSection} />,
+    <Contact key="contact" isDarkMode={isDarkMode} />,
+  ];
+
+  // Navbar height — slides rest below this, but travel past it when animating
+  const NAV_H = 76;
+
   return (
     <div
-      className={`transition-colors duration-300 ${isDarkMode ? "bg-gray-900" : "bg-gray-50"}`}
+      className="fixed inset-0"
+      style={{ background: "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)" }}
+      onTouchStart={(e) => { touchStartY.current = e.touches[0].clientY; }}
+      onTouchEnd={(e) => {
+        if (touchStartY.current === null) return;
+        const dy = e.changedTouches[0].clientY - touchStartY.current;
+        if (Math.abs(dy) > 45) {
+          if (dy < 0) goTo(current + 1);
+          else goTo(current - 1);
+        }
+        touchStartY.current = null;
+      }}
     >
       <Navbar
         isDarkMode={isDarkMode}
@@ -165,151 +180,34 @@ export default function HomeClient() {
         activeSection={SECTION_IDS[current]}
       />
 
-      {/* ── Full-screen vertical slider ── */}
-      <div
-        className="fixed inset-0 overflow-hidden"
-        style={{ zIndex: 1 }}
-        onTouchStart={(e) => {
-          touchStartY.current = e.touches[0].clientY;
-        }}
-        onTouchEnd={(e) => {
-          if (touchStartY.current === null) return;
-          const dy = e.changedTouches[0].clientY - touchStartY.current;
-          if (Math.abs(dy) > 45) {
-            if (dy < 0) goTo(current + 1);
-            else goTo(current - 1);
-          }
-          touchStartY.current = null;
-        }}
-      >
-        {/* Slide 0: Hero */}
-        <div
-          className="absolute inset-0 transition-transform duration-700 ease-in-out will-change-transform overflow-hidden"
-          style={{ transform: `translateY(${(0 - current) * 100}vh)` }}
-        >
-          <HeroSection isDarkMode={isDarkMode} scrollToSection={scrollToSection} />
-        </div>
-
-        {/* Slide 1: Skills */}
-        <div
-          className="absolute inset-0 transition-transform duration-700 ease-in-out will-change-transform overflow-hidden"
-          style={{ transform: `translateY(${(1 - current) * 100}vh)` }}
-        >
-          <SkillsSection isDarkMode={isDarkMode} skills={skills} />
-        </div>
-
-        {/* Slide 2: Projects */}
-        <div
-          className="absolute inset-0 transition-transform duration-700 ease-in-out will-change-transform overflow-hidden"
-          style={{ transform: `translateY(${(2 - current) * 100}vh)` }}
-        >
-          <ProjectSection isDarkMode={isDarkMode} projects={allProjects} />
-        </div>
-
-        {/* Slide 3: Services */}
-        <div
-          className="absolute inset-0 transition-transform duration-700 ease-in-out will-change-transform overflow-hidden"
-          style={{ transform: `translateY(${(3 - current) * 100}vh)` }}
-        >
-          <ServiceSection isDarkMode={isDarkMode} />
-        </div>
-
-        {/* Slide 4: Quick Solutions */}
-        <div
-          className="absolute inset-0 transition-transform duration-700 ease-in-out will-change-transform overflow-hidden"
-          style={{ transform: `translateY(${(4 - current) * 100}vh)` }}
-        >
-          <QuickSolutions isDarkMode={isDarkMode} scrollToSection={scrollToSection} />
-        </div>
-
-        {/* Slide 5: Contact */}
-        <div
-          className="absolute inset-0 transition-transform duration-700 ease-in-out will-change-transform overflow-hidden"
-          style={{ transform: `translateY(${(5 - current) * 100}vh)` }}
-        >
-          <Contact isDarkMode={isDarkMode} />
-        </div>
-
-        {/* ── Right side nav dots ── */}
-        <div className="fixed right-5 top-1/2 -translate-y-1/2 flex flex-col gap-3 z-30">
-          {SECTION_LABELS.map((label, i) => (
-            <button
-              key={i}
-              onClick={() => goTo(i)}
-              title={label}
-              className="group flex items-center justify-end gap-2"
-            >
-              {/* Label tooltip */}
-              <span
-                className={`text-xs font-medium tracking-wide transition-all duration-200 opacity-0 group-hover:opacity-100 ${
-                  isDarkMode ? "text-gray-300" : "text-gray-600"
-                }`}
-              >
-                {label}
-              </span>
-              <span
-                className={`block rounded-full transition-all duration-300 ${
-                  i === current
-                    ? "w-3 h-3 bg-violet-500 shadow-[0_0_10px_rgba(124,58,237,0.9)]"
-                    : "w-2 h-2 bg-gray-400/40 group-hover:bg-violet-400/60"
-                }`}
-              />
-            </button>
-          ))}
-        </div>
-
-        {/* ── Up / Down arrows ── */}
-        {/* {current > 0 && (
-          <button
-            onClick={() => goTo(current - 1)}
-            className={`fixed left-1/2 -translate-x-1/2 top-20 z-30 p-2.5 rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110 ${
-              isDarkMode
-                ? "bg-gray-800/80 text-white"
-                : "bg-white/80 text-gray-700"
-            }`}
-          >
-            ↑
-          </button>
-        )}
-        {current < SECTION_IDS.length - 1 && (
-          <button
-            onClick={() => goTo(current + 1)}
-            className={`fixed left-1/2 -translate-x-1/2 bottom-8 z-30 p-2.5 rounded-full shadow-lg backdrop-blur-sm transition-all duration-200 hover:scale-110 ${
-              isDarkMode
-                ? "bg-gray-800/80 text-white"
-                : "bg-white/80 text-gray-700"
-            }`}
-          >
-            ↓
-          </button>
-        )} */}
-
-        {/* ── Section indicator ── */}
-        <div
-          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-30 pointer-events-none"
-          style={{ marginLeft: "2rem" }}
-        >
+      {/* Slides rest below the navbar. When animating they travel a full 100vh
+          so they visually pass behind the navbar before disappearing off-screen.
+          Entering slide is delayed so the exit finishes first. */}
+      {slides.map((slide, i) => {
+        const isEntering = i === current;
+        return (
           <div
-            className={`px-4 py-1.5 rounded-full text-xs font-semibold tracking-widest uppercase shadow backdrop-blur-sm ${
-              isDarkMode
-                ? "bg-gray-800/80 text-violet-400"
-                : "bg-white/80 text-violet-600"
-            }`}
+            key={i}
+            className="fixed overflow-hidden rounded-2xl will-change-transform shadow-2xl"
+            style={{
+              top: NAV_H,
+              left: 8,
+              right: 8,
+              bottom: 8,
+              zIndex: isEntering ? 11 : 10,
+              transform: `translateY(calc(${i - current} * 100vh))`,
+              transition: "transform 650ms cubic-bezier(0.87, 0, 0.13, 1)",
+              transitionDelay: isEntering ? "200ms" : "0ms",
+            }}
           >
-            {SECTION_LABELS[current]}
-            <span className="ml-2 opacity-40">
-              {current + 1} / {SECTION_IDS.length}
-            </span>
+            {slide}
           </div>
-        </div>
-      </div>
+        );
+      })}
 
       {/* Keep FAB on top of everything */}
-      <div className="fixed z-40 bottom-4 right-4">
-        <QuickFixFAB
-          isDarkMode={isDarkMode}
-          scrollToSection={scrollToSection}
-        />
+      <div className="fixed z-40 bottom-5 right-5">
+        <QuickFixFAB isDarkMode={isDarkMode} scrollToSection={scrollToSection} />
       </div>
     </div>
   );

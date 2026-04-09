@@ -92,7 +92,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({
   return (
     <section
       id="quick-solutions"
-      className={`h-full py-12 sm:py-16 relative overflow-y-auto ${
+      className={`h-full py-8 relative overflow-y-auto ${
         isDarkMode ? "bg-gray-900" : "bg-emerald-50"
       }`}
     >
@@ -119,7 +119,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center mt-10 mb-5">
+        <div className="text-center mb-5">
           <div
             className="inline-flex items-center gap-2 mb-2 px-3 py-1 rounded-full border text-xs font-semibold
             bg-gradient-to-r from-green-500/10 to-emerald-500/10

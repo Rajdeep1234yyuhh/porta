@@ -54,7 +54,7 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
   return (
     <section
       id="skills"
-      className={`h-full py-12 sm:py-16 relative overflow-y-auto ${
+      className={`h-full py-8 relative overflow-y-auto ${
         isDarkMode ? "bg-gray-900" : "bg-slate-50"
       }`}
     >
@@ -74,7 +74,7 @@ const SkillsSection: React.FC<SkillsSectionProps> = ({
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10">
         {/* Section Header */}
-        <div className="text-center mt-10 mb-12">
+        <div className="text-center mb-8">
           <div className="inline-block mb-4">
             <span
               className={`text-sm font-semibold tracking-wider uppercase px-4 py-2 rounded-full ${
