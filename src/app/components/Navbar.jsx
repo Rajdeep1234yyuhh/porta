@@ -6,7 +6,6 @@ import {
   Sun,
   Moon,
   Home,
-  Code2,
   FolderOpen,
   Briefcase,
   Mail,
@@ -54,7 +53,6 @@ const Navbar = ({
 
   const navItems = [
     { label: "Home", icon: Home, section: "home" },
-    { label: "Skills", icon: Code2, section: "skills" },
     { label: "Projects", icon: FolderOpen, section: "projects" },
     { label: "Services", icon: Briefcase, section: "services" },
     { label: "Contact", icon: Mail, section: "contact" },
@@ -306,6 +304,14 @@ const Navbar = ({
           {isDarkMode ? <Sun className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" /> : <Moon className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />}
           <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">{isDarkMode ? "Light" : "Dark"}</span>
         </button>
+
+        <div className="w-px h-5 bg-white/10 mx-0.5" />
+
+        {/* Cube */}
+        <Link href="/cube" className="group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200">
+          <Box className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />
+          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">Cube</span>
+        </Link>
       </div>
     </>
   );

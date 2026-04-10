@@ -4,7 +4,6 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import Contact from "./Contact";
 import Navbar from "./Navbar";
 import HeroSection from "./HeroSection";
-import SkillsSection from "./SkillsSection";
 import ProjectSection from "./ProjectSection";
 import ServiceSection from "./ServiceSection";
 import QuickSolutions from "./QuickSolutions";
@@ -13,7 +12,6 @@ import { allProjects } from "../data/projects";
 
 const SECTION_IDS = [
   "home",
-  "skills",
   "projects",
   "services",
   "quick-solutions",
@@ -90,60 +88,8 @@ export default function HomeClient() {
     return () => window.removeEventListener("wheel", handler);
   }, [current, goTo]);
 
-  const skills = [
-    {
-      name: "Next.js",
-      level: 90,
-      color: "#ffffff",
-      bg: "#000000",
-      lightBg: "#f0f0f0",
-      lightColor: "#000000",
-    },
-    {
-      name: "React",
-      level: 95,
-      color: "#61DAFB",
-      bg: "#20232a",
-      lightBg: "#e0f8fe",
-      lightColor: "#0891b2",
-    },
-    {
-      name: "Shopify",
-      level: 85,
-      color: "#96BF48",
-      bg: "#1a1a1a",
-      lightBg: "#eef6e0",
-      lightColor: "#4a7a10",
-    },
-    {
-      name: "Tailwind CSS",
-      level: 95,
-      color: "#38BDF8",
-      bg: "#0f172a",
-      lightBg: "#e0f4fe",
-      lightColor: "#0284c7",
-    },
-    {
-      name: "Python",
-      level: 75,
-      color: "#FFD343",
-      bg: "#1e3a5f",
-      lightBg: "#fef9e7",
-      lightColor: "#b45309",
-    },
-    {
-      name: "Node.js",
-      level: 80,
-      color: "#68A063",
-      bg: "#1a1a1a",
-      lightBg: "#edf5e8",
-      lightColor: "#166534",
-    },
-  ];
-
   const slides = [
     <HeroSection key="hero" isDarkMode={isDarkMode} scrollToSection={scrollToSection} />,
-    <SkillsSection key="skills" isDarkMode={isDarkMode} skills={skills} />,
     <ProjectSection key="projects" isDarkMode={isDarkMode} projects={allProjects} />,
     <ServiceSection key="services" isDarkMode={isDarkMode} />,
     <QuickSolutions key="quick" isDarkMode={isDarkMode} scrollToSection={scrollToSection} />,

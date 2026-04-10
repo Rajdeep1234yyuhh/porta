@@ -36,41 +36,41 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
         <div className={`absolute -bottom-10 -right-20 w-80 h-80 rounded-full blur-3xl opacity-15 ${isDarkMode ? "bg-purple-500" : "bg-purple-200"}`} />
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 py-5">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 py-3">
         {/* Header */}
-        <div className="text-center mb-6">
-          <span className={`inline-block text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-full mb-2 ${isDarkMode ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-green-100 text-green-600 border border-green-200"}`}>
+        <div className="text-center mb-4">
+          <span className={`inline-block text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-full mb-1.5 ${isDarkMode ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-green-100 text-green-600 border border-green-200"}`}>
             Get In Touch
           </span>
-          <h2 className={`text-2xl md:text-3xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+          <h2 className={`text-xl md:text-2xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
             Let&apos;s Work{" "}
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Together</span>
           </h2>
         </div>
 
         {/* Grid */}
-        <div className="grid md:grid-cols-2 gap-5">
+        <div className="grid md:grid-cols-2 gap-4">
           {/* Contact Info */}
-          <div className={`p-6 rounded-2xl border transition-all duration-300 ${isDarkMode ? "bg-gray-800/50 backdrop-blur-sm border-gray-700/50 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/15" : "bg-white border-slate-200 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-500/10"}`}>
-            <h3 className={`text-lg font-bold mb-4 ${isDarkMode ? "text-white" : "text-slate-900"}`}>Contact Information</h3>
+          <div className={`p-4 rounded-2xl border transition-all duration-300 ${isDarkMode ? "bg-gray-800/50 backdrop-blur-sm border-gray-700/50 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/15" : "bg-white border-slate-200 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-500/10"}`}>
+            <h3 className={`text-sm font-bold mb-3 ${isDarkMode ? "text-white" : "text-slate-900"}`}>Contact Information</h3>
 
             <a
               href="mailto:kotoky10@gmail.com"
-              className={`flex items-center p-3 rounded-lg mb-4 transition-all duration-200 group ${isDarkMode ? "hover:bg-gray-700/50" : "hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50"}`}
+              className={`flex items-center p-2.5 rounded-lg mb-3 transition-all duration-200 group ${isDarkMode ? "hover:bg-gray-700/50" : "hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50"}`}
             >
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200">
-                <Mail className="w-5 h-5 text-white" />
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200 shrink-0">
+                <Mail className="w-4 h-4 text-white" />
               </div>
               <div>
                 <div className={`text-[10px] font-medium uppercase tracking-wider mb-0.5 ${isDarkMode ? "text-gray-500" : "text-slate-400"}`}>Email</div>
-                <div className={`text-sm font-medium ${isDarkMode ? "text-gray-300 group-hover:text-white" : "text-slate-700 group-hover:text-slate-900"}`}>
+                <div className={`text-xs font-medium ${isDarkMode ? "text-gray-300 group-hover:text-white" : "text-slate-700 group-hover:text-slate-900"}`}>
                   kotoky10@gmail.com
                 </div>
               </div>
             </a>
 
             <div>
-              <h4 className={`text-xs font-semibold uppercase tracking-wider mb-3 ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>Connect With Me</h4>
+              <h4 className={`text-[10px] font-semibold uppercase tracking-wider mb-2 ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>Connect With Me</h4>
               <div className="flex gap-2">
                 {[
                   { href: "https://github.com/Rajdeep1234yyuhh", icon: <GithubIcon />, hoverClass: isDarkMode ? "hover:bg-gray-600 hover:border-blue-500/50" : "hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-600 hover:border-blue-300" },
@@ -82,7 +82,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`w-10 h-10 rounded-lg flex items-center justify-center transition-all duration-200 border group ${isDarkMode ? "bg-gray-700/50 border-gray-600" : "bg-white border-slate-200"} ${hoverClass}`}
+                    className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 border group ${isDarkMode ? "bg-gray-700/50 border-gray-600" : "bg-white border-slate-200"} ${hoverClass}`}
                   >
                     <span className={`${isDarkMode ? "text-gray-300 group-hover:text-white" : "text-slate-600 group-hover:text-white"}`}>
                       {icon}
@@ -94,26 +94,26 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
           </div>
 
           {/* CTA Card */}
-          <div className={`p-6 rounded-2xl border ${isDarkMode ? "bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50" : "bg-gradient-to-br from-white to-slate-50 border-slate-200"}`}>
-            <div className="flex items-center mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mr-3">
-                <div className="w-2.5 h-2.5 bg-white rounded-full animate-pulse" />
+          <div className={`p-4 rounded-2xl border ${isDarkMode ? "bg-gradient-to-br from-gray-800 to-gray-900 border-gray-700/50" : "bg-gradient-to-br from-white to-slate-50 border-slate-200"}`}>
+            <div className="flex items-center mb-3">
+              <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center mr-3 shrink-0">
+                <div className="w-2 h-2 bg-white rounded-full animate-pulse" />
               </div>
               <div>
-                <h4 className={`text-base font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>Available for Work</h4>
-                <p className={`text-xs ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>Ready to collaborate</p>
+                <h4 className={`text-sm font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>Available for Work</h4>
+                <p className={`text-[10px] ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>Ready to collaborate</p>
               </div>
             </div>
 
-            <p className={`text-sm mb-4 leading-relaxed ${isDarkMode ? "text-gray-400" : "text-slate-600"}`}>
+            <p className={`text-xs mb-3 leading-relaxed ${isDarkMode ? "text-gray-400" : "text-slate-600"}`}>
               I&apos;m currently available for freelance work and new opportunities. Let&apos;s discuss how I can help bring your vision to life.
             </p>
 
-            <div className="space-y-2 mb-5">
+            <div className="space-y-1.5 mb-4">
               {["Quick turnaround time", "Modern, responsive designs", "Ongoing support & maintenance"].map((feature) => (
                 <div key={feature} className="flex items-center gap-2">
-                  <div className="w-5 h-5 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shrink-0">
-                    <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="w-4 h-4 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shrink-0">
+                    <svg className="w-2 h-2 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                     </svg>
                   </div>
@@ -124,7 +124,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
 
             <a
               href="mailto:kotoky10@gmail.com"
-              className={`group inline-flex items-center w-full justify-center px-6 py-3 rounded-lg font-medium text-sm transition-all duration-200 ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-gray-900 text-white hover:bg-gray-800"}`}
+              className={`group inline-flex items-center w-full justify-center px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-gray-900 text-white hover:bg-gray-800"}`}
             >
               Start a Conversation
               <Send className="w-3.5 h-3.5 ml-2 group-hover:translate-x-0.5 transition-transform" />
