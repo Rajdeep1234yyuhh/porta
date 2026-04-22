@@ -100,19 +100,21 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         <span className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? "text-gray-600" : "text-slate-400"}`}>Core Stack</span>
         <div className={`h-px flex-1 ${isDarkMode ? "bg-white/10" : "bg-slate-200"}`} />
       </div>
-      <div className="flex flex-wrap gap-1.5 justify-center md:justify-start">
+      <div className="flex flex-wrap gap-2 justify-center md:justify-start">
         {MAIN_STACK.map((tech) => (
           <div key={tech.name}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-semibold cursor-default transition-transform duration-150 hover:scale-105"
+            className="relative group w-10 h-10 rounded-xl flex items-center justify-center cursor-default transition-transform duration-150 hover:scale-110"
             style={{ background: isDarkMode ? tech.bg : tech.lightBg }}>
-            <tech.Icon size={12} color={isDarkMode ? tech.color : tech.lightColor} />
-            <span style={{ color: isDarkMode ? tech.color : tech.lightColor }}>{tech.name}</span>
+            <tech.Icon size={20} color={isDarkMode ? tech.color : tech.lightColor} />
+            <span className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold px-2 py-0.5 rounded-md bg-gray-900 text-white shadow opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 z-10">
+              {tech.name}
+            </span>
           </div>
         ))}
       </div>
       <div className="overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)", WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)" }}>
         <div className="flex animate-marquee w-max">
-          {[...MINOR_STACK, ...MINOR_STACK].map((tech, i) => (
+          {[...MAIN_STACK, ...MINOR_STACK, ...MAIN_STACK, ...MINOR_STACK].map((tech, i) => (
             <div key={i} className="flex items-center gap-1.5 mx-2.5 cursor-default shrink-0">
               <div className="w-5 h-5 rounded flex items-center justify-center shrink-0" style={{ background: isDarkMode ? tech.bg : tech.lightBg }}>
                 <tech.Icon size={11} color={isDarkMode ? tech.color : tech.lightColor} />
