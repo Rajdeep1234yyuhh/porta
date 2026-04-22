@@ -85,7 +85,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
   return (
     <section
       id="projects"
-      className={`h-full flex flex-col overflow-hidden relative ${isDarkMode ? "bg-gray-900" : "bg-slate-50"}`}
+      className={`h-full flex flex-col overflow-hidden relative ${isDarkMode ? "bg-[#141414]" : "bg-slate-50"}`}
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div
@@ -173,7 +173,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
                     <div
                       className={`h-full flex flex-col rounded-2xl border overflow-hidden transition-all duration-300 hover:scale-[1.015] ${
                         isDarkMode
-                          ? "bg-gray-800/60 border-gray-700/50 hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/15"
+                          ? "bg-[#1c1c1e] border-[#2a2a2a] hover:border-purple-500/50 hover:shadow-xl hover:shadow-purple-500/15"
                           : "bg-white border-slate-200 hover:border-purple-300 hover:shadow-xl hover:shadow-purple-500/10"
                       }`}
                       onMouseEnter={(e) => {
@@ -267,7 +267,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
                                     ? "bg-red-500/15 text-red-400 border-red-500/25"
                                     : "bg-red-50 text-red-700 border-red-200"
                                   : isDarkMode
-                                    ? "bg-gray-700 text-gray-400 border-gray-600"
+                                    ? "bg-[#242424] text-gray-400 border-[#333]"
                                     : "bg-gray-100 text-gray-600 border-gray-200"
                               }`}
                             >
@@ -331,7 +331,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({
                 className={`rounded-full transition-all duration-300 ${
                   i === currentIndex
                     ? "w-5 h-2 bg-gradient-to-r from-blue-600 to-purple-600"
-                    : `w-2 h-2 ${isDarkMode ? "bg-gray-600 hover:bg-gray-500" : "bg-slate-300 hover:bg-slate-400"}`
+                    : `w-2 h-2 ${isDarkMode ? "bg-[#333] hover:bg-[#444]" : "bg-slate-300 hover:bg-slate-400"}`
                 }`}
               />
             ))}

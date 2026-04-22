@@ -28,12 +28,12 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
   return (
     <section
       id="contact"
-      className={`h-full flex flex-col justify-center overflow-hidden relative ${isDarkMode ? "bg-gray-900" : "bg-slate-50"}`}
+      className={`h-full flex flex-col justify-center overflow-hidden relative ${isDarkMode ? "bg-[#141414]" : "bg-slate-50"}`}
     >
       {/* Background */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className={`absolute top-10 -left-20 w-80 h-80 rounded-full blur-3xl opacity-15 ${isDarkMode ? "bg-blue-500" : "bg-blue-200"}`} />
-        <div className={`absolute -bottom-10 -right-20 w-80 h-80 rounded-full blur-3xl opacity-15 ${isDarkMode ? "bg-purple-500" : "bg-purple-200"}`} />
+        <div className={`absolute top-10 -left-20 w-80 h-80 rounded-full blur-3xl opacity-15 ${isDarkMode ? "bg-transparent" : "bg-blue-200"}`} />
+        <div className={`absolute -bottom-10 -right-20 w-80 h-80 rounded-full blur-3xl opacity-15 ${isDarkMode ? "bg-transparent" : "bg-purple-200"}`} />
       </div>
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 py-3">
@@ -51,12 +51,12 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
         {/* Grid */}
         <div className="grid md:grid-cols-2 gap-4">
           {/* Contact Info */}
-          <div className={`p-4 rounded-2xl border transition-all duration-300 ${isDarkMode ? "bg-gray-800/50 backdrop-blur-sm border-gray-700/50 hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/15" : "bg-white border-slate-200 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-500/10"}`}>
+          <div className={`p-4 rounded-2xl border transition-all duration-300 ${isDarkMode ? "bg-[#1c1c1e] backdrop-blur-sm border-[#2a2a2a] hover:border-blue-500/50 hover:shadow-xl hover:shadow-blue-500/10" : "bg-white border-slate-200 hover:border-blue-300 hover:shadow-xl hover:shadow-blue-500/10"}`}>
             <h3 className={`text-sm font-bold mb-3 ${isDarkMode ? "text-white" : "text-slate-900"}`}>Contact Information</h3>
 
             <a
               href="mailto:kotoky10@gmail.com"
-              className={`flex items-center p-2.5 rounded-lg mb-3 transition-all duration-200 group ${isDarkMode ? "hover:bg-gray-700/50" : "hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50"}`}
+              className={`flex items-center p-2.5 rounded-lg mb-3 transition-all duration-200 group ${isDarkMode ? "hover:bg-[#242424]" : "hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50"}`}
             >
               <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200 shrink-0">
                 <Mail className="w-4 h-4 text-white" />
@@ -73,16 +73,16 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
               <h4 className={`text-[10px] font-semibold uppercase tracking-wider mb-2 ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>Connect With Me</h4>
               <div className="flex gap-2">
                 {[
-                  { href: "https://github.com/Rajdeep1234yyuhh", icon: <GithubIcon />, hoverClass: isDarkMode ? "hover:bg-gray-600 hover:border-blue-500/50" : "hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-600 hover:border-blue-300" },
-                  { href: "https://www.linkedin.com/in/rajdeep-kotoky-2273561a0/", icon: <LinkedinIcon />, hoverClass: isDarkMode ? "hover:bg-gray-600 hover:border-blue-500/50" : "hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-600 hover:border-blue-300" },
-                  { href: "https://www.instagram.com/radioactive_gigs/", icon: <InstagramIcon />, hoverClass: isDarkMode ? "hover:bg-gray-600 hover:border-pink-500/50" : "hover:bg-gradient-to-br hover:from-pink-500 hover:to-orange-400 hover:border-pink-300" },
+                  { href: "https://github.com/Rajdeep1234yyuhh", icon: <GithubIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-blue-500/50" : "hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-600 hover:border-blue-300" },
+                  { href: "https://www.linkedin.com/in/rajdeep-kotoky-2273561a0/", icon: <LinkedinIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-blue-500/50" : "hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-600 hover:border-blue-300" },
+                  { href: "https://www.instagram.com/radioactive_gigs/", icon: <InstagramIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-pink-500/50" : "hover:bg-gradient-to-br hover:from-pink-500 hover:to-orange-400 hover:border-pink-300" },
                 ].map(({ href, icon, hoverClass }, i) => (
                   <a
                     key={i}
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 border group ${isDarkMode ? "bg-gray-700/50 border-gray-600" : "bg-white border-slate-200"} ${hoverClass}`}
+                    className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 border group ${isDarkMode ? "bg-[#242424] border-[#333]" : "bg-white border-slate-200"} ${hoverClass}`}
                   >
                     <span className={`${isDarkMode ? "text-gray-300 group-hover:text-white" : "text-slate-600 group-hover:text-white"}`}>
                       {icon}

@@ -115,7 +115,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             WhatsApp
           </a>
           <a href={`tel:+91${PHONE}`}
-            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-md font-medium text-xs shadow-md whitespace-nowrap ${isDarkMode ? "bg-gray-700 text-white" : "bg-white text-slate-800 border border-slate-200"}`}>
+            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-md font-medium text-xs shadow-md whitespace-nowrap ${isDarkMode ? "bg-[#242424] text-white" : "bg-white text-slate-800 border border-slate-200"}`}>
             <Phone className="w-3.5 h-3.5 text-blue-500" /> Call Me
           </a>
         </div>
@@ -147,12 +147,12 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
 
       <section
         id="about"
-        className={`h-full flex flex-col overflow-hidden relative ${isDarkMode ? "bg-gray-900" : "bg-white"}`}
+        className={`h-full flex flex-col overflow-hidden relative ${isDarkMode ? "bg-[#141414]" : "bg-white"}`}
       >
         {/* Background */}
-        <div className={`absolute inset-0 ${isDarkMode ? "bg-gradient-to-br from-gray-900 to-gray-800" : "bg-gradient-to-br from-slate-50 to-blue-50"}`} />
-        <div className={`absolute top-10 right-10 w-56 h-56 rounded-full blur-3xl opacity-20 ${isDarkMode ? "bg-blue-500/20" : "bg-blue-100"}`} />
-        <div className={`absolute bottom-20 left-10 w-56 h-56 rounded-full blur-3xl opacity-20 ${isDarkMode ? "bg-purple-500/20" : "bg-purple-100"}`} />
+        <div className={`absolute inset-0 ${isDarkMode ? "bg-[#141414]" : "bg-gradient-to-br from-slate-50 to-blue-50"}`} />
+        {!isDarkMode && <div className="absolute top-10 right-10 w-56 h-56 rounded-full blur-3xl opacity-20 bg-blue-100" />}
+        {!isDarkMode && <div className="absolute bottom-20 left-10 w-56 h-56 rounded-full blur-3xl opacity-20 bg-purple-100" />}
 
         {/* ── MOBILE layout (md:hidden) — safe flex-col, no centering that clips ── */}
         <div className="md:hidden flex-1 flex flex-col justify-center px-5 py-4 relative z-10 gap-3">
@@ -160,25 +160,25 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
           {/* Photo with floating cards — give horizontal room via mx-12 */}
           <div className="flex justify-center">
             <div className="relative mx-12">
-              <div className={`rounded-2xl p-2 shadow-xl ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
+              <div className={`rounded-2xl p-2 shadow-xl ${isDarkMode ? "bg-[#1c1c1e]" : "bg-white"}`}>
                 <img src="/DP.jpg" alt="Rajdeep" className="w-28 h-36 object-cover rounded-xl" />
               </div>
               <div className="absolute -top-2 -right-2 bg-green-500 text-white px-2 py-0.5 rounded-full text-[10px] font-semibold shadow flex items-center gap-1">
                 <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" /> Available
               </div>
-              <div className={`absolute -top-3 -left-10 rounded-lg p-1.5 shadow-md border animate-float ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-slate-100"}`}>
+              <div className={`absolute -top-3 -left-10 rounded-lg p-1.5 shadow-md border animate-float ${isDarkMode ? "bg-[#1c1c1e] border-[#2a2a2a]" : "bg-white border-slate-100"}`}>
                 <div className="flex items-center gap-1">
                   <div className="w-5 h-5 bg-black rounded flex items-center justify-center"><SiNextdotjs size={10} color="#fff" /></div>
                   <span className={`text-[10px] font-semibold ${isDarkMode ? "text-white" : "text-slate-800"}`}>Next.js</span>
                 </div>
               </div>
-              <div className={`absolute top-8 -right-10 rounded-lg p-1.5 shadow-md border animate-float-reverse ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-slate-100"}`}>
+              <div className={`absolute top-8 -right-10 rounded-lg p-1.5 shadow-md border animate-float-reverse ${isDarkMode ? "bg-[#1c1c1e] border-[#2a2a2a]" : "bg-white border-slate-100"}`}>
                 <div className="flex items-center gap-1">
                   <div className="w-5 h-5 bg-[#96BF48] rounded flex items-center justify-center"><SiShopify size={10} color="#fff" /></div>
                   <span className={`text-[10px] font-semibold ${isDarkMode ? "text-white" : "text-slate-800"}`}>Shopify</span>
                 </div>
               </div>
-              <div className={`absolute bottom-4 -left-10 rounded-lg p-1.5 shadow-md border animate-float-slow ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-slate-100"}`}>
+              <div className={`absolute bottom-4 -left-10 rounded-lg p-1.5 shadow-md border animate-float-slow ${isDarkMode ? "bg-[#1c1c1e] border-[#2a2a2a]" : "bg-white border-slate-100"}`}>
                 <div className="flex items-center gap-1">
                   <div className="w-5 h-5 bg-[#1e3a5f] rounded flex items-center justify-center"><SiPython size={10} color="#FFD343" /></div>
                   <span className={`text-[10px] font-semibold ${isDarkMode ? "text-white" : "text-slate-800"}`}>AI / ML</span>
@@ -279,13 +279,13 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               {/* Right — Photo with floating cards */}
               <div className="flex justify-center items-center">
                 <div className="relative">
-                  <div className={`rounded-2xl p-3 shadow-2xl transition-all duration-500 hover:scale-[1.02] ${isDarkMode ? "bg-gray-800" : "bg-white"}`}>
+                  <div className={`rounded-2xl p-3 shadow-2xl transition-all duration-500 hover:scale-[1.02] ${isDarkMode ? "bg-[#1c1c1e]" : "bg-white"}`}>
                     <img src="/DP.jpg" alt="Professional Photo" className="w-44 h-56 lg:w-52 lg:h-64 object-cover rounded-xl" />
                   </div>
                   <div className="absolute -top-3 -right-3 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg flex items-center gap-1.5">
                     <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse" /> Available
                   </div>
-                  <div className={`absolute -top-5 -left-6 rounded-xl p-2.5 shadow-lg border animate-float cursor-pointer hover:scale-105 transition-all duration-300 ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-slate-100"}`}>
+                  <div className={`absolute -top-5 -left-6 rounded-xl p-2.5 shadow-lg border animate-float cursor-pointer hover:scale-105 transition-all duration-300 ${isDarkMode ? "bg-[#1c1c1e] border-[#2a2a2a]" : "bg-white border-slate-100"}`}>
                     <div className="flex items-center gap-2">
                       <div className="w-7 h-7 bg-black rounded-lg flex items-center justify-center"><SiNextdotjs size={14} color="#ffffff" /></div>
                       <div>
@@ -294,7 +294,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                       </div>
                     </div>
                   </div>
-                  <div className={`absolute top-10 -right-8 rounded-xl p-2.5 shadow-lg border animate-float-reverse cursor-pointer hover:scale-105 transition-all duration-300 ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-slate-100"}`}>
+                  <div className={`absolute top-10 -right-8 rounded-xl p-2.5 shadow-lg border animate-float-reverse cursor-pointer hover:scale-105 transition-all duration-300 ${isDarkMode ? "bg-[#1c1c1e] border-[#2a2a2a]" : "bg-white border-slate-100"}`}>
                     <div className="flex items-center gap-2">
                       <div className="w-7 h-7 bg-[#96BF48] rounded-lg flex items-center justify-center"><SiShopify size={14} color="#ffffff" /></div>
                       <div>
@@ -303,7 +303,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                       </div>
                     </div>
                   </div>
-                  <div className={`absolute bottom-6 -left-8 rounded-xl p-2.5 shadow-lg border animate-float-slow cursor-pointer hover:scale-105 transition-all duration-300 ${isDarkMode ? "bg-gray-800 border-gray-700" : "bg-white border-slate-100"}`}>
+                  <div className={`absolute bottom-6 -left-8 rounded-xl p-2.5 shadow-lg border animate-float-slow cursor-pointer hover:scale-105 transition-all duration-300 ${isDarkMode ? "bg-[#1c1c1e] border-[#2a2a2a]" : "bg-white border-slate-100"}`}>
                     <div className="flex items-center gap-2">
                       <div className="w-7 h-7 bg-[#1e3a5f] rounded-lg flex items-center justify-center"><SiPython size={14} color="#FFD343" /></div>
                       <div>
@@ -312,7 +312,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                       </div>
                     </div>
                   </div>
-                  <div className={`absolute inset-0 rounded-2xl blur-2xl -z-10 scale-95 opacity-30 ${isDarkMode ? "bg-blue-500" : "bg-blue-200"}`} />
+                  <div className={`absolute inset-0 rounded-2xl blur-2xl -z-10 scale-95 opacity-30 ${isDarkMode ? "bg-[#2a2a2a]" : "bg-blue-200"}`} />
                 </div>
               </div>
 

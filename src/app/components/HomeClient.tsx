@@ -102,7 +102,7 @@ export default function HomeClient() {
   return (
     <div
       className="fixed inset-0"
-      style={{ background: "linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%)" }}
+      style={{ background: "#0a0a0a" }}
       onTouchStart={(e) => { touchStartY.current = e.touches[0].clientY; }}
       onTouchEnd={(e) => {
         if (touchStartY.current === null) return;

@@ -20,11 +20,11 @@ const ServiceSection: React.FC<ServiceSectionProps> = ({ isDarkMode }) => {
   return (
     <section
       id="services"
-      className={`h-full flex flex-col justify-center overflow-hidden relative ${isDarkMode ? "bg-gray-900" : "bg-white"}`}
+      className={`h-full flex flex-col justify-center overflow-hidden relative ${isDarkMode ? "bg-[#141414]" : "bg-white"}`}
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className={`absolute -top-24 right-10 w-64 h-64 rounded-full blur-3xl opacity-20 ${isDarkMode ? "bg-blue-500" : "bg-blue-300"}`} />
-        <div className={`absolute bottom-10 -left-20 w-64 h-64 rounded-full blur-3xl opacity-20 ${isDarkMode ? "bg-purple-500" : "bg-purple-300"}`} />
+        <div className={`absolute -top-24 right-10 w-64 h-64 rounded-full blur-3xl opacity-20 ${isDarkMode ? "bg-transparent" : "bg-blue-300"}`} />
+        <div className={`absolute bottom-10 -left-20 w-64 h-64 rounded-full blur-3xl opacity-20 ${isDarkMode ? "bg-transparent" : "bg-purple-300"}`} />
       </div>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 w-full relative z-10 py-3">
@@ -46,7 +46,7 @@ const ServiceSection: React.FC<ServiceSectionProps> = ({ isDarkMode }) => {
               <Link
                 key={service.slug}
                 href={`/services#${service.slug}`}
-                className={`group flex items-center gap-4 px-4 py-3 rounded-xl border transition-all duration-200 hover:shadow-lg hover:scale-[1.012] ${isDarkMode ? `bg-gray-800/60 border-gray-700/50 ${cfg.border}` : `bg-white border-slate-200 ${cfg.border}`}`}
+                className={`group flex items-center gap-4 px-4 py-3 rounded-xl border transition-all duration-200 hover:shadow-lg hover:scale-[1.012] ${isDarkMode ? `bg-[#1c1c1e] border-[#2a2a2a] ${cfg.border}` : `bg-white border-slate-200 ${cfg.border}`}`}
               >
                 {/* Icon */}
                 <div className={`shrink-0 w-11 h-11 rounded-xl flex items-center justify-center shadow-md bg-gradient-to-br ${cfg.gradient} group-hover:scale-110 group-hover:rotate-3 transition-all duration-200`}>
