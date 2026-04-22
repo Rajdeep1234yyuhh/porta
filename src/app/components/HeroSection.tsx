@@ -16,7 +16,6 @@ interface HeroSectionProps {
   scrollToSection: (sectionId: string) => void;
 }
 
-const TYPING_PHRASES = ["AI/ML Engineer", "Web Developer", "Software Developer", "Shopify Developer"];
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MAIN_STACK: Array<{ name: string; Icon: any; color: string; bg: string; lightBg: string; lightColor: string }> = [
@@ -52,14 +51,9 @@ const MINOR_STACK = [
 const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
   const [projectCount, setProjectCount] = React.useState(0);
   const [yearsCount, setYearsCount] = React.useState(0);
-  const [satisfactionCount, setSatisfactionCount] = React.useState(0);
+  const [clientCount, setClientCount] = React.useState(0);
   const [contactOpen, setContactOpen] = React.useState(false);
   const contactRef = React.useRef<HTMLDivElement>(null);
-
-  const [displayedText, setDisplayedText] = React.useState("");
-  const [phraseIndex, setPhraseIndex] = React.useState(0);
-  const [charIndex, setCharIndex] = React.useState(0);
-  const [isDeleting, setIsDeleting] = React.useState(false);
 
   React.useEffect(() => {
     const handleOutside = (e: MouseEvent) => {
@@ -70,26 +64,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
   }, []);
 
   React.useEffect(() => {
-    const current = TYPING_PHRASES[phraseIndex];
-    let delay: number;
-    if (!isDeleting && charIndex < current.length) delay = 60;
-    else if (!isDeleting && charIndex === current.length) delay = 1800;
-    else if (isDeleting && charIndex > 0) delay = 35;
-    else delay = 300;
-    const t = setTimeout(() => {
-      if (!isDeleting && charIndex < current.length) { setDisplayedText(current.slice(0, charIndex + 1)); setCharIndex((c) => c + 1); }
-      else if (!isDeleting && charIndex === current.length) { setIsDeleting(true); }
-      else if (isDeleting && charIndex > 0) { setDisplayedText(current.slice(0, charIndex - 1)); setCharIndex((c) => c - 1); }
-      else { setIsDeleting(false); setPhraseIndex((i) => (i + 1) % TYPING_PHRASES.length); }
-    }, delay);
-    return () => clearTimeout(t);
-  }, [charIndex, isDeleting, phraseIndex]);
-
-  React.useEffect(() => {
-    const pi = setInterval(() => setProjectCount((p) => { if (p >= 50) { clearInterval(pi); return 50; } return p + 1; }), 30);
+    const pi = setInterval(() => setProjectCount((p) => { if (p >= 25) { clearInterval(pi); return 25; } return p + 1; }), 30);
     const yi = setInterval(() => setYearsCount((p) => { if (p >= 5) { clearInterval(yi); return 5; } return p + 1; }), 300);
-    const si = setInterval(() => setSatisfactionCount((p) => { if (p >= 100) { clearInterval(si); return 100; } return p + 2; }), 20);
-    return () => { clearInterval(pi); clearInterval(yi); clearInterval(si); };
+    const ci = setInterval(() => setClientCount((p) => { if (p >= 30) { clearInterval(ci); return 30; } return p + 1; }), 40);
+    return () => { clearInterval(pi); clearInterval(yi); clearInterval(ci); };
   }, []);
 
   /* ── Shared UI fragments ── */
@@ -164,9 +142,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
           background-size:200% auto; background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
           animation:shimmer 4s linear infinite;
         }
-        @keyframes blink { 0%,100%{opacity:1}50%{opacity:0} }
-        .cursor-blink { display:inline-block;width:2px;margin-left:2px;background:currentColor;animation:blink 0.9s step-end infinite;vertical-align:text-bottom; }
-        @keyframes popUpFromButton { from{opacity:0;transform:translateY(8px) scale(0.92)} to{opacity:1;transform:translateY(0) scale(1)} }
+@keyframes popUpFromButton { from{opacity:0;transform:translateY(8px) scale(0.92)} to{opacity:1;transform:translateY(0) scale(1)} }
       `}</style>
 
       <section
@@ -212,20 +188,24 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
           </div>
 
           {/* Text — centered */}
-          <div className="text-center space-y-1">
-            <p className={`text-xs font-semibold ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>I can be your</p>
-            <h1 className="shimmer-text text-2xl font-bold leading-tight">
-              {displayedText}
-              <span className={`cursor-blink ${isDarkMode ? "bg-purple-400" : "bg-blue-600"}`} />
+          <div className="text-center space-y-1.5">
+            <p className={`text-[11px] font-semibold uppercase tracking-widest ${isDarkMode ? "text-gray-500" : "text-slate-400"}`}>Rajdeep Kotoky</p>
+            <h1 className="font-bold leading-tight">
+              <span className="shimmer-text text-2xl block">Full-Stack Developer</span>
+              <span className={`text-lg font-semibold ${isDarkMode ? "text-purple-400" : "text-purple-600"}`}>&amp; AI Engineer</span>
             </h1>
             <p className={`text-xs leading-relaxed px-2 ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>
-              Next.js · AI/ML · Shopify solutions that drive real results.
+              I build web apps and AI solutions — from Shopify stores to LLM-powered products. Clean code, fast delivery.
             </p>
           </div>
 
           {/* Stats */}
           <div className="flex justify-center gap-7">
-            {[{ val: `${projectCount}+`, label: "Projects" }, { val: `${yearsCount}+`, label: "Years Exp" }, { val: `${satisfactionCount}%`, label: "Satisfaction" }].map(({ val, label }) => (
+            {[
+              { val: `${projectCount}+`, label: "Projects Delivered" },
+              { val: `${yearsCount}+`, label: "Years Exp" },
+              { val: `${clientCount}+`, label: "Happy Clients" },
+            ].map(({ val, label }) => (
               <div key={label} className="text-center">
                 <div className={`text-base font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>{val}</div>
                 <div className={`text-[10px] ${isDarkMode ? "text-gray-500" : "text-slate-400"}`}>{label}</div>
@@ -258,18 +238,22 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               {/* Left */}
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <p className={`text-lg font-semibold ${isDarkMode ? "text-gray-300" : "text-slate-600"}`}>I can be your</p>
-                  <h1 className="shimmer-text text-4xl lg:text-5xl font-bold leading-tight">
-                    {displayedText}
-                    <span className={`cursor-blink ${isDarkMode ? "bg-purple-400" : "bg-blue-600"}`} />
+                  <p className={`text-xs font-semibold uppercase tracking-widest ${isDarkMode ? "text-gray-500" : "text-slate-400"}`}>Rajdeep Kotoky</p>
+                  <h1 className="font-bold leading-tight">
+                    <span className="shimmer-text text-4xl lg:text-5xl block">Full-Stack Developer</span>
+                    <span className={`text-2xl lg:text-3xl font-semibold ${isDarkMode ? "text-purple-400" : "text-purple-600"}`}>&amp; AI Engineer</span>
                   </h1>
                   <p className={`text-sm leading-relaxed max-w-lg ${isDarkMode ? "text-gray-300" : "text-slate-600"}`}>
-                    I craft exceptional digital experiences using modern technologies. Specializing in Next.js, React, and AI-powered web solutions that drive results.
+                    I build production-ready web apps and AI solutions — Shopify stores, SaaS platforms, ML models, and LLM integrations. 5+ years turning ideas into shipped products.
                   </p>
                 </div>
 
                 <div className="flex items-center gap-8">
-                  {[{ val: `${projectCount}+`, label: "Projects" }, { val: `${yearsCount}+`, label: "Years Exp" }, { val: `${satisfactionCount}%`, label: "Satisfaction" }].map(({ val, label }) => (
+                  {[
+                    { val: `${projectCount}+`, label: "Projects Delivered" },
+                    { val: `${yearsCount}+`, label: "Years Exp" },
+                    { val: `${clientCount}+`, label: "Happy Clients" },
+                  ].map(({ val, label }) => (
                     <div key={label} className="text-center">
                       <div className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>{val}</div>
                       <div className={`text-xs ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>{label}</div>
