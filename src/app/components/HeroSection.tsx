@@ -354,11 +354,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   </div>
                 )}
 
-                {techStack}
               </div>
 
-              {/* Right — Photo with floating cards */}
-              <div className="flex justify-center items-center">
+              {/* Right — Photo with floating cards + Core Stack */}
+              <div className="flex flex-col items-center gap-6">
                 <div className="relative">
                   <div className={`rounded-2xl p-3 shadow-2xl transition-all duration-500 hover:scale-[1.02] ${isDarkMode ? "bg-[#1c1c1e]" : "bg-white"}`}>
                     <img src="/DP.jpg" alt="Professional Photo" className="w-44 h-56 lg:w-52 lg:h-64 object-cover rounded-xl" />
@@ -395,6 +394,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   </div>
                   <div className={`absolute inset-0 rounded-2xl blur-2xl -z-10 scale-95 opacity-30 ${isDarkMode ? "bg-[#2a2a2a]" : "bg-blue-200"}`} />
                 </div>
+                {techStack}
               </div>
 
             </div>
