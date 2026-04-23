@@ -73,31 +73,51 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
   /* ── Shared UI fragments ── */
   const techStack = (
     <div className="space-y-2">
-      <div className="flex items-center gap-2">
-        <div className={`h-px flex-1 ${isDarkMode ? "bg-white/10" : "bg-slate-200"}`} />
-        <span className={`text-[10px] font-bold uppercase tracking-widest ${isDarkMode ? "text-gray-600" : "text-slate-400"}`}>Core Stack</span>
-        <div className={`h-px flex-1 ${isDarkMode ? "bg-white/10" : "bg-slate-200"}`} />
-      </div>
+      {isDarkMode ? (
+        <>
+          <hr style={{ border: 'none', borderTop: '1px solid #0a2a22', marginBottom: 14 }} />
+          <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#1a4a40', marginBottom: 12 }}>Core Stack</div>
+        </>
+      ) : (
+        <div className="flex items-center gap-2">
+          <div className="h-px flex-1 bg-slate-200" />
+          <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Core Stack</span>
+          <div className="h-px flex-1 bg-slate-200" />
+        </div>
+      )}
       <div className="flex flex-wrap gap-2 justify-center md:justify-start">
         {MAIN_STACK.map((tech) => (
           <div key={tech.name}
-            className="relative group w-10 h-10 rounded-xl flex items-center justify-center cursor-default transition-transform duration-150 hover:scale-110"
-            style={{ background: isDarkMode ? tech.bg : tech.lightBg }}>
-            <tech.Icon size={20} color={isDarkMode ? tech.color : tech.lightColor} />
+            className="relative group flex items-center justify-center cursor-default transition-all duration-150 hover:scale-110"
+            style={isDarkMode
+              ? { width: 36, height: 36, borderRadius: 8, background: '#040d0a', border: '1px solid #0a2a22' }
+              : { width: 40, height: 40, borderRadius: 12, background: tech.lightBg }
+            }>
+            <tech.Icon size={isDarkMode ? 18 : 20} color={isDarkMode ? tech.color : tech.lightColor} />
             <span className="pointer-events-none absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap text-[10px] font-semibold px-2 py-0.5 rounded-md bg-gray-900 text-white shadow opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 z-10">
               {tech.name}
             </span>
           </div>
         ))}
       </div>
-      <div className="overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)", WebkitMaskImage: "linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)" }}>
+      <div className="overflow-hidden" style={{
+        maskImage: `linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)`,
+        WebkitMaskImage: `linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)`,
+      }}>
         <div className="flex animate-marquee w-max">
           {[...MAIN_STACK, ...MINOR_STACK, ...MAIN_STACK, ...MINOR_STACK].map((tech, i) => (
-            <div key={i} className="flex items-center gap-1.5 mx-2.5 cursor-default shrink-0">
-              <div className="w-5 h-5 rounded flex items-center justify-center shrink-0" style={{ background: isDarkMode ? tech.bg : tech.lightBg }}>
-                <tech.Icon size={11} color={isDarkMode ? tech.color : tech.lightColor} />
+            <div key={i} className="flex items-center gap-1.5 mx-2.5 cursor-default shrink-0"
+              style={isDarkMode ? { fontFamily: "'JetBrains Mono', monospace" } : {}}>
+              <div className="rounded flex items-center justify-center shrink-0"
+                style={isDarkMode
+                  ? { width: 16, height: 16 }
+                  : { width: 20, height: 20, background: tech.lightBg }}>
+                <tech.Icon size={isDarkMode ? 14 : 11} color={isDarkMode ? tech.color : tech.lightColor} />
               </div>
-              <span className={`text-[10px] font-medium whitespace-nowrap ${isDarkMode ? "text-gray-500" : "text-slate-400"}`}>{tech.name}</span>
+              <span style={isDarkMode ? { fontSize: 11, color: '#3a7060', whiteSpace: 'nowrap' } : {}}
+                className={isDarkMode ? "" : `text-[10px] font-medium whitespace-nowrap text-slate-400`}>
+                {tech.name}
+              </span>
             </div>
           ))}
         </div>
@@ -121,8 +141,11 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         </div>
       )}
       <button onClick={() => setContactOpen((o) => !o)}
-        className={`group px-3.5 py-1.5 rounded-md transition-all duration-200 font-medium border-2 flex items-center gap-1.5 text-sm ${isDarkMode ? "border-purple-500/50 text-purple-300 hover:bg-purple-500/10" : "border-purple-600/30 text-purple-700 hover:bg-purple-50"}`}>
-        Get In Touch <Mail className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+        className="group flex items-center gap-1.5 transition-all duration-200 font-medium text-sm"
+        style={isDarkMode
+          ? { display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, padding: '9px 18px', borderRadius: 4, cursor: 'pointer', border: '1px solid #1a3a30', background: 'transparent', color: '#4a7a70', transition: 'all 0.18s ease' }
+          : { padding: '7px 14px', borderRadius: 6, border: '2px solid rgb(147 51 234 / 0.3)', color: 'rgb(126 34 206)', background: 'transparent' }}>
+        Get In Touch {isDarkMode ? '✉' : <Mail className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />}
       </button>
     </div>
   );
@@ -138,7 +161,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         .animate-float-slow { animation: float-slow 8s ease-in-out infinite; }
         @keyframes shimmer { 0%{background-position:-200% center}100%{background-position:200% center} }
         .shimmer-text {
-          background: linear-gradient(90deg,#2563eb 0%,#7c3aed 30%,#a78bfa 50%,#7c3aed 70%,#2563eb 100%);
+          background: linear-gradient(90deg,#22d3ee 0%,#818cf8 35%,#a78bfa 50%,#818cf8 65%,#22d3ee 100%);
           background-size:200% auto; background-clip:text; -webkit-background-clip:text; -webkit-text-fill-color:transparent;
           animation:shimmer 4s linear infinite;
         }
@@ -147,10 +170,12 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
 
       <section
         id="about"
-        className={`h-full flex flex-col overflow-hidden relative ${isDarkMode ? "bg-[#141414]" : "bg-white"}`}
+        className={`h-full flex flex-col overflow-hidden relative ${isDarkMode ? "bg-[#08090f]" : "bg-white"}`}
       >
         {/* Background */}
-        <div className={`absolute inset-0 ${isDarkMode ? "bg-[#141414]" : "bg-gradient-to-br from-slate-50 to-blue-50"}`} />
+        <div className={`absolute inset-0 ${isDarkMode ? "bg-[#08090f]" : "bg-gradient-to-br from-slate-50 to-blue-50"}`} />
+        {isDarkMode && <div className="absolute -top-24 -left-20 w-96 h-96 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(0,200,255,0.06), transparent 70%)' }} />}
+        {isDarkMode && <div className="absolute -bottom-20 right-10 w-80 h-80 rounded-full pointer-events-none" style={{ background: 'radial-gradient(circle, rgba(120,0,255,0.05), transparent 70%)' }} />}
         {!isDarkMode && <div className="absolute top-10 right-10 w-56 h-56 rounded-full blur-3xl opacity-20 bg-blue-100" />}
         {!isDarkMode && <div className="absolute bottom-20 left-10 w-56 h-56 rounded-full blur-3xl opacity-20 bg-purple-100" />}
 
@@ -189,10 +214,14 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
 
           {/* Text — centered */}
           <div className="text-center space-y-1.5">
-            <p className={`text-[11px] font-semibold uppercase tracking-widest ${isDarkMode ? "text-gray-500" : "text-slate-400"}`}>Rajdeep Kotoky</p>
-            <h1 className="font-bold leading-tight">
+            <p className="flex items-center justify-center gap-2 text-[11px] font-bold uppercase tracking-widest text-emerald-400">
+              <span className="w-4 h-px bg-emerald-400 block" />
+              Rajdeep Kotoky
+              <span className="w-4 h-px bg-emerald-400 block" />
+            </p>
+            <h1 className="font-extrabold leading-tight">
               <span className="shimmer-text text-2xl block">Full-Stack Developer</span>
-              <span className={`text-lg font-semibold ${isDarkMode ? "text-purple-400" : "text-purple-600"}`}>&amp; AI Engineer</span>
+              <span className={`text-xl font-extrabold ${isDarkMode ? "text-purple-400" : "text-purple-600"}`}>&amp; AI Engineer</span>
             </h1>
             <p className={`text-xs leading-relaxed px-2 ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>
               I build web apps and AI solutions — from Shopify stores to LLM-powered products. Clean code, fast delivery.
@@ -236,42 +265,94 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             <div className="grid grid-cols-2 gap-10 lg:gap-16 items-center">
 
               {/* Left */}
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <p className={`text-xs font-semibold uppercase tracking-widest ${isDarkMode ? "text-gray-500" : "text-slate-400"}`}>Rajdeep Kotoky</p>
-                  <h1 className="font-bold leading-tight">
-                    <span className="shimmer-text text-4xl lg:text-5xl block">Full-Stack Developer</span>
-                    <span className={`text-2xl lg:text-3xl font-semibold ${isDarkMode ? "text-purple-400" : "text-purple-600"}`}>&amp; AI Engineer</span>
-                  </h1>
-                  <p className={`text-sm leading-relaxed max-w-lg ${isDarkMode ? "text-gray-300" : "text-slate-600"}`}>
-                    I build production-ready web apps and AI solutions — Shopify stores, SaaS platforms, ML models, and LLM integrations. 5+ years turning ideas into shipped products.
+              <div>
+                {/* Eyebrow */}
+                {isDarkMode ? (
+                  <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 11, letterSpacing: '0.22em', textTransform: 'uppercase', color: '#00ccaa', marginBottom: 18, display: 'flex', alignItems: 'center', gap: 10 }}>
+                    <span style={{ width: 20, height: 1, background: '#00ccaa', opacity: 0.5, flexShrink: 0, display: 'block' }} />
+                    Rajdeep Kotoky
+                  </div>
+                ) : (
+                  <p className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-emerald-400 mb-3">
+                    <span className="w-6 h-px bg-emerald-400 block" />
+                    Rajdeep Kotoky
                   </p>
-                </div>
+                )}
 
-                <div className="flex items-center gap-8">
+                {/* Heading */}
+                {isDarkMode ? (
+                  <h1 style={{ fontFamily: "'Outfit', sans-serif", fontSize: 'clamp(36px, 4.2vw, 58px)', fontWeight: 900, lineHeight: 1.05, letterSpacing: '-0.03em', marginBottom: 20 }}>
+                    <span style={{ display: 'block', color: '#a8f0e8' }}>Full-Stack Developer</span>
+                    <span style={{ display: 'block', color: '#9d8fff' }}>&amp; AI Engineer</span>
+                  </h1>
+                ) : (
+                  <h1 className="font-extrabold leading-[1.1] mb-3">
+                    <span className="shimmer-text text-5xl lg:text-6xl block">Full-Stack Developer</span>
+                    <span className="text-4xl lg:text-5xl font-extrabold text-purple-600">&amp; AI Engineer</span>
+                  </h1>
+                )}
+
+                {/* Bio */}
+                {isDarkMode ? (
+                  <p style={{ fontSize: 15, lineHeight: 1.75, color: '#5a7a70', maxWidth: 460, marginBottom: 28 }}>
+                    I build{' '}
+                    <span style={{ color: '#8aa8a0', fontWeight: 500 }}>production-ready web apps and AI solutions</span>
+                    {' '}— Shopify stores, SaaS platforms, ML models, and LLM integrations.{' '}
+                    <span style={{ color: '#8aa8a0', fontWeight: 500 }}>5+ years</span> turning ideas into shipped products.
+                  </p>
+                ) : (
+                  <p className="text-sm leading-relaxed max-w-lg text-slate-600 mb-4">
+                    I build <strong className="text-slate-900 font-semibold">production-ready web apps and AI solutions</strong> — Shopify stores, SaaS platforms, ML models, and LLM integrations. <strong className="text-slate-900 font-semibold">5+ years</strong> turning ideas into shipped products.
+                  </p>
+                )}
+
+                {/* Stats */}
+                <div style={{ display: 'flex', gap: isDarkMode ? 28 : 32, marginBottom: isDarkMode ? 28 : 20 }}>
                   {[
-                    { val: `${projectCount}+`, label: "Projects Delivered" },
-                    { val: `${yearsCount}+`, label: "Years Exp" },
-                    { val: `${clientCount}+`, label: "Happy Clients" },
-                  ].map(({ val, label }) => (
-                    <div key={label} className="text-center">
-                      <div className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>{val}</div>
-                      <div className={`text-xs ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>{label}</div>
+                    { count: projectCount, label: "Projects Delivered" },
+                    { count: yearsCount, label: "Years Exp" },
+                    { count: clientCount, label: "Happy Clients" },
+                  ].map(({ count, label }) => isDarkMode ? (
+                    <div key={label}>
+                      <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 24, fontWeight: 700, color: '#e0f4f0', lineHeight: 1 }}>
+                        {count}<sup style={{ color: '#00ccaa', fontSize: 12 }}>+</sup>
+                      </div>
+                      <div style={{ fontSize: 11, color: '#2a5a50', marginTop: 4, letterSpacing: '0.04em' }}>{label}</div>
+                    </div>
+                  ) : (
+                    <div key={label}>
+                      <div className="text-2xl font-extrabold text-slate-900">{count}<sup className="text-base">+</sup></div>
+                      <div className="text-xs mt-0.5 text-slate-500">{label}</div>
                     </div>
                   ))}
                 </div>
 
-                <div className="flex flex-wrap gap-2.5">
-                  <button onClick={() => scrollToSection("projects")}
-                    className={`group px-4 py-2 rounded-md font-medium flex items-center gap-2 text-sm active:scale-95 ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-gray-900 text-white hover:bg-gray-800"}`}>
-                    View My Work <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                  </button>
-                  <a href="/resume.pdf" target="_blank" rel="noopener noreferrer"
-                    className={`group px-4 py-2 rounded-md font-medium border-2 flex items-center gap-2 text-sm ${isDarkMode ? "border-emerald-500/50 text-emerald-300 hover:bg-emerald-500/10" : "border-emerald-600/30 text-emerald-700 hover:bg-emerald-50"}`}>
-                    Resume <FileText className="w-3.5 h-3.5 group-hover:-translate-y-px transition-transform" />
-                  </a>
-                  {contactDropdown}
-                </div>
+                {/* Buttons */}
+                {isDarkMode ? (
+                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' as const, marginBottom: 32 }}>
+                    <button onClick={() => scrollToSection("projects")}
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, padding: '9px 18px', borderRadius: 4, cursor: 'pointer', border: '1px solid rgba(0,255,200,0.25)', background: 'rgba(0,255,200,0.1)', color: '#00ffcc', transition: 'all 0.18s ease' }}>
+                      View My Work ↗
+                    </button>
+                    <a href="/resume.pdf" target="_blank" rel="noopener noreferrer"
+                      style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, padding: '9px 18px', borderRadius: 4, cursor: 'pointer', border: '1px solid rgba(0,204,170,0.25)', background: 'transparent', color: '#00ccaa', transition: 'all 0.18s ease', textDecoration: 'none' }}>
+                      Resume ⬇
+                    </a>
+                    {contactDropdown}
+                  </div>
+                ) : (
+                  <div className="flex flex-wrap gap-2.5 mb-4">
+                    <button onClick={() => scrollToSection("projects")}
+                      className="group px-4 py-2 rounded-md font-semibold border-2 flex items-center gap-2 text-sm transition-all duration-200 active:scale-95 border-emerald-600/40 text-emerald-700 hover:bg-emerald-50">
+                      View My Work <ExternalLink className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                    </button>
+                    <a href="/resume.pdf" target="_blank" rel="noopener noreferrer"
+                      className="group px-4 py-2 rounded-md font-semibold border-2 flex items-center gap-2 text-sm transition-all duration-200 border-slate-300 text-slate-700 hover:bg-slate-50">
+                      Resume <FileText className="w-3.5 h-3.5 group-hover:-translate-y-px transition-transform" />
+                    </a>
+                    {contactDropdown}
+                  </div>
+                )}
 
                 {techStack}
               </div>

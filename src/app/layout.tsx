@@ -15,24 +15,27 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://rajdeepkotoky.vercel.app"),
-  title: "Rajdeep Kotoky — Web Developer & AI/ML Engineer",
+  title: "Rajdeep Kotoky — Full-Stack Developer & AI Engineer",
   description:
-    "Portfolio of Rajdeep Kotoky, a Full Stack Web Developer specializing in Next.js, React, Shopify, and AI/ML integrations.",
+    "Portfolio of Rajdeep Kotoky, a Full-Stack Developer & AI Engineer specializing in Next.js, React, Shopify, and AI/ML integrations.",
   keywords: [
     "Rajdeep Kotoky",
-    "Web Developer",
-    "Full Stack Developer",
-    "Next.js",
-    "React",
+    "Full-Stack Developer",
+    "AI Engineer",
+    "Next.js Developer",
+    "React Developer",
     "Shopify Developer",
     "AI ML Engineer",
     "Portfolio",
   ],
   authors: [{ name: "Rajdeep Kotoky" }],
+  alternates: {
+    canonical: "https://rajdeepkotoky.vercel.app",
+  },
   openGraph: {
-    title: "Rajdeep Kotoky — Web Developer & AI/ML Engineer",
+    title: "Rajdeep Kotoky — Full-Stack Developer & AI Engineer",
     description:
-      "Full Stack Web Developer specializing in Next.js, React, Shopify, and AI/ML integrations.",
+      "Full-Stack Developer & AI Engineer specializing in Next.js, React, Shopify, and AI/ML integrations.",
     url: "https://rajdeepkotoky.vercel.app",
     siteName: "Rajdeep Kotoky Portfolio",
     images: [
@@ -40,16 +43,16 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Rajdeep Kotoky Portfolio",
+        alt: "Rajdeep Kotoky — Full-Stack Developer & AI Engineer",
       },
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rajdeep Kotoky — Web Developer & AI/ML Engineer",
+    title: "Rajdeep Kotoky — Full-Stack Developer & AI Engineer",
     description:
-      "Full Stack Web Developer specializing in Next.js, React, Shopify, and AI/ML.",
+      "Full-Stack Developer & AI Engineer specializing in Next.js, React, Shopify, and AI/ML.",
     images: ["/og-image.jpg"],
   },
 };
