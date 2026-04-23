@@ -85,7 +85,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
           <div className="h-px flex-1 bg-slate-200" />
         </div>
       )}
-      <div className="flex flex-wrap gap-2 justify-center md:justify-start">
+      <div className="flex flex-wrap gap-2 justify-center">
         {MAIN_STACK.map((tech) => (
           <div key={tech.name}
             className="relative group flex items-center justify-center cursor-default transition-all duration-150 hover:scale-110"
@@ -99,28 +99,6 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             </span>
           </div>
         ))}
-      </div>
-      <div className="overflow-hidden" style={{
-        maskImage: `linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)`,
-        WebkitMaskImage: `linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)`,
-      }}>
-        <div className="flex animate-marquee w-max">
-          {[...MAIN_STACK, ...MINOR_STACK, ...MAIN_STACK, ...MINOR_STACK].map((tech, i) => (
-            <div key={i} className="flex items-center gap-1.5 mx-2.5 cursor-default shrink-0"
-              style={isDarkMode ? { fontFamily: "'JetBrains Mono', monospace" } : {}}>
-              <div className="rounded flex items-center justify-center shrink-0"
-                style={isDarkMode
-                  ? { width: 16, height: 16 }
-                  : { width: 20, height: 20, background: tech.lightBg }}>
-                <tech.Icon size={isDarkMode ? 14 : 11} color={isDarkMode ? tech.color : tech.lightColor} />
-              </div>
-              <span style={isDarkMode ? { fontSize: 11, color: '#3a7060', whiteSpace: 'nowrap' } : {}}
-                className={isDarkMode ? "" : `text-[10px] font-medium whitespace-nowrap text-slate-400`}>
-                {tech.name}
-              </span>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );
@@ -262,7 +240,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         {/* ── DESKTOP layout (hidden md:flex) — safe, content won't overflow ── */}
         <div className="hidden md:flex flex-1 items-center relative z-10 overflow-hidden">
           <div className="max-w-6xl mx-auto px-8 lg:px-12 w-full">
-            <div className="grid grid-cols-2 gap-10 lg:gap-16 items-center">
+            <div className="grid grid-cols-2 gap-10 lg:gap-16 items-start">
 
               {/* Left */}
               <div>
