@@ -14,6 +14,7 @@ import {
   Info,
   Box,
   Share2,
+  MessageSquare,
 } from "lucide-react";
 
 const PHONE = "8638752315";
