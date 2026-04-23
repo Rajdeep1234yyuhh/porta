@@ -120,7 +120,9 @@ const Navbar = ({
             }`}
           >
             <Zap className="w-4 h-4 shrink-0 transition-transform duration-200 group-hover:-translate-y-2" />
-            <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">Quick Fix</span>
+            <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">
+              Quick Fix
+            </span>
           </button>
           {quickOpen && (
             <div
@@ -170,8 +172,14 @@ const Navbar = ({
           onClick={toggleTheme}
           className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}
         >
-          {isDarkMode ? <Sun className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" /> : <Moon className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" />}
-          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">{isDarkMode ? "Light" : "Dark"}</span>
+          {isDarkMode ? (
+            <Sun className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" />
+          ) : (
+            <Moon className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" />
+          )}
+          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">
+            {isDarkMode ? "Light" : "Dark"}
+          </span>
         </button>
 
         {/* Divider */}
@@ -183,16 +191,21 @@ const Navbar = ({
           className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}
         >
           <Box className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" />
-          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">Cube</span>
+          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">
+            Cube
+          </span>
         </Link>
       </div>
 
       {/* ── Desktop: social block — floats to the right of the main dock ── */}
-      <div style={{ right: 32 }} className={`fixed top-5 z-50 hidden lg:flex items-center gap-1 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 overflow-visible ${
-        isDarkMode
-          ? "bg-[#141414]/95 border-white/[0.08]"
-          : "bg-white/90 border-gray-200/80 shadow-gray-200/60"
-      }`}>
+      <div
+        style={{ right: 32 }}
+        className={`fixed top-5 z-50 hidden lg:flex items-center gap-1 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 overflow-visible ${
+          isDarkMode
+            ? "bg-[#141414]/95 border-white/[0.08]"
+            : "bg-white/90 border-gray-200/80 shadow-gray-200/60"
+        }`}
+      >
         {/* GitHub */}
         <a
           href="https://github.com/Rajdeep1234yyuhh"
@@ -200,13 +213,21 @@ const Navbar = ({
           rel="noopener noreferrer"
           className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}
         >
-          <svg className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          <svg
+            className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
           </svg>
-          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">GitHub</span>
+          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">
+            GitHub
+          </span>
         </a>
 
-        <div className={`w-px h-5 ${isDarkMode ? "bg-white/10" : "bg-gray-200"}`} />
+        <div
+          className={`w-px h-5 ${isDarkMode ? "bg-white/10" : "bg-gray-200"}`}
+        />
 
         {/* LinkedIn */}
         <a
@@ -215,13 +236,21 @@ const Navbar = ({
           rel="noopener noreferrer"
           className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}
         >
-          <svg className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          <svg
+            className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
           </svg>
-          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">LinkedIn</span>
+          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">
+            LinkedIn
+          </span>
         </a>
 
-        <div className={`w-px h-5 ${isDarkMode ? "bg-white/10" : "bg-gray-200"}`} />
+        <div
+          className={`w-px h-5 ${isDarkMode ? "bg-white/10" : "bg-gray-200"}`}
+        />
 
         {/* Instagram */}
         <a
@@ -230,10 +259,16 @@ const Navbar = ({
           rel="noopener noreferrer"
           className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}
         >
-          <svg className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" fill="currentColor" viewBox="0 0 24 24">
-            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+          <svg
+            className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
           </svg>
-          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">Instagram</span>
+          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">
+            Instagram
+          </span>
         </a>
       </div>
 
@@ -251,12 +286,16 @@ const Navbar = ({
                   : "text-gray-400 hover:text-white hover:bg-white/10"
               }`}
             >
-              <Icon className={`w-4 h-4 transition-transform duration-200 ${isActive ? "" : "group-hover:-translate-y-1.5"}`} />
-              <span className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow transition-all duration-200 ${
-                isActive
-                  ? "opacity-100 translate-y-0"
-                  : "opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0"
-              }`}>
+              <Icon
+                className={`w-4 h-4 transition-transform duration-200 ${isActive ? "" : "group-hover:-translate-y-1.5"}`}
+              />
+              <span
+                className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow transition-all duration-200 ${
+                  isActive
+                    ? "opacity-100 translate-y-0"
+                    : "opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0"
+                }`}
+              >
                 {label}
               </span>
             </button>
@@ -275,28 +314,53 @@ const Navbar = ({
                 : "text-gray-400 hover:text-white hover:bg-white/10"
             }`}
           >
-            <Zap className={`w-4 h-4 transition-transform duration-200 ${activeSection === "quick-solutions" ? "" : "group-hover:-translate-y-1.5"}`} />
-            <span className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow transition-all duration-200 ${
-              activeSection === "quick-solutions"
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0"
-            }`}>Quick Fix</span>
+            <Zap
+              className={`w-4 h-4 transition-transform duration-200 ${activeSection === "quick-solutions" ? "" : "group-hover:-translate-y-1.5"}`}
+            />
+            <span
+              className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow transition-all duration-200 ${
+                activeSection === "quick-solutions"
+                  ? "opacity-100 translate-y-0"
+                  : "opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0"
+              }`}
+            >
+              Quick Fix
+            </span>
           </button>
           {quickOpen && (
             <div
               style={{ animation: "dropIn 0.18s ease both" }}
               className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-44 rounded-xl shadow-2xl border overflow-hidden z-50 bg-[#1c1c1e] border-white/[0.08]"
             >
-              <a href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`} target="_blank" rel="noopener noreferrer" onClick={() => setQuickOpen(false)} className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 transition-colors">
+              <a
+                href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setQuickOpen(false)}
+                className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 transition-colors"
+              >
                 <WhatsAppIcon /> WhatsApp
               </a>
-              <a href={`tel:+${PHONE}`} onClick={() => setQuickOpen(false)} className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors">
+              <a
+                href={`tel:+${PHONE}`}
+                onClick={() => setQuickOpen(false)}
+                className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors"
+              >
                 <Phone className="w-4 h-4 text-blue-400" /> Call Me
               </a>
-              <button onClick={() => { scrollToSection("contact"); setQuickOpen(false); }} className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors">
+              <button
+                onClick={() => {
+                  scrollToSection("contact");
+                  setQuickOpen(false);
+                }}
+                className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors"
+              >
                 <Mail className="w-4 h-4 text-purple-400" /> Message
               </button>
-              <button onClick={handleQuickDetails} className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors">
+              <button
+                onClick={handleQuickDetails}
+                className="w-full flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors"
+              >
                 <Info className="w-4 h-4 text-emerald-400" /> Details
               </button>
             </div>
@@ -306,17 +370,31 @@ const Navbar = ({
         <div className="w-px h-5 bg-white/10 mx-0.5" />
 
         {/* Theme */}
-        <button onClick={toggleTheme} className="group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200">
-          {isDarkMode ? <Sun className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" /> : <Moon className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />}
-          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">{isDarkMode ? "Light" : "Dark"}</span>
+        <button
+          onClick={toggleTheme}
+          className="group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200"
+        >
+          {isDarkMode ? (
+            <Sun className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />
+          ) : (
+            <Moon className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />
+          )}
+          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">
+            {isDarkMode ? "Light" : "Dark"}
+          </span>
         </button>
 
         <div className="w-px h-5 bg-white/10 mx-0.5" />
 
         {/* Cube */}
-        <Link href="/cube" className="group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200">
+        <Link
+          href="/cube"
+          className="group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200"
+        >
           <Box className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />
-          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">Cube</span>
+          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">
+            Cube
+          </span>
         </Link>
 
         <div className="w-px h-5 bg-white/10 mx-0.5" />
@@ -328,23 +406,61 @@ const Navbar = ({
             className="group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200"
           >
             <Share2 className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />
-            <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">Social</span>
+            <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">
+              Social
+            </span>
           </button>
           {socialOpen && (
             <div
               style={{ animation: "dropIn 0.18s ease both" }}
               className="absolute top-full right-0 mt-2 w-40 rounded-xl shadow-2xl border overflow-hidden z-50 bg-[#1c1c1e] border-white/[0.08]"
             >
-              <a href="https://github.com/Rajdeep1234yyuhh" target="_blank" rel="noopener noreferrer" onClick={() => setSocialOpen(false)} className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 transition-colors">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
+              <a
+                href="https://github.com/Rajdeep1234yyuhh"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setSocialOpen(false)}
+                className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 transition-colors"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                </svg>
                 GitHub
               </a>
-              <a href="https://www.linkedin.com/in/rajdeep-kotoky-2273561a0/" target="_blank" rel="noopener noreferrer" onClick={() => setSocialOpen(false)} className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+              <a
+                href="https://www.linkedin.com/in/rajdeep-kotoky-2273561a0/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setSocialOpen(false)}
+                className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+                </svg>
                 LinkedIn
               </a>
-              <a href="https://www.instagram.com/radioactive_gigs/" target="_blank" rel="noopener noreferrer" onClick={() => setSocialOpen(false)} className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors">
-                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+              <a
+                href="https://www.instagram.com/radioactive_gigs/"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => setSocialOpen(false)}
+                className="flex items-center gap-2.5 px-4 py-3 text-sm font-medium text-gray-200 hover:bg-white/10 border-t border-white/10 transition-colors"
+              >
+                <svg
+                  className="w-4 h-4"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
+                </svg>
                 Instagram
               </a>
             </div>
