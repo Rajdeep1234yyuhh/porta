@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Contact from "./Contact";
 import Navbar from "./Navbar";
+import { ViewSwitcherDesktop } from "./ViewSwitcher";
 import HeroSection from "./HeroSection";
 import ProjectSection from "./ProjectSection";
 import ServiceSection from "./ServiceSection";
@@ -120,6 +121,7 @@ export default function HomeClient() {
         scrollToSection={scrollToSection}
         activeSection={SECTION_IDS[current]}
       />
+      <ViewSwitcherDesktop isDarkMode={isDarkMode} />
 
       {/* Slides rest below the navbar. When animating they travel a full 100vh
           so they visually pass behind the navbar before disappearing off-screen.
