@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Project } from "../data/projects";
 
 interface ProjectSectionProps {
@@ -76,6 +76,17 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
     () => setCurrentIndex((i) => Math.min(maxIndex, i + 1)),
     [maxIndex],
   );
+
+  const touchStartX = useRef<number | null>(null);
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null) return;
+    const dx = touchStartX.current - e.changedTouches[0].clientX;
+    if (Math.abs(dx) > 40) dx > 0 ? next() : prev();
+    touchStartX.current = null;
+  };
 
   const toggleDesc = (i: number) =>
     setExpandedDesc((s) => {
@@ -155,7 +166,11 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
             <ChevronLeft className="w-3.5 h-3.5" />
           </button>
 
-          <div className="overflow-hidden mx-8">
+          <div
+            className="overflow-hidden mx-8"
+            onTouchStart={onTouchStart}
+            onTouchEnd={onTouchEnd}
+          >
             <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentIndex * cardWidth}%)` }}
