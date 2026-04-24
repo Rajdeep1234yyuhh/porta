@@ -103,7 +103,7 @@ export default function HomeClient() {
   return (
     <div
       className="fixed inset-0"
-      style={{ background: "#0a0a0a" }}
+      style={{ background: isDarkMode ? "#0a0a0a" : "#e8edf5" }}
       onTouchStart={(e) => { touchStartY.current = e.touches[0].clientY; }}
       onTouchEnd={(e) => {
         if (touchStartY.current === null) return;
