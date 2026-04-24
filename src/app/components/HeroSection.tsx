@@ -332,35 +332,34 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         tooltipBg: "bg-gray-900",
       }
     : ({
-        section: "#f2f7f5",
-        blob1: "radial-gradient(circle, rgba(0,180,150,0.07), transparent 70%)",
-        blob2:
-          "radial-gradient(circle, rgba(100,50,200,0.05), transparent 70%)",
+        section: "#ffffff",
+        blob1: "radial-gradient(circle, rgba(109,40,217,0.04), transparent 70%)",
+        blob2: "radial-gradient(circle, rgba(13,148,136,0.05), transparent 70%)",
         cardBg: "#ffffff",
-        cardBorder: "#e2ece8",
-        eyebrow: "#00997a",
-        eyebrowLine: "rgba(0,153,122,0.4)",
-        h1Line1: "#1a3530",
-        h1Line2: "#4a3080",
-        bioBody: "#3a5a54",
-        bioEmphasis: "#1a3530",
-        statNum: "#1a3530",
-        statSup: "#00997a",
-        statLabel: "#6a8a82",
-        btn1Border: "rgba(0,153,122,0.3)",
-        btn1Bg: "rgba(0,153,122,0.08)",
-        btn1Text: "#007a60",
-        btn2Border: "rgba(0,153,122,0.25)",
+        cardBorder: "#e2e8f0",
+        eyebrow: "#0d9488",
+        eyebrowLine: "rgba(13,148,136,0.3)",
+        h1Line1: "#0f172a",
+        h1Line2: "#6d28d9",
+        bioBody: "#475569",
+        bioEmphasis: "#1e293b",
+        statNum: "#0f172a",
+        statSup: "#0d9488",
+        statLabel: "#94a3b8",
+        btn1Border: "transparent",
+        btn1Bg: "#0d9488",
+        btn1Text: "#ffffff",
+        btn2Border: "#cbd5e1",
         btn2Bg: "transparent",
-        btn2Text: "#008868",
-        btn3Border: "#b0ccc4",
+        btn2Text: "#334155",
+        btn3Border: "#e2e8f0",
         btn3Bg: "transparent",
-        btn3Text: "#3a6a58",
-        divider: "#cce0d8",
-        stackLabel: "#7a9a90",
+        btn3Text: "#64748b",
+        divider: "#e2e8f0",
+        stackLabel: "#94a3b8",
         iconBg: "",
-        iconBorder: "#d0e8e0",
-        glow: "#b8d8d0",
+        iconBorder: "#e2e8f0",
+        glow: "rgba(148,163,184,0.15)",
         photoNameText: "text-slate-900",
         photoSubText: "text-slate-500",
         tooltipBg: "bg-slate-800",
@@ -685,8 +684,8 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                 padding: "0 8px",
               }}
             >
-              I build web apps and AI solutions — from Shopify stores to
-              LLM-powered products. Clean code, fast delivery.
+              Shopify stores that sell. SaaS that scales. AI that works.
+              End-to-end, shipped fast — no handoffs, no delays.
             </p>
           </div>
 
@@ -831,16 +830,23 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                     marginBottom: 28,
                   }}
                 >
-                  I build{" "}
+                  I turn briefs into live products —{" "}
                   <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
-                    production-ready web apps and AI solutions
+                    Shopify stores
                   </span>{" "}
-                  — Shopify stores, SaaS platforms, ML models, and LLM
-                  integrations.{" "}
+                  that sell,{" "}
                   <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
-                    5+ years
+                    SaaS platforms
                   </span>{" "}
-                  turning ideas into shipped products.
+                  that scale, and{" "}
+                  <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
+                    AI tools
+                  </span>{" "}
+                  built on real ML. End-to-end, on time,{" "}
+                  <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
+                    every time
+                  </span>
+                  .
                 </p>
 
                 {/* Stats */}

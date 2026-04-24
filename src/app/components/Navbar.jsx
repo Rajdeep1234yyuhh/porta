@@ -15,6 +15,7 @@ import {
   Box,
   Share2,
   MessageSquare,
+  Terminal,
 } from "lucide-react";
 
 const PHONE = "8638752315";
@@ -193,6 +194,20 @@ const Navbar = ({
           <Box className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" />
           <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">
             Cube
+          </span>
+        </Link>
+
+        {/* Divider */}
+        <div className="w-px h-6 bg-white/10 mx-1" />
+
+        {/* Terminal */}
+        <Link
+          href="/terminal"
+          className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-emerald-400 hover:bg-white/10" : "text-gray-500 hover:text-emerald-600 hover:bg-gray-100"}`}
+        >
+          <Terminal className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" />
+          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">
+            Terminal
           </span>
         </Link>
       </div>
@@ -397,6 +412,19 @@ const Navbar = ({
           <Box className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />
           <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">
             Cube
+          </span>
+        </Link>
+
+        <div className="w-px h-5 bg-white/10 mx-0.5" />
+
+        {/* Terminal */}
+        <Link
+          href="/terminal"
+          className="group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl text-gray-400 hover:text-emerald-400 hover:bg-white/10 transition-all duration-200"
+        >
+          <Terminal className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />
+          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">
+            Terminal
           </span>
         </Link>
 

@@ -825,100 +825,9 @@ function Background3D() {
   );
 }
 
-// ── Mobile 3-D Navbar ────────────────────────────────────────────────────────
+// ── Mobile Nav — CSS 3D buttons ──────────────────────────────────────────────
 
-function MobileNavTile({
-  section,
-  index,
-  isActive,
-  onClick,
-}: {
-  section: { label: string; icon: string; color: string };
-  index: number;
-  isActive: boolean;
-  onClick: () => void;
-}) {
-  const groupRef = useRef<THREE.Group>(null);
-  const matRef = useRef<THREE.MeshStandardMaterial>(null);
-  const t = useRef(Math.random() * Math.PI * 2);
-
-  const col = index % 3;
-  const row = Math.floor(index / 3);
-  const baseX = (col - 1) * 1.16;
-  const baseY = row === 0 ? 0.42 : -0.42;
-
-  useFrame((_, delta) => {
-    t.current += delta;
-    if (groupRef.current) {
-      groupRef.current.position.x = baseX;
-      groupRef.current.position.y =
-        baseY + Math.sin(t.current * 0.65 + index * 0.9) * 0.022;
-      groupRef.current.rotation.x = THREE.MathUtils.lerp(
-        groupRef.current.rotation.x,
-        isActive ? -0.14 : -0.04,
-        delta * 6,
-      );
-    }
-    if (matRef.current) {
-      matRef.current.emissiveIntensity = THREE.MathUtils.lerp(
-        matRef.current.emissiveIntensity,
-        isActive ? 0.32 + Math.sin(t.current * 1.6) * 0.1 : 0,
-        delta * 6,
-      );
-    }
-  });
-
-  return (
-    <group
-      ref={groupRef}
-      onClick={(e) => {
-        e.stopPropagation();
-        onClick();
-      }}
-    >
-      <RoundedBox args={[1.02, 0.6, 0.11]} radius={0.07} smoothness={3}>
-        <meshStandardMaterial
-          ref={matRef}
-          color={isActive ? section.color : "#14142a"}
-          metalness={0.78}
-          roughness={0.18}
-          emissive={section.color}
-          emissiveIntensity={0}
-        />
-      </RoundedBox>
-      {/* top accent stripe */}
-      <mesh position={[0, 0.3, 0.057]}>
-        <planeGeometry args={[0.82, 0.022]} />
-        <meshBasicMaterial
-          color={section.color}
-          transparent
-          opacity={isActive ? 1 : 0.3}
-        />
-      </mesh>
-      <Text
-        position={[0, 0.09, 0.062]}
-        fontSize={0.185}
-        color={isActive ? "#ffffff" : section.color}
-        anchorX="center"
-        anchorY="middle"
-      >
-        {section.icon}
-      </Text>
-      <Text
-        position={[0, -0.14, 0.062]}
-        fontSize={0.082}
-        color={isActive ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.3)"}
-        anchorX="center"
-        anchorY="middle"
-        letterSpacing={0.05}
-      >
-        {section.label.toUpperCase()}
-      </Text>
-    </group>
-  );
-}
-
-function MobileNavScene({
+function MobileNavButtons({
   active,
   setActive,
 }: {
@@ -926,21 +835,94 @@ function MobileNavScene({
   setActive: (i: number) => void;
 }) {
   return (
-    <>
-      <ambientLight intensity={1.9} />
-      <directionalLight position={[0, 5, 6]} intensity={1.3} />
-      <pointLight position={[0, 1, 4]} intensity={0.7} color="#a78bfa" />
-      <pointLight position={[0, -1, 3]} intensity={0.3} color="#60a5fa" />
-      {SECTIONS.map((sec, i) => (
-        <MobileNavTile
-          key={i}
-          section={sec}
-          index={i}
-          isActive={active === i}
-          onClick={() => setActive(i)}
-        />
-      ))}
-    </>
+    <div style={{
+      display: "grid",
+      gridTemplateColumns: "repeat(3, 1fr)",
+      gap: 10,
+      padding: "16px 14px 20px",
+      perspective: "600px",
+    }}>
+      {SECTIONS.map((sec, i) => {
+        const isActive = active === i;
+        return (
+          <button
+            key={i}
+            onClick={() => setActive(i)}
+            style={{
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 5,
+              padding: "12px 6px 10px",
+              borderRadius: 14,
+              border: `1px solid ${isActive ? sec.color : "rgba(255,255,255,0.08)"}`,
+              background: isActive
+                ? `linear-gradient(160deg, ${sec.color}28 0%, ${sec.color}0a 100%)`
+                : "linear-gradient(160deg, rgba(28,18,56,0.95) 0%, rgba(14,10,34,0.95) 100%)",
+              boxShadow: isActive
+                ? `0 0 20px ${sec.color}50, 0 6px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -2px 0 rgba(0,0,0,0.5)`
+                : "0 6px 18px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07), inset 0 -2px 0 rgba(0,0,0,0.45)",
+              transform: isActive
+                ? "translateY(1px) rotateX(1deg)"
+                : "translateY(0) rotateX(4deg)",
+              transformStyle: "preserve-3d",
+              cursor: "pointer",
+              transition: "all 0.18s cubic-bezier(0.34,1.56,0.64,1)",
+              outline: "none",
+              WebkitTapHighlightColor: "transparent",
+            }}
+          >
+            {/* top-edge highlight line */}
+            <div style={{
+              position: "absolute",
+              top: 0,
+              left: "12%",
+              right: "12%",
+              height: 1,
+              borderRadius: 1,
+              background: isActive
+                ? `linear-gradient(90deg, transparent, ${sec.color}cc, transparent)`
+                : "linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent)",
+            }} />
+            {/* icon */}
+            <span style={{
+              fontSize: 22,
+              lineHeight: 1,
+              filter: isActive ? `drop-shadow(0 0 6px ${sec.color})` : "none",
+              transition: "filter 0.18s ease",
+            }}>
+              {sec.icon}
+            </span>
+            {/* label */}
+            <span style={{
+              fontSize: 9,
+              fontWeight: 700,
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: isActive ? "#ffffff" : "rgba(255,255,255,0.35)",
+              transition: "color 0.18s ease",
+            }}>
+              {sec.label}
+            </span>
+            {/* active bottom glow bar */}
+            {isActive && (
+              <div style={{
+                position: "absolute",
+                bottom: 0,
+                left: "20%",
+                right: "20%",
+                height: 2,
+                borderRadius: 2,
+                background: sec.color,
+                boxShadow: `0 0 8px ${sec.color}`,
+              }} />
+            )}
+          </button>
+        );
+      })}
+    </div>
   );
 }
 
@@ -1443,17 +1425,12 @@ export default function CubePageClient() {
           height: "43%",
           display: "none",
           zIndex: 5,
-          background:
-            "linear-gradient(to bottom, transparent 0%, rgba(8,4,22,0.55) 18%, rgba(8,4,22,0.85) 100%)",
+          background: "rgba(8, 4, 22, 0.85)",
+          backdropFilter: "blur(12px)",
+          borderTop: "1px solid rgba(255,255,255,0.06)",
         }}
       >
-        <Canvas
-          camera={{ position: [0, 0, 3.6], fov: 54 }}
-          gl={{ antialias: true, alpha: true }}
-          style={{ background: "transparent", width: "100%", height: "100%" }}
-        >
-          <MobileNavScene active={active} setActive={setActive} />
-        </Canvas>
+        <MobileNavButtons active={active} setActive={setActive} />
       </div>
     </div>
   );
