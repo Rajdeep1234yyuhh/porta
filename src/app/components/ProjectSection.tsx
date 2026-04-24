@@ -41,6 +41,7 @@ interface CarouselProps {
   desktopPerView: number;
   accent: AccentStyle;
   label: string;
+  showHeader?: boolean;
 }
 
 const ProjectCarousel: React.FC<CarouselProps> = ({
@@ -49,6 +50,7 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
   desktopPerView,
   accent,
   label,
+  showHeader = true,
 }) => {
   const [perView, setPerView] = useState(desktopPerView);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -124,17 +126,19 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
     <div className={`flex flex-col rounded-2xl border overflow-hidden ${panelBg} ${panelBorder}`}>
 
       {/* ── Panel header ── */}
-      <div className={`flex items-center justify-between px-4 py-3 border-b ${headerBorder}`}>
-        <div className="flex items-center gap-2">
-          <span className={`w-2 h-2 rounded-full shrink-0 ${accentDot}`} />
-          <span className={`text-sm font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>
-            {label}
+      {showHeader && (
+        <div className={`flex items-center justify-between px-4 py-3 border-b ${headerBorder}`}>
+          <div className="flex items-center gap-2">
+            <span className={`w-2 h-2 rounded-full shrink-0 ${accentDot}`} />
+            <span className={`text-sm font-bold ${isDarkMode ? "text-white" : "text-slate-800"}`}>
+              {label}
+            </span>
+          </div>
+          <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${countBadge}`}>
+            {projects.length} projects
           </span>
         </div>
-        <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${countBadge}`}>
-          {projects.length} projects
-        </span>
-      </div>
+      )}
 
       {/* ── Carousel body ── */}
       <div className="flex flex-col gap-2 p-3">
@@ -319,8 +323,21 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
 };
 
 const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects }) => {
+  const [activeTab, setActiveTab] = useState<"tech" | "shopify">("tech");
+
   const aiProjects      = projects.filter((p) => !p.categories.includes("Shopify"));
   const shopifyProjects = projects.filter((p) =>  p.categories.includes("Shopify"));
+
+  const tabBase = `flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200`;
+  const tabActive = isDarkMode
+    ? "bg-[#2a2a2a] text-white shadow-md"
+    : "bg-white text-slate-900 shadow-md";
+  const tabInactive = isDarkMode
+    ? "text-gray-500 hover:text-gray-300"
+    : "text-slate-400 hover:text-slate-700";
+  const countActive = (accent: AccentStyle) => accent === "tech"
+    ? isDarkMode ? "bg-purple-500/10 text-purple-400 border-purple-500/20" : "bg-purple-100 text-purple-600 border-purple-200"
+    : isDarkMode ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-emerald-100 text-emerald-700 border-emerald-200";
 
   return (
     <section
@@ -355,9 +372,57 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
           </Link>
         </div>
 
-        {/* Two self-contained panels */}
-        <div className="flex flex-col lg:flex-row gap-4 flex-1 min-h-0 items-start">
-          <div className="flex-[2] min-w-0 w-full">
+        {/* ── Mobile: tab switcher + single panel ── */}
+        <div className="flex flex-col gap-3 lg:hidden">
+          {/* Tabs */}
+          <div className={`flex gap-1.5 p-1.5 rounded-2xl border ${isDarkMode ? "bg-white/[0.04] border-white/[0.07]" : "bg-slate-100 border-slate-200"}`}>
+            <button
+              onClick={() => setActiveTab("tech")}
+              className={`${tabBase} ${activeTab === "tech" ? tabActive : tabInactive}`}
+            >
+              <span className="w-2 h-2 rounded-full bg-purple-500 shrink-0" />
+              AI / ML &amp; Software
+              <span className={`ml-auto text-[10px] px-1.5 py-0.5 rounded-full border ${activeTab === "tech" ? countActive("tech") : isDarkMode ? "border-white/10 text-gray-500" : "border-slate-200 text-slate-400"}`}>
+                {aiProjects.length}
+              </span>
+            </button>
+            <button
+              onClick={() => setActiveTab("shopify")}
+              className={`${tabBase} ${activeTab === "shopify" ? tabActive : tabInactive}`}
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
+              Shopify Stores
+              <span className={`ml-auto text-[10px] px-1.5 py-0.5 rounded-full border ${activeTab === "shopify" ? countActive("shopify") : isDarkMode ? "border-white/10 text-gray-500" : "border-slate-200 text-slate-400"}`}>
+                {shopifyProjects.length}
+              </span>
+            </button>
+          </div>
+
+          {/* Active panel */}
+          {activeTab === "tech" ? (
+            <ProjectCarousel
+              isDarkMode={isDarkMode}
+              projects={aiProjects}
+              desktopPerView={1}
+              accent="tech"
+              label="AI / ML & Software"
+              showHeader={false}
+            />
+          ) : (
+            <ProjectCarousel
+              isDarkMode={isDarkMode}
+              projects={shopifyProjects}
+              desktopPerView={1}
+              accent="shopify"
+              label="Shopify Stores"
+              showHeader={false}
+            />
+          )}
+        </div>
+
+        {/* ── Desktop: two panels side by side ── */}
+        <div className="hidden lg:flex flex-row gap-4 items-start">
+          <div className="flex-[2] min-w-0">
             <ProjectCarousel
               isDarkMode={isDarkMode}
               projects={aiProjects}
@@ -366,8 +431,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
               label="AI / ML & Software"
             />
           </div>
-
-          <div className="flex-[1] min-w-0 w-full">
+          <div className="flex-[1] min-w-0">
             <ProjectCarousel
               isDarkMode={isDarkMode}
               projects={shopifyProjects}
