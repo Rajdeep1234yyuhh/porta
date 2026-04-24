@@ -240,9 +240,10 @@ const MINOR_STACK = [
 ];
 
 const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
-  const [projectCount, setProjectCount] = React.useState(0);
-  const [yearsCount, setYearsCount] = React.useState(0);
+  const [fullStackCount, setFullStackCount] = React.useState(0);
+  const [shopifyCount, setShopifyCount] = React.useState(0);
   const [clientCount, setClientCount] = React.useState(0);
+  const [yearsCount, setYearsCount] = React.useState(0);
   const [contactOpen, setContactOpen] = React.useState(false);
   const contactRef = React.useRef<HTMLDivElement>(null);
 
@@ -256,43 +257,43 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
   }, []);
 
   React.useEffect(() => {
-    const pi = setInterval(
+    const fi = setInterval(
       () =>
-        setProjectCount((p) => {
-          if (p >= 25) {
-            clearInterval(pi);
-            return 25;
-          }
+        setFullStackCount((p) => {
+          if (p >= 4) { clearInterval(fi); return 4; }
           return p + 1;
         }),
-      30,
+      180,
     );
-    const yi = setInterval(
+    const si = setInterval(
       () =>
-        setYearsCount((p) => {
-          if (p >= 5) {
-            clearInterval(yi);
-            return 5;
-          }
-          return p + 1;
-        }),
-      300,
-    );
-    const ci = setInterval(
-      () =>
-        setClientCount((p) => {
-          if (p >= 30) {
-            clearInterval(ci);
-            return 30;
-          }
+        setShopifyCount((p) => {
+          if (p >= 18) { clearInterval(si); return 18; }
           return p + 1;
         }),
       40,
     );
+    const ci = setInterval(
+      () =>
+        setClientCount((p) => {
+          if (p >= 25) { clearInterval(ci); return 25; }
+          return p + 1;
+        }),
+      50,
+    );
+    const yi = setInterval(
+      () =>
+        setYearsCount((p) => {
+          if (p >= 5) { clearInterval(yi); return 5; }
+          return p + 1;
+        }),
+      300,
+    );
     return () => {
-      clearInterval(pi);
-      clearInterval(yi);
+      clearInterval(fi);
+      clearInterval(si);
       clearInterval(ci);
+      clearInterval(yi);
     };
   }, []);
 
@@ -666,54 +667,61 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               }}
             >
               <span
-                style={{ display: "block", fontSize: 22, color: t.h1Line1 }}
+                style={{ display: "block", fontSize: 21, color: t.h1Line1 }}
               >
-                Full-Stack Developer
+                Full-Stack &amp; AI/ML Developer
               </span>
               <span
                 style={{ display: "block", fontSize: 18, color: t.h1Line2 }}
               >
-                &amp; AI Engineer
+                Shopify Expert
               </span>
             </h1>
             <p
               style={{
                 fontSize: 12,
-                lineHeight: 1.65,
+                lineHeight: 1.7,
                 color: t.bioBody,
                 padding: "0 8px",
               }}
             >
-              Shopify stores that sell. SaaS that scales. AI that works.
-              End-to-end, shipped fast — no handoffs, no delays.
+              Full-stack apps,{" "}
+              <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>AI/ML systems</span>
+              {" "}&amp;{" "}
+              <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>Shopify stores</span>
+              {" "}— built to scale, automate, and grow revenue.
+              End-to-end, focused on performance and real impact.
             </p>
           </div>
 
           {/* Stats */}
-          <div style={{ display: "flex", justifyContent: "center", gap: 28 }}>
-            {[
-              { val: projectCount, label: "Projects" },
-              { val: yearsCount, label: "Years Exp" },
-              { val: clientCount, label: "Happy Clients" },
-            ].map(({ val, label }) => (
-              <div key={label} className="text-center">
-                <div
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 18,
-                    fontWeight: 700,
-                    color: t.statNum,
-                    lineHeight: 1,
-                  }}
-                >
-                  {val}
-                  <sup style={{ color: t.statSup, fontSize: 10 }}>+</sup>
-                </div>
-                <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>
-                  {label}
-                </div>
+          <div style={{ display: "flex", justifyContent: "center", gap: 20 }}>
+            <div className="text-center">
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 18, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+                {fullStackCount}
               </div>
-            ))}
+              <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>Full-Stack</div>
+              <div style={{ fontSize: 9, color: t.bioBody, marginTop: 1 }}>incl. AI</div>
+            </div>
+            <div className="text-center">
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 18, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+                {shopifyCount}
+              </div>
+              <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>Shopify Stores</div>
+              <div style={{ fontSize: 9, color: t.bioBody, marginTop: 1 }}>& many more</div>
+            </div>
+            <div className="text-center">
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 18, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+                {clientCount}<sup style={{ color: t.statSup, fontSize: 9 }}>+</sup>
+              </div>
+              <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>Happy Clients</div>
+            </div>
+            <div className="text-center">
+              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 18, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+                {yearsCount}<sup style={{ color: t.statSup, fontSize: 9 }}>+</sup>
+              </div>
+              <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>Yrs Experience</div>
+            </div>
           </div>
 
           {/* CTA */}
@@ -805,18 +813,18 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                 <h1
                   style={{
                     fontFamily: "'Outfit', sans-serif",
-                    fontSize: "clamp(36px, 4.2vw, 58px)",
+                    fontSize: "clamp(32px, 3.8vw, 52px)",
                     fontWeight: 900,
-                    lineHeight: 1.05,
+                    lineHeight: 1.08,
                     letterSpacing: "-0.03em",
                     marginBottom: 20,
                   }}
                 >
                   <span style={{ display: "block", color: t.h1Line1 }}>
-                    Full-Stack Developer
+                    Full-Stack &amp; AI/ML Developer
                   </span>
                   <span style={{ display: "block", color: t.h1Line2 }}>
-                    &amp; AI Engineer
+                    Shopify Expert
                   </span>
                 </h1>
 
@@ -830,57 +838,75 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                     marginBottom: 28,
                   }}
                 >
-                  I turn briefs into live products —{" "}
+                  I build{" "}
+                  <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
+                    full-stack applications
+                  </span>
+                  ,{" "}
+                  <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
+                    AI/ML integrations &amp; systems
+                  </span>
+                  , and{" "}
                   <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
                     Shopify stores
                   </span>{" "}
-                  that sell,{" "}
+                  for businesses to scale, automate, and increase revenue —
+                  end-to-end solutions focused on{" "}
                   <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
-                    SaaS platforms
-                  </span>{" "}
-                  that scale, and{" "}
-                  <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
-                    AI tools
-                  </span>{" "}
-                  built on real ML. End-to-end, on time,{" "}
-                  <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
-                    every time
+                    performance, usability, and real impact
                   </span>
                   .
                 </p>
 
                 {/* Stats */}
-                <div style={{ display: "flex", gap: 28, marginBottom: 28 }}>
-                  {[
-                    { count: projectCount, label: "Projects Delivered" },
-                    { count: yearsCount, label: "Years Exp" },
-                    { count: clientCount, label: "Happy Clients" },
-                  ].map(({ count, label }) => (
-                    <div key={label}>
-                      <div
-                        style={{
-                          fontFamily: "'JetBrains Mono', monospace",
-                          fontSize: 24,
-                          fontWeight: 700,
-                          color: t.statNum,
-                          lineHeight: 1,
-                        }}
-                      >
-                        {count}
-                        <sup style={{ color: t.statSup, fontSize: 12 }}>+</sup>
-                      </div>
-                      <div
-                        style={{
-                          fontSize: 11,
-                          color: t.statLabel,
-                          marginTop: 4,
-                          letterSpacing: "0.04em",
-                        }}
-                      >
-                        {label}
-                      </div>
+                <div style={{ display: "flex", gap: 24, marginBottom: 28, flexWrap: "wrap" as const }}>
+                  {/* Full-Stack */}
+                  <div>
+                    <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 24, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+                      {fullStackCount}
                     </div>
-                  ))}
+                    <div style={{ fontSize: 11, color: t.statLabel, marginTop: 4, letterSpacing: "0.04em" }}>
+                      Full-Stack Projects
+                    </div>
+                    <div style={{ fontSize: 10, color: t.bioBody, marginTop: 2 }}>
+                      incl. AI integrations
+                    </div>
+                  </div>
+
+                  {/* Shopify */}
+                  <div>
+                    <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 24, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+                      {shopifyCount}
+                    </div>
+                    <div style={{ fontSize: 11, color: t.statLabel, marginTop: 4, letterSpacing: "0.04em" }}>
+                      Shopify Stores
+                    </div>
+                    <div style={{ fontSize: 10, color: t.bioBody, marginTop: 2 }}>
+                      & many more worked with
+                    </div>
+                  </div>
+
+                  {/* Clients */}
+                  <div>
+                    <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 24, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+                      {clientCount}
+                      <sup style={{ color: t.statSup, fontSize: 12 }}>+</sup>
+                    </div>
+                    <div style={{ fontSize: 11, color: t.statLabel, marginTop: 4, letterSpacing: "0.04em" }}>
+                      Happy Clients
+                    </div>
+                  </div>
+
+                  {/* Years */}
+                  <div>
+                    <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 24, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+                      {yearsCount}
+                      <sup style={{ color: t.statSup, fontSize: 12 }}>+</sup>
+                    </div>
+                    <div style={{ fontSize: 11, color: t.statLabel, marginTop: 4, letterSpacing: "0.04em" }}>
+                      Years Experience
+                    </div>
+                  </div>
                 </div>
 
                 {/* Buttons */}
