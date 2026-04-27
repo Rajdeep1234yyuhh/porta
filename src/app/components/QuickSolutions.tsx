@@ -32,7 +32,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSec
         <div className={`absolute bottom-0 -left-16 w-56 h-56 rounded-full blur-3xl opacity-10 ${isDarkMode ? "bg-transparent" : "bg-blue-200"}`} />
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 w-full relative z-10 py-4">
+      <div className="max-w-5xl mx-auto px-2 sm:px-6 w-full relative z-10 py-4">
         {/* Header */}
         <div className="flex items-center justify-between mb-4 sm:mb-5">
           <div>

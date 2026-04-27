@@ -36,7 +36,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
         <div className={`absolute -bottom-10 -right-20 w-80 h-80 rounded-full blur-3xl opacity-15 ${isDarkMode ? "bg-transparent" : "bg-purple-200"}`} />
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full relative z-10 py-3">
+      <div className="max-w-5xl mx-auto px-2 sm:px-6 lg:px-8 w-full relative z-10 py-3">
         {/* Header */}
         <div className="text-center mb-4">
           <span className={`inline-block text-xs font-semibold tracking-wider uppercase px-3 py-1 rounded-full mb-1.5 ${isDarkMode ? "bg-green-500/10 text-green-400 border border-green-500/20" : "bg-green-100 text-green-600 border border-green-200"}`}>

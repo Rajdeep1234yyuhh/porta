@@ -27,7 +27,7 @@ const ServiceSection: React.FC<ServiceSectionProps> = ({ isDarkMode }) => {
         <div className={`absolute bottom-10 -left-20 w-64 h-64 rounded-full blur-3xl opacity-20 ${isDarkMode ? "bg-transparent" : "bg-purple-300"}`} />
       </div>
 
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 w-full relative z-10 py-3">
+      <div className="max-w-3xl mx-auto px-2 sm:px-6 w-full relative z-10 py-3">
         {/* Header - minimal */}
         <div className="mb-4">
           <h2 className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>

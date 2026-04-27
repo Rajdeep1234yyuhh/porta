@@ -131,11 +131,9 @@ export default function HomeClient() {
         return (
           <div
             key={i}
-            className="fixed overflow-hidden rounded-2xl will-change-transform shadow-2xl"
+            className="fixed left-3 right-3 md:left-8 md:right-8 overflow-hidden rounded-2xl will-change-transform shadow-2xl"
             style={{
               top: NAV_H + 8,
-              left: 32,
-              right: 32,
               bottom: 20,
               zIndex: isEntering ? 11 : 10,
               transform: `translateY(calc(${i - current} * 100vh))`,

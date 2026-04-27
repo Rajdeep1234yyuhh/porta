@@ -167,7 +167,7 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
           </button>
 
           <div
-            className="overflow-hidden mx-8"
+            className="overflow-hidden mx-2 sm:mx-5 lg:mx-8"
             onTouchStart={onTouchStart}
             onTouchEnd={onTouchEnd}
           >
@@ -190,7 +190,7 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
                 return (
                   <div
                     key={project.id}
-                    className="shrink-0 px-1.5"
+                    className="shrink-0 px-1 sm:px-1.5"
                     style={{ width: `${cardWidth}%` }}
                   >
                     <div
@@ -365,7 +365,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
         <div className={`absolute -bottom-10 -right-20 w-64 h-64 rounded-full blur-3xl opacity-10 ${isDarkMode ? "bg-emerald-500" : "bg-emerald-200"}`} />
       </div>
 
-      <div className="flex flex-col flex-1 min-h-0 w-full px-3 sm:px-5 relative z-10 pt-5 pb-4 gap-4">
+      <div className="flex flex-col flex-1 min-h-0 w-full px-2 sm:px-5 relative z-10 pt-5 pb-4 gap-4">
 
         {/* Section header */}
         <div className="flex items-end justify-between shrink-0">
