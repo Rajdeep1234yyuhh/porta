@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Zap, CheckCircle, MessageCircle, Phone, ChevronDown } from "lucide-react";
+import { Zap, CheckCircle, MessageCircle, Phone, ChevronDown, Gift, Wallet } from "lucide-react";
 
 const PHONE = "919999999999";
 
@@ -11,12 +11,12 @@ interface QuickSolutionsProps {
 }
 
 const solutions = [
-  { title: "Bug Fix",           examples: ["Runtime errors", "Layout breaks", "API failures", "Logic bugs"],          tag: "free" },
-  { title: "Code Review",       examples: ["React components", "API routes", "DB queries", "Performance"],            tag: "free" },
-  { title: "Small Feature",     examples: ["Auth flow", "Form validation", "Filters & search", "Dark mode"],          tag: "paid" },
-  { title: "UI Polish",         examples: ["Responsive fixes", "Animations", "Component styling", "Layout"],          tag: "free" },
-  { title: "API Integration",   examples: ["REST APIs", "Firebase", "Stripe", "AI/LLM"],                             tag: "paid" },
-  { title: "Performance Audit", examples: ["Load time", "Bundle size", "Re-renders", "DB tuning"],                   tag: "paid" },
+  { title: "Bug Fix",           examples: ["Runtime errors", "Layout breaks", "API failures", "Logic bugs"],          deal: true },
+  { title: "Code Review",       examples: ["React components", "API routes", "DB queries", "Performance"],            deal: true },
+  { title: "Small Feature",     examples: ["Auth flow", "Form validation", "Filters & search", "Dark mode"],          deal: false },
+  { title: "UI Polish",         examples: ["Responsive fixes", "Animations", "Component styling", "Layout"],          deal: false },
+  { title: "API Integration",   examples: ["REST APIs", "Firebase", "Stripe", "AI/LLM"],                             deal: false },
+  { title: "Performance Audit", examples: ["Load time", "Bundle size", "Re-renders", "DB tuning"],                   deal: false },
 ];
 
 const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSection }) => {
@@ -25,29 +25,29 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSec
   return (
     <section
       id="quick-solutions"
-      className={`h-full flex flex-col justify-center overflow-hidden relative ${isDarkMode ? "bg-[#141414]" : "bg-emerald-50"}`}
+      className={`h-full flex flex-col justify-start sm:justify-center overflow-y-auto sm:overflow-hidden relative ${isDarkMode ? "bg-[#141414]" : "bg-emerald-50"}`}
     >
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className={`absolute -top-24 right-0 w-56 h-56 rounded-full blur-3xl opacity-10 ${isDarkMode ? "bg-transparent" : "bg-green-300"}`} />
         <div className={`absolute bottom-0 -left-16 w-56 h-56 rounded-full blur-3xl opacity-10 ${isDarkMode ? "bg-transparent" : "bg-blue-200"}`} />
       </div>
 
-      <div className="max-w-5xl mx-auto px-2 sm:px-6 w-full relative z-10 py-4">
+      <div className="max-w-5xl mx-auto px-2 sm:px-6 w-full relative z-10 py-3 sm:py-4">
         {/* Header */}
-        <div className="flex items-center justify-between mb-4 sm:mb-5">
-          <div>
-            <h2 className={`text-xl sm:text-2xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2.5 sm:mb-5">
+          <div className="min-w-0">
+            <h2 className={`text-lg sm:text-2xl font-bold leading-tight ${isDarkMode ? "text-white" : "text-slate-900"}`}>
               Got a Problem?{" "}
-              <span className="bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">Let&apos;s Solve It.</span>
+              <span className="bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">Quick Fixes.</span>
             </h2>
-            <p className={`text-xs sm:text-sm mt-0.5 ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>
-              Most are <span className="text-green-500 font-semibold">free</span> - the rest cost almost nothing.
+            <p className={`text-[11px] sm:text-sm mt-0.5 leading-snug ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>
+              Fast help for small issues. Every quick fix has a minor charge, while some fixes can be free when they are part of an active deal.
             </p>
           </div>
-          <div className="relative shrink-0">
+          <div className="relative shrink-0 self-start sm:self-auto">
             <button
               onClick={() => setContactOpen((o) => !o)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-white text-sm bg-green-600 hover:bg-green-500 transition-all duration-100"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-white text-xs sm:text-sm bg-green-600 hover:bg-green-500 transition-all duration-100"
               style={{ boxShadow: "0 3px 0 0 #166834" }}
             >
               <Zap className="w-4 h-4" />
@@ -73,23 +73,38 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSec
           </div>
         </div>
 
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 mb-2.5 sm:mb-3">
+          <div className={`flex items-center gap-1.5 sm:gap-2 rounded-xl border px-2.5 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-xs font-medium ${isDarkMode ? "bg-white/[0.04] border-white/10 text-gray-300" : "bg-white border-emerald-200 text-slate-700"}`}>
+            <Wallet className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-amber-500 shrink-0" />
+            Minor charges apply to quick fixes.
+          </div>
+          <div className={`flex items-center gap-1.5 sm:gap-2 rounded-xl border px-2.5 sm:px-3 py-1.5 sm:py-2 text-[10px] sm:text-xs font-medium ${isDarkMode ? "bg-white/[0.04] border-white/10 text-gray-300" : "bg-white border-emerald-200 text-slate-700"}`}>
+            <Gift className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-green-500 shrink-0" />
+            Can be free in active deals.
+          </div>
+        </div>
+
         {/* Cards - 3x2 grid, larger on desktop */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-4">
           {solutions.map((s) => (
             <div
               key={s.title}
-              className={`rounded-xl px-4 py-3.5 sm:px-5 sm:py-4 border transition-all duration-200 hover:scale-[1.02] ${isDarkMode ? "bg-[#1c1c1e] border-[#2a2a2a] hover:border-green-500/40" : "bg-white border-slate-200 hover:border-green-400/60"}`}
+              className={`rounded-xl px-2.5 py-2.5 sm:px-5 sm:py-4 border transition-all duration-200 hover:scale-[1.02] ${isDarkMode ? "bg-[#1c1c1e] border-[#2a2a2a] hover:border-green-500/40" : "bg-white border-slate-200 hover:border-green-400/60"}`}
             >
-              <div className="flex items-center justify-between mb-2 sm:mb-2.5">
-                <h3 className={`font-bold text-sm sm:text-base ${isDarkMode ? "text-white" : "text-slate-900"}`}>{s.title}</h3>
-                <span className={`text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0 ${s.tag === "free" ? "bg-green-500/15 text-green-500 border border-green-500/30" : isDarkMode ? "bg-amber-500/15 text-amber-400 border border-amber-500/30" : "bg-amber-50 text-amber-600 border border-amber-300"}`}>
-                  {s.tag === "free" ? "Free" : "Fee"}
+              <div className="flex items-center justify-between gap-2 mb-1.5 sm:mb-2.5">
+                <h3 className={`min-w-0 font-bold text-[12px] sm:text-base leading-tight ${isDarkMode ? "text-white" : "text-slate-900"}`}>{s.title}</h3>
+                <span
+                  aria-label={s.deal ? "Can be free in active deals" : "Minor charge applies"}
+                  title={s.deal ? "Can be free in active deals" : "Minor charge applies"}
+                  className={`inline-flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full shrink-0 ${s.deal ? "bg-green-500/15 text-green-500 border border-green-500/30" : isDarkMode ? "bg-amber-500/15 text-amber-400 border border-amber-500/30" : "bg-amber-50 text-amber-600 border border-amber-300"}`}
+                >
+                  {s.deal ? <Gift className="w-3.5 h-3.5" /> : <Wallet className="w-3.5 h-3.5" />}
                 </span>
               </div>
-              <ul className="flex flex-col gap-1 sm:gap-1.5">
-                {s.examples.map((ex) => (
-                  <li key={ex} className={`flex items-center gap-1.5 text-xs sm:text-sm ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>
-                    <CheckCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-green-500 shrink-0" />
+              <ul className="flex flex-col gap-0.5 sm:gap-1.5">
+                {s.examples.map((ex, i) => (
+                  <li key={ex} className={`${i > 2 ? "hidden sm:flex" : "flex"} items-center gap-1 sm:gap-1.5 text-[10px] sm:text-sm leading-snug ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>
+                    <CheckCircle className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-green-500 shrink-0" />
                     {ex}
                   </li>
                 ))}
