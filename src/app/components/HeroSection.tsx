@@ -260,7 +260,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
     const fi = setInterval(
       () =>
         setFullStackCount((p) => {
-          if (p >= 4) { clearInterval(fi); return 4; }
+          if (p >= 4) {
+            clearInterval(fi);
+            return 4;
+          }
           return p + 1;
         }),
       180,
@@ -268,7 +271,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
     const si = setInterval(
       () =>
         setShopifyCount((p) => {
-          if (p >= 18) { clearInterval(si); return 18; }
+          if (p >= 18) {
+            clearInterval(si);
+            return 18;
+          }
           return p + 1;
         }),
       40,
@@ -276,7 +282,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
     const ci = setInterval(
       () =>
         setClientCount((p) => {
-          if (p >= 25) { clearInterval(ci); return 25; }
+          if (p >= 25) {
+            clearInterval(ci);
+            return 25;
+          }
           return p + 1;
         }),
       50,
@@ -284,7 +293,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
     const yi = setInterval(
       () =>
         setYearsCount((p) => {
-          if (p >= 5) { clearInterval(yi); return 5; }
+          if (p >= 5) {
+            clearInterval(yi);
+            return 5;
+          }
           return p + 1;
         }),
       300,
@@ -334,8 +346,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
       }
     : ({
         section: "#ffffff",
-        blob1: "radial-gradient(circle, rgba(109,40,217,0.04), transparent 70%)",
-        blob2: "radial-gradient(circle, rgba(13,148,136,0.05), transparent 70%)",
+        blob1:
+          "radial-gradient(circle, rgba(109,40,217,0.04), transparent 70%)",
+        blob2:
+          "radial-gradient(circle, rgba(13,148,136,0.05), transparent 70%)",
         cardBg: "#ffffff",
         cardBorder: "#e2e8f0",
         eyebrow: "#0d9488",
@@ -686,41 +700,91 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               }}
             >
               Full-stack apps,{" "}
-              <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>AI/ML systems</span>
-              {" "}&amp;{" "}
-              <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>Shopify stores</span>
-              {" "}— built to scale, automate, and grow revenue.
-              End-to-end, focused on performance and real impact.
+              <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
+                AI/ML systems
+              </span>{" "}
+              &amp;{" "}
+              <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
+                Shopify stores
+              </span>{" "}
+              — built to scale, automate, and grow revenue. End-to-end, focused
+              on performance and real impact.
             </p>
           </div>
 
           {/* Stats */}
           <div style={{ display: "flex", justifyContent: "center", gap: 20 }}>
             <div className="text-center">
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 18, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+              <div
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: t.statNum,
+                  lineHeight: 1,
+                }}
+              >
                 {fullStackCount}
               </div>
-              <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>Full-Stack</div>
-              <div style={{ fontSize: 9, color: t.bioBody, marginTop: 1 }}>incl. AI</div>
+              <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>
+                Full-Stack
+              </div>
+              <div style={{ fontSize: 9, color: t.bioBody, marginTop: 1 }}>
+                incl. AI
+              </div>
             </div>
             <div className="text-center">
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 18, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+              <div
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: t.statNum,
+                  lineHeight: 1,
+                }}
+              >
                 {shopifyCount}
               </div>
-              <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>Shopify Stores</div>
-              <div style={{ fontSize: 9, color: t.bioBody, marginTop: 1 }}>& many more</div>
+              <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>
+                Shopify Stores
+              </div>
+              <div style={{ fontSize: 9, color: t.bioBody, marginTop: 1 }}>
+                & many more
+              </div>
             </div>
             <div className="text-center">
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 18, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
-                {clientCount}<sup style={{ color: t.statSup, fontSize: 9 }}>+</sup>
+              <div
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: t.statNum,
+                  lineHeight: 1,
+                }}
+              >
+                {clientCount}
+                <sup style={{ color: t.statSup, fontSize: 9 }}>+</sup>
               </div>
-              <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>Happy Clients</div>
+              <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>
+                Happy Clients
+              </div>
             </div>
             <div className="text-center">
-              <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 18, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
-                {yearsCount}<sup style={{ color: t.statSup, fontSize: 9 }}>+</sup>
+              <div
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 18,
+                  fontWeight: 700,
+                  color: t.statNum,
+                  lineHeight: 1,
+                }}
+              >
+                {yearsCount}
+                <sup style={{ color: t.statSup, fontSize: 9 }}>+</sup>
               </div>
-              <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>Yrs Experience</div>
+              <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>
+                Yrs Experience
+              </div>
             </div>
           </div>
 
@@ -859,51 +923,122 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                 </p>
 
                 {/* Stats */}
-                <div style={{ display: "flex", gap: 24, marginBottom: 28, flexWrap: "wrap" as const }}>
+                <div
+                  style={{
+                    display: "flex",
+                    gap: 18,
+                    marginBottom: 28,
+                    flexWrap: "wrap" as const,
+                  }}
+                >
                   {/* Full-Stack */}
                   <div>
-                    <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 24, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+                    <div
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 24,
+                        fontWeight: 700,
+                        color: t.statNum,
+                        lineHeight: 1,
+                      }}
+                    >
                       {fullStackCount}
                     </div>
-                    <div style={{ fontSize: 11, color: t.statLabel, marginTop: 4, letterSpacing: "0.04em" }}>
-                      Full-Stack Projects
+                    <div
+                      style={{
+                        fontSize: 11,
+                        color: t.statLabel,
+                        marginTop: 4,
+                        letterSpacing: "0.04em",
+                      }}
+                    >
+                      Full-Stack Projects Delivered
                     </div>
-                    <div style={{ fontSize: 10, color: t.bioBody, marginTop: 2 }}>
+                    <div
+                      style={{ fontSize: 10, color: t.bioBody, marginTop: 2 }}
+                    >
                       incl. AI integrations
                     </div>
                   </div>
 
                   {/* Shopify */}
                   <div>
-                    <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 24, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+                    <div
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 24,
+                        fontWeight: 700,
+                        color: t.statNum,
+                        lineHeight: 1,
+                      }}
+                    >
                       {shopifyCount}
                     </div>
-                    <div style={{ fontSize: 11, color: t.statLabel, marginTop: 4, letterSpacing: "0.04em" }}>
+                    <div
+                      style={{
+                        fontSize: 11,
+                        color: t.statLabel,
+                        marginTop: 4,
+                        letterSpacing: "0.04em",
+                      }}
+                    >
                       Shopify Stores
                     </div>
-                    <div style={{ fontSize: 10, color: t.bioBody, marginTop: 2 }}>
+                    <div
+                      style={{ fontSize: 10, color: t.bioBody, marginTop: 2 }}
+                    >
                       & many more worked with
                     </div>
                   </div>
 
                   {/* Clients */}
                   <div>
-                    <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 24, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+                    <div
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 24,
+                        fontWeight: 700,
+                        color: t.statNum,
+                        lineHeight: 1,
+                      }}
+                    >
                       {clientCount}
                       <sup style={{ color: t.statSup, fontSize: 12 }}>+</sup>
                     </div>
-                    <div style={{ fontSize: 11, color: t.statLabel, marginTop: 4, letterSpacing: "0.04em" }}>
+                    <div
+                      style={{
+                        fontSize: 11,
+                        color: t.statLabel,
+                        marginTop: 4,
+                        letterSpacing: "0.04em",
+                      }}
+                    >
                       Happy Clients
                     </div>
                   </div>
 
                   {/* Years */}
                   <div>
-                    <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 24, fontWeight: 700, color: t.statNum, lineHeight: 1 }}>
+                    <div
+                      style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: 24,
+                        fontWeight: 700,
+                        color: t.statNum,
+                        lineHeight: 1,
+                      }}
+                    >
                       {yearsCount}
                       <sup style={{ color: t.statSup, fontSize: 12 }}>+</sup>
                     </div>
-                    <div style={{ fontSize: 11, color: t.statLabel, marginTop: 4, letterSpacing: "0.04em" }}>
+                    <div
+                      style={{
+                        fontSize: 11,
+                        color: t.statLabel,
+                        marginTop: 4,
+                        letterSpacing: "0.04em",
+                      }}
+                    >
                       Years Experience
                     </div>
                   </div>
