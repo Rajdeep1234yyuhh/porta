@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Terminal — Rajdeep Kotoky",
+  title: "Terminal | Rajdeep Kotoky",
   description: "Interactive portfolio terminal. Type 'help' to explore commands.",
 };
 

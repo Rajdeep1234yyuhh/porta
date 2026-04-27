@@ -15,7 +15,7 @@ export const allServices: ServiceData[] = [
     shortDescription:
       "Custom websites and web applications using modern frameworks like Next.js and React.",
     fullDescription:
-      "I build fast, scalable, and production-ready web applications tailored to your business needs. From landing pages to complex full-stack platforms, I handle everything from UI design to deployment — using modern frameworks and industry best practices.",
+      "I build fast, scalable, and production-ready web applications tailored to your business needs. From landing pages to complex full-stack platforms, I handle everything from UI design to deployment - using modern frameworks and industry best practices.",
     icon: "globe",
     features: [
       "Custom UI/UX implementation",

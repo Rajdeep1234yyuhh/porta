@@ -97,7 +97,7 @@ export default function HomeClient() {
     <Contact key="contact" isDarkMode={isDarkMode} />,
   ];
 
-  // Navbar height — slides rest below this, but travel past it when animating
+  // Navbar height - slides rest below this, but travel past it when animating
   const NAV_H = 84;
 
   return (

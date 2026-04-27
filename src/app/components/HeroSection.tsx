@@ -309,7 +309,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
     };
   }, []);
 
-  /* ── Color tokens — only colors differ between modes ── */
+  /* Color tokens - only colors differ between modes */
   const t = isDarkMode
     ? {
         section: "#08090f",
@@ -380,7 +380,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         tooltipBg: "bg-slate-800",
       } as const);
 
-  /* ── Core stack icons ── */
+  /* Core stack icons */
   const techStack = (
     <div style={{ width: "100%" }}>
       <div
@@ -440,7 +440,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
     </div>
   );
 
-  /* ── Contact dropdown ── */
+  /* Contact dropdown */
   const contactDropdown = (
     <div className="relative" ref={contactRef}>
       {contactOpen && (
@@ -499,7 +499,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
           transition: "all 0.18s ease",
         }}
       >
-        Get In Touch ✉
+        Get In Touch
       </button>
     </div>
   );
@@ -570,7 +570,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
           style={{ background: t.blob2 }}
         />
 
-        {/* ── MOBILE layout ── */}
+        {/* MOBILE layout */}
         <div className="md:hidden flex-1 flex flex-col justify-center px-5 py-4 relative z-10 gap-3">
           {/* Photo */}
           <div className="flex justify-center">
@@ -707,7 +707,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
                 Shopify stores
               </span>{" "}
-              — built to scale, automate, and grow revenue. End-to-end, focused
+              - built to scale, automate, and grow revenue. End-to-end, focused
               on performance and real impact.
             </p>
           </div>
@@ -813,7 +813,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                 color: t.btn1Text,
               }}
             >
-              View My Work ↗
+              View My Work
             </button>
             <a
               href="/resume.pdf"
@@ -833,7 +833,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                 textDecoration: "none",
               }}
             >
-              Resume ⬇
+              Resume
             </a>
             {contactDropdown}
           </div>
@@ -841,7 +841,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
           {techStack}
         </div>
 
-        {/* ── DESKTOP layout ── */}
+        {/* DESKTOP layout */}
         <div className="hidden md:flex flex-1 items-center relative z-10 overflow-hidden">
           <div className="max-w-6xl mx-auto px-8 lg:px-12 w-full">
             <div className="grid grid-cols-2 gap-10 lg:gap-16 items-start">
@@ -914,7 +914,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
                     Shopify stores
                   </span>{" "}
-                  for businesses to scale, automate, and increase revenue —
+                  for businesses to scale, automate, and increase revenue -
                   end-to-end solutions focused on{" "}
                   <span style={{ color: t.bioEmphasis, fontWeight: 500 }}>
                     performance, usability, and real impact
@@ -1070,7 +1070,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                       transition: "all 0.18s ease",
                     }}
                   >
-                    View My Work ↗
+                    View My Work
                   </button>
                   <a
                     href="/resume.pdf"
@@ -1092,13 +1092,13 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                       textDecoration: "none",
                     }}
                   >
-                    Resume ⬇
+                    Resume
                   </a>
                   {contactDropdown}
                 </div>
               </div>
 
-              {/* Right — Photo + Core Stack */}
+              {/* Right - Photo + Core Stack */}
               <div className="flex flex-col items-center gap-6">
                 <div className="relative">
                   <div

@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Services — Rajdeep Kotoky",
+  title: "Services | Rajdeep Kotoky",
   description:
     "Web Development, E-commerce Solutions, and AI/ML Integration services by Rajdeep Kotoky. Professional, fast, and affordable.",
   alternates: {
     canonical: "https://rajdeepkotoky.vercel.app/services",
   },
   openGraph: {
-    title: "Services — Rajdeep Kotoky",
+    title: "Services | Rajdeep Kotoky",
     description:
       "Web Development, E-commerce, and AI/ML Integration services by Rajdeep Kotoky.",
     url: "https://rajdeepkotoky.vercel.app/services",
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Services — Rajdeep Kotoky",
+    title: "Services | Rajdeep Kotoky",
     description:
       "Web Development, E-commerce, and AI/ML Integration services by Rajdeep Kotoky.",
     images: ["/og-image.jpg"],

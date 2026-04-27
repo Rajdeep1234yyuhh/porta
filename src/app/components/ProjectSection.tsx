@@ -136,7 +136,7 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
   return (
     <div className={`flex flex-col rounded-2xl border overflow-hidden ${panelBg} ${panelBorder}`}>
 
-      {/* ── Panel header ── */}
+      {/* Panel header */}
       {showHeader && (
         <div className={`flex items-center justify-between px-4 py-3 border-b ${headerBorder}`}>
           <div className="flex items-center gap-2">
@@ -151,7 +151,7 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
         </div>
       )}
 
-      {/* ── Carousel body ── */}
+      {/* Carousel body */}
       <div className="flex flex-col gap-2 p-3">
 
         {/* Sliding track */}
@@ -238,15 +238,15 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
                       )}
 
                       {/* Content */}
-                      <div className="flex flex-col p-2.5 gap-2">
+                      <div className="flex flex-col p-3 sm:p-3.5 lg:p-4 gap-2.5 lg:gap-3">
                         {/* Title */}
-                        <h3 className={`text-xs font-bold leading-snug ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                        <h3 className={`text-[13px] sm:text-sm lg:text-base font-bold leading-snug ${isDarkMode ? "text-white" : "text-slate-900"}`}>
                           {project.title}
                         </h3>
 
                         {/* Description */}
-                        <p className={`text-[10px] leading-relaxed ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>
-                          {isDescExpanded ? desc : needsMore ? shortDesc + "…" : desc}
+                        <p className={`text-[11px] sm:text-xs lg:text-sm leading-relaxed ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>
+                          {isDescExpanded ? desc : needsMore ? shortDesc + "..." : desc}
                           {needsMore && (
                             <button
                               onClick={() => toggleDesc(index)}
@@ -387,7 +387,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
           </Link>
         </div>
 
-        {/* ── Mobile: tab switcher + single panel ── */}
+        {/* Mobile: tab switcher + single panel */}
         <div className="flex flex-col gap-3 lg:hidden">
           {/* Tabs */}
           <div className={`flex gap-1.5 p-1.5 rounded-2xl border ${isDarkMode ? "bg-white/[0.04] border-white/[0.07]" : "bg-slate-100 border-slate-200"}`}>
@@ -435,7 +435,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
           )}
         </div>
 
-        {/* ── Desktop: two panels side by side ── */}
+        {/* Desktop: two panels side by side */}
         <div className="hidden lg:flex flex-row gap-4 items-start">
           <div className="flex-[2] min-w-0">
             <ProjectCarousel

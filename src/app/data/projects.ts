@@ -61,7 +61,7 @@ export const allProjects: Project[] = [
     id: 4,
     title: "Assamese-English Code-Mixed Tourism Chatbot",
     description:
-      "A two-stage intelligent dialogue system for Assam tourism, featuring a MuRIL-based intent classifier across 44 intents with ~97% accuracy and a semantic retrieval module over 221,799 Q&A pairs covering 51 destinations — designed for low-resource code-mixed NLP.",
+      "A two-stage intelligent dialogue system for Assam tourism, featuring a MuRIL-based intent classifier across 44 intents with ~97% accuracy and a semantic retrieval module over 221,799 Q&A pairs covering 51 destinations - designed for low-resource code-mixed NLP.",
     mediaType: "image",
     tech: ["Python", "PyTorch", "MuRIL", "HuggingFace Transformers", "NumPy", "Jupyter Notebook"],
     categories: ["NLP", "Deep Learning", "Research"],
@@ -104,7 +104,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 9,
-    title: "Zanera – Imitation Jewellery E-commerce Platform",
+    title: "Zanera - Imitation Jewellery E-commerce Platform",
     description:
       "An online jewellery platform offering stylish and affordable imitation jewellery, including ethnic, traditional, and modern designs crafted for everyday wear and special occasions.",
     mediaType: "image",
@@ -116,7 +116,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 10,
-    title: "The Anvik – Ethnic Jewellery E-commerce Platform",
+    title: "The Anvik - Ethnic Jewellery E-commerce Platform",
     description:
       "An online jewellery store offering handcrafted designer earrings, jhumkas, chandbalis, and traditional jewellery sets tailored for weddings, festive occasions, and everyday wear.",
     mediaType: "image",
@@ -128,7 +128,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 11,
-    title: "Heer House of Jewellery – Handcrafted Bridal Jewellery Platform",
+    title: "Heer House of Jewellery - Handcrafted Bridal Jewellery Platform",
     description:
       "An online jewellery platform specializing in handcrafted bridal and occasion-based jewellery, offering kundan sets, anklets, earrings, and bespoke accessories designed with traditional techniques and modern aesthetics.",
     mediaType: "image",
@@ -140,7 +140,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 12,
-    title: "Fruitful – Fruit-Based Skincare E-commerce Platform",
+    title: "Fruitful - Fruit-Based Skincare E-commerce Platform",
     description:
       "A skincare e-commerce platform offering fruit-powered, vegan, and beginner-friendly skincare products designed to simplify daily routines with clean formulations and natural ingredients.",
     mediaType: "image",
@@ -152,7 +152,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 13,
-    title: "Giisha Beauty – Ayurvedic Haircare E-commerce Platform",
+    title: "Giisha Beauty - Ayurvedic Haircare E-commerce Platform",
     description:
       "A haircare-focused e-commerce platform offering Ayurvedic-inspired treatments like hair oils, masks, and grooming tools, combining traditional Indian rituals with modern science for healthy, glossy hair.",
     mediaType: "image",
@@ -164,7 +164,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 14,
-    title: "Roslyn by Demi – Women's Fashion E-commerce Platform",
+    title: "Roslyn by Demi - Women's Fashion E-commerce Platform",
     description:
       "A fashion e-commerce platform offering chic, modern women's clothing including dresses, co-ord sets, tops, and accessories, designed to blend elegance, comfort, and contemporary style.",
     mediaType: "image",
@@ -176,7 +176,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 15,
-    title: "Nishorama – Gen-Z Ethnic Fashion E-commerce Platform",
+    title: "Nishorama - Gen-Z Ethnic Fashion E-commerce Platform",
     description:
       "A direct-to-consumer fashion platform offering bold, handcrafted ethnic wear like block-printed kurtis, fusion outfits, and contemporary desi styles designed for modern Gen-Z audiences.",
     mediaType: "image",
@@ -188,7 +188,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 16,
-    title: "Vintage Loom – Handcrafted Cotton Ethnic Wear Platform",
+    title: "Vintage Loom - Handcrafted Cotton Ethnic Wear Platform",
     description:
       "A fashion e-commerce platform offering handcrafted cotton ethnic wear including suit sets, kurtas, and sarees, designed with handblock printing techniques and rooted in sustainable artisan craftsmanship.",
     mediaType: "image",
@@ -200,7 +200,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 17,
-    title: "Bloomegg – Performance Marketing & E-commerce Growth Agency",
+    title: "Bloomegg - Performance Marketing & E-commerce Growth Agency",
     description:
       "A digital marketing agency specializing in performance marketing, social media advertising, and e-commerce growth strategies, helping brands scale revenue through data-driven campaigns and creative execution.",
     mediaType: "image",
@@ -212,7 +212,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 18,
-    title: "Aekay – Fashion Accessories & Jewellery E-commerce Platform",
+    title: "Aekay - Fashion Accessories & Jewellery E-commerce Platform",
     description:
       "An online fashion accessories platform offering trendy, affordable jewellery including rings, earrings, necklaces, and bracelets, designed for everyday wear with a focus on durability, style, and accessibility.",
     mediaType: "image",
@@ -224,7 +224,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 19,
-    title: "The House of Hoor – Handcrafted Ethnic Wear E-commerce Platform",
+    title: "The House of Hoor - Handcrafted Ethnic Wear E-commerce Platform",
     description:
       "A premium fashion e-commerce platform offering handcrafted ethnic wear including suit sets, anarkalis, co-ord sets, and kurtas, rooted in handblock printing and designed with a blend of traditional craftsmanship and modern elegance.",
     mediaType: "image",
@@ -236,7 +236,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 20,
-    title: "Gelato Vinto – Artisanal Gelato & Dessert E-commerce Platform",
+    title: "Gelato Vinto - Artisanal Gelato & Dessert E-commerce Platform",
     description:
       "An online dessert platform offering authentic Italian-style artisanal gelato, gelato cakes, sorbets, and sugar-free options, crafted with natural ingredients and designed to deliver a premium dessert experience.",
     mediaType: "image",
@@ -248,7 +248,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 21,
-    title: "Homebagh – Online Plants & Home Decor E-commerce Platform",
+    title: "Homebagh - Online Plants & Home Decor E-commerce Platform",
     description:
       "An e-commerce platform offering indoor and outdoor plants, planters, and gardening accessories, focused on creating greener, aesthetically pleasing living spaces with easy-to-maintain plant solutions.",
     mediaType: "image",
@@ -260,7 +260,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 22,
-    title: "The Mesh Store – Trendy Women's Fashion & Accessories E-commerce Platform",
+    title: "The Mesh Store - Trendy Women's Fashion & Accessories E-commerce Platform",
     description:
       "A fashion e-commerce platform offering trendy women's clothing, bags, and accessories ranging from everyday basics to party and gala outfits, with a focus on cruelty-free materials and bold, modern styles.",
     mediaType: "image",
@@ -272,7 +272,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 23,
-    title: "Kapda Shop – Online Fabric & Textile Marketplace",
+    title: "Kapda Shop - Online Fabric & Textile Marketplace",
     description:
       "An e-commerce platform offering a wide range of premium fabrics including cotton, silk, linen, velvet, and georgette, catering to designers, boutiques, and individuals for both retail and bulk sourcing.",
     mediaType: "image",
@@ -284,7 +284,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 24,
-    title: "Bombay Blossom – Handcrafted Bags & Jewellery E-commerce Platform",
+    title: "Bombay Blossom - Handcrafted Bags & Jewellery E-commerce Platform",
     description:
       "A handcrafted fashion e-commerce platform offering artisanal bags, jewellery, and accessories made from traditional Indian textiles, recycled fabrics, and handloom techniques, promoting sustainable fashion and supporting local artisans.",
     mediaType: "image",
@@ -296,7 +296,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 25,
-    title: "Armor by Smugglerz – Men's Innerwear & Loungewear E-commerce Platform",
+    title: "Armor by Smugglerz - Men's Innerwear & Loungewear E-commerce Platform",
     description:
       "A men's fashion e-commerce platform offering premium innerwear, boxers, trunks, and loungewear with bold prints, performance fabrics, and comfort-focused designs tailored for everyday wear.",
     mediaType: "image",
@@ -308,7 +308,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 26,
-    title: "DIY by Tok – Kids DIY Kits & Educational Toys E-commerce Platform",
+    title: "DIY by Tok - Kids DIY Kits & Educational Toys E-commerce Platform",
     description:
       "An e-commerce platform offering creative DIY kits and educational toys for children, designed to enhance hands-on learning, creativity, and engagement through fun, activity-based experiences.",
     mediaType: "image",

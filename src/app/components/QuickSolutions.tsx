@@ -41,7 +41,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSec
               <span className="bg-gradient-to-r from-green-500 to-emerald-500 bg-clip-text text-transparent">Let&apos;s Solve It.</span>
             </h2>
             <p className={`text-xs sm:text-sm mt-0.5 ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>
-              Most are <span className="text-green-500 font-semibold">free</span> — the rest cost almost nothing.
+              Most are <span className="text-green-500 font-semibold">free</span> - the rest cost almost nothing.
             </p>
           </div>
           <div className="relative shrink-0">
@@ -73,7 +73,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSec
           </div>
         </div>
 
-        {/* Cards — 3×2 grid, larger on desktop */}
+        {/* Cards - 3x2 grid, larger on desktop */}
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
           {solutions.map((s) => (
             <div

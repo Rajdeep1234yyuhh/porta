@@ -28,7 +28,7 @@ const ServiceSection: React.FC<ServiceSectionProps> = ({ isDarkMode }) => {
       </div>
 
       <div className="max-w-3xl mx-auto px-4 sm:px-6 w-full relative z-10 py-3">
-        {/* Header — minimal */}
+        {/* Header - minimal */}
         <div className="mb-4">
           <h2 className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
             Professional{" "}

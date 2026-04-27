@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://rajdeepkotoky.vercel.app"),
-  title: "Rajdeep Kotoky — Full-Stack Developer & AI Engineer",
+  title: "Rajdeep Kotoky | Full-Stack Developer & AI Engineer",
   description:
     "Portfolio of Rajdeep Kotoky, a Full-Stack Developer & AI Engineer specializing in Next.js, React, Shopify, and AI/ML integrations.",
   keywords: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     canonical: "https://rajdeepkotoky.vercel.app",
   },
   openGraph: {
-    title: "Rajdeep Kotoky — Full-Stack Developer & AI Engineer",
+    title: "Rajdeep Kotoky | Full-Stack Developer & AI Engineer",
     description:
       "Full-Stack Developer & AI Engineer specializing in Next.js, React, Shopify, and AI/ML integrations.",
     url: "https://rajdeepkotoky.vercel.app",
@@ -43,14 +43,14 @@ export const metadata: Metadata = {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Rajdeep Kotoky — Full-Stack Developer & AI Engineer",
+        alt: "Rajdeep Kotoky | Full-Stack Developer & AI Engineer",
       },
     ],
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rajdeep Kotoky — Full-Stack Developer & AI Engineer",
+    title: "Rajdeep Kotoky | Full-Stack Developer & AI Engineer",
     description:
       "Full-Stack Developer & AI Engineer specializing in Next.js, React, Shopify, and AI/ML.",
     images: ["/og-image.jpg"],
