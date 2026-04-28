@@ -3,7 +3,7 @@
 "use client";
 
 import React from "react";
-import { ExternalLink, Mail, Phone, FileText, Braces } from "lucide-react";
+import { Download, ExternalLink, Mail, Phone, FileText, Braces } from "lucide-react";
 import {
   SiNextdotjs,
   SiShopify,
@@ -486,20 +486,28 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         </a>
       </div>
       <button
+        className="hero-contact-button"
         onClick={() => setContactOpen((o) => !o)}
         style={{
           display: "inline-flex",
           alignItems: "center",
           gap: 6,
           fontSize: 13,
-          fontWeight: 500,
+          fontWeight: 700,
           padding: "9px 18px",
-          borderRadius: 4,
+          borderRadius: 6,
           cursor: "pointer",
-          border: `1px solid ${t.btn3Border}`,
-          background: t.btn3Bg,
-          color: t.btn3Text,
-          transition: "all 0.18s ease",
+          border: isDarkMode
+            ? "1px solid rgba(45, 212, 191, 0.45)"
+            : "1px solid rgba(13, 148, 136, 0.22)",
+          background: isDarkMode
+            ? "linear-gradient(135deg, rgba(20,184,166,0.22), rgba(45,212,191,0.12))"
+            : "linear-gradient(135deg, #0d9488, #14b8a6)",
+          color: isDarkMode ? "#5eead4" : "#ffffff",
+          boxShadow: isDarkMode
+            ? "0 10px 24px rgba(20, 184, 166, 0.12), inset 0 1px 0 rgba(255,255,255,0.08)"
+            : "0 10px 22px rgba(13, 148, 136, 0.24)",
+          transition: "transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease",
         }}
       >
         Get In Touch
@@ -555,6 +563,13 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             opacity: 1;
             transform: translateY(0) scale(1);
           }
+        }
+        .hero-contact-button:hover {
+          filter: brightness(1.06);
+          transform: translateY(-1px);
+        }
+        .hero-contact-button:active {
+          transform: translateY(0) scale(0.98);
         }
       `}</style>
 
@@ -817,6 +832,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               }}
             >
               View My Work
+              <ExternalLink className="w-3 h-3" aria-hidden="true" />
             </button>
             <a
               href="/resume.pdf"
@@ -837,6 +853,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               }}
             >
               Resume
+              <Download className="w-3 h-3" aria-hidden="true" />
             </a>
             {contactDropdown}
           </div>
@@ -1074,6 +1091,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                     }}
                   >
                     View My Work
+                    <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                   <a
                     href="/resume.pdf"
@@ -1096,6 +1114,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                     }}
                   >
                     Resume
+                    <Download className="w-3.5 h-3.5" aria-hidden="true" />
                   </a>
                   {contactDropdown}
                 </div>
