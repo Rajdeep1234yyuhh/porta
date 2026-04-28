@@ -1,17 +1,69 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import { SpeedDial } from "primereact/speeddial";
 
 const PHONE = "8638752315";
+const HELP_NUDGE_INITIAL_DELAY_MS = 1200;
+const HELP_NUDGE_INTERVAL_MS = 15000;
+const HELP_NUDGE_VISIBLE_MS = 6000;
 
 interface QuickFixFABProps {
   isDarkMode: boolean;
   scrollToSection: (id: string) => void;
 }
 
-const QuickFixFAB: React.FC<QuickFixFABProps> = ({ scrollToSection }) => {
+const QuickFixFAB = ({ scrollToSection }: QuickFixFABProps) => {
+  const [showHelpNudge, setShowHelpNudge] = useState(false);
+
+  useEffect(() => {
+    const mobileQuery = window.matchMedia("(max-width: 767px)");
+    let hideTimeoutId: number | undefined;
+
+    const hideNudge = () => setShowHelpNudge(false);
+
+    const showNudge = () => {
+      if (!mobileQuery.matches) {
+        hideNudge();
+        return;
+      }
+
+      setShowHelpNudge(true);
+
+      if (hideTimeoutId) {
+        window.clearTimeout(hideTimeoutId);
+      }
+
+      hideTimeoutId = window.setTimeout(hideNudge, HELP_NUDGE_VISIBLE_MS);
+    };
+
+    const handleViewportChange = () => {
+      if (!mobileQuery.matches) {
+        hideNudge();
+      }
+    };
+
+    const initialTimeoutId = window.setTimeout(
+      showNudge,
+      HELP_NUDGE_INITIAL_DELAY_MS
+    );
+    const intervalId = window.setInterval(showNudge, HELP_NUDGE_INTERVAL_MS);
+    mobileQuery.addEventListener("change", handleViewportChange);
+
+    return () => {
+      window.clearTimeout(initialTimeoutId);
+      window.clearInterval(intervalId);
+
+      if (hideTimeoutId) {
+        window.clearTimeout(hideTimeoutId);
+      }
+
+      mobileQuery.removeEventListener("change", handleViewportChange);
+    };
+  }, []);
+
   const items = [
     {
       label: "WhatsApp",
@@ -95,9 +147,84 @@ const QuickFixFAB: React.FC<QuickFixFABProps> = ({ scrollToSection }) => {
           color: #f9fafb !important;
           font-size: 1rem !important;
         }
+
+        .mobile-help-nudge {
+          display: none;
+        }
+
+        @keyframes mobileHelpNudgePop {
+          0% {
+            opacity: 0;
+            transform: translateX(3rem) scale(0.72);
+          }
+          68% {
+            opacity: 1;
+            transform: translateX(-0.16rem) scale(1.04);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0) scale(1);
+          }
+        }
+
+        @media (max-width: 767px) {
+          .mobile-help-nudge {
+            align-items: center;
+            background: #111827;
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 9999px;
+            bottom: 0.85rem;
+            box-shadow:
+              0 2px 0 rgba(255,255,255,0.12) inset,
+              0 10px 28px rgba(0,0,0,0.35);
+            color: #f9fafb;
+            display: inline-flex;
+            font-size: 0.8rem;
+            font-weight: 800;
+            letter-spacing: 0;
+            line-height: 1;
+            opacity: 0;
+            padding: 0.65rem 0.8rem;
+            pointer-events: none;
+            position: absolute;
+            right: 4.65rem;
+            transform: translateX(3rem) scale(0.72);
+            transform-origin: right center;
+            transition:
+              opacity 220ms ease,
+              transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+            white-space: nowrap;
+            will-change: opacity, transform;
+          }
+
+          .mobile-help-nudge::after {
+            background: #111827;
+            border-right: 1px solid rgba(255,255,255,0.14);
+            border-top: 1px solid rgba(255,255,255,0.14);
+            content: "";
+            height: 0.65rem;
+            position: absolute;
+            right: -0.33rem;
+            top: 50%;
+            transform: translateY(-50%) rotate(45deg);
+            width: 0.65rem;
+          }
+
+          .mobile-help-nudge.is-visible {
+            animation: mobileHelpNudgePop 430ms cubic-bezier(0.2, 0.85, 0.2, 1) both;
+            opacity: 1;
+            transform: translateX(0) scale(1);
+          }
+        }
       `}</style>
 
       <div className="quick-fix-fab fixed bottom-10 right-8 z-50">
+        <span
+          aria-hidden="true"
+          className={`mobile-help-nudge ${showHelpNudge ? "is-visible" : ""}`}
+        >
+          Need help?
+        </span>
         <SpeedDial
           model={items}
           radius={95}

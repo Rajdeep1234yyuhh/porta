@@ -25,11 +25,16 @@ const VIEWS = [
 ];
 
 function ViewButtons({ isDarkMode, btnSize, liftClass, tipClass, divClass }) {
+  const dividerClass = isDarkMode ? "bg-white/10" : "bg-gray-200";
+  const tooltipClass = isDarkMode
+    ? "bg-gray-900 text-white"
+    : "bg-white text-slate-800 border border-slate-200";
+
   return (
     <>
       {VIEWS.map((view, i) => (
         <div key={view.href} className="contents">
-          {i > 0 && <div className={`w-px bg-white/10 ${divClass}`} />}
+          {i > 0 && <div className={`w-px ${dividerClass} ${divClass}`} />}
           <Link
             href={view.href}
             className={`group relative flex flex-col items-center justify-center ${btnSize} rounded-xl transition-all duration-200 ${
@@ -39,7 +44,7 @@ function ViewButtons({ isDarkMode, btnSize, liftClass, tipClass, divClass }) {
             }`}
           >
             <view.icon className={`w-4 h-4 transition-transform duration-200 ${liftClass}`} />
-            <span className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 ${tipClass} font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none rounded-md bg-gray-900 text-white shadow`}>
+            <span className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 ${tipClass} font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none rounded-md shadow ${tooltipClass}`}>
               {view.label}
             </span>
           </Link>

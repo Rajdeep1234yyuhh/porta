@@ -61,6 +61,13 @@ const Navbar = ({
     { label: "Services", icon: Briefcase, section: "services" },
     { label: "Contact", icon: Mail, section: "contact" },
   ];
+  const mobileButtonClass = isDarkMode
+    ? "text-gray-400 hover:text-white hover:bg-white/10"
+    : "text-gray-500 hover:text-gray-900 hover:bg-gray-100";
+  const mobileDividerClass = isDarkMode ? "bg-white/10" : "bg-gray-200";
+  const mobileTooltipClass = isDarkMode
+    ? "bg-gray-900 text-white"
+    : "bg-white text-slate-800 border border-slate-200";
 
   useEffect(() => {
     const handleOutside = (e) => {
@@ -284,7 +291,13 @@ const Navbar = ({
       </div>
 
       {/* ── Mobile: floating dock (same style as desktop, top-center) ── */}
-      <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 flex lg:hidden items-center gap-0.5 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border bg-[#141414]/95 border-white/[0.08]">
+      <div
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 flex lg:hidden items-center gap-0.5 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 ${
+          isDarkMode
+            ? "bg-[#141414]/95 border-white/[0.08]"
+            : "bg-white/90 border-gray-200/80 shadow-gray-200/60"
+        }`}
+      >
         {navItems.map(({ label, icon: Icon, section }) => {
           const isActive = activeSection === section;
           return (
@@ -294,14 +307,14 @@ const Navbar = ({
               className={`group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 ${
                 isActive
                   ? "bg-violet-600 text-white shadow-lg shadow-violet-500/30"
-                  : "text-gray-400 hover:text-white hover:bg-white/10"
+                  : mobileButtonClass
               }`}
             >
               <Icon
                 className={`w-4 h-4 transition-transform duration-200 ${isActive ? "" : "group-hover:-translate-y-1.5"}`}
               />
               <span
-                className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow transition-all duration-200 ${
+                className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap pointer-events-none px-1.5 py-0.5 rounded-md shadow transition-all duration-200 ${mobileTooltipClass} ${
                   isActive
                     ? "opacity-100 translate-y-0"
                     : "opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0"
@@ -313,7 +326,7 @@ const Navbar = ({
           );
         })}
 
-        <div className="w-px h-5 bg-white/10 mx-0.5" />
+        <div className={`w-px h-5 ${mobileDividerClass} mx-0.5`} />
 
         {/* Quick Fix */}
         <div className="relative" ref={quickRef}>
@@ -322,14 +335,14 @@ const Navbar = ({
             className={`group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 ${
               activeSection === "quick-solutions"
                 ? "bg-violet-600 text-white shadow-lg shadow-violet-500/30"
-                : "text-gray-400 hover:text-white hover:bg-white/10"
+                : mobileButtonClass
             }`}
           >
             <Zap
               className={`w-4 h-4 transition-transform duration-200 ${activeSection === "quick-solutions" ? "" : "group-hover:-translate-y-1.5"}`}
             />
             <span
-              className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow transition-all duration-200 ${
+              className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap pointer-events-none px-1.5 py-0.5 rounded-md shadow transition-all duration-200 ${mobileTooltipClass} ${
                 activeSection === "quick-solutions"
                   ? "opacity-100 translate-y-0"
                   : "opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0"
@@ -399,38 +412,38 @@ const Navbar = ({
           </div>
         </div>
 
-        <div className="w-px h-5 bg-white/10 mx-0.5" />
+        <div className={`w-px h-5 ${mobileDividerClass} mx-0.5`} />
 
         {/* Theme */}
         <button
           onClick={toggleTheme}
-          className="group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200"
+          className={`group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 ${mobileButtonClass}`}
         >
           {isDarkMode ? (
             <Sun className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />
           ) : (
             <Moon className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />
           )}
-          <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">
+          <span className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md shadow ${mobileTooltipClass}`}>
             {isDarkMode ? "Light" : "Dark"}
           </span>
         </button>
 
-        <div className="w-px h-5 bg-white/10 mx-0.5" />
+        <div className={`w-px h-5 ${mobileDividerClass} mx-0.5`} />
 
         {/* View switcher: Cube + Terminal */}
         <ViewSwitcherMobile isDarkMode={isDarkMode} />
 
-        <div className="w-px h-5 bg-white/10 mx-0.5" />
+        <div className={`w-px h-5 ${mobileDividerClass} mx-0.5`} />
 
         {/* Social */}
         <div className="relative" ref={socialRef}>
           <button
             onClick={() => setSocialOpen((o) => !o)}
-            className="group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl text-gray-400 hover:text-white hover:bg-white/10 transition-all duration-200"
+            className={`group relative flex flex-col items-center justify-center w-9 h-9 rounded-xl transition-all duration-200 ${mobileButtonClass}`}
           >
             <Share2 className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-1.5" />
-            <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md bg-gray-900 text-white shadow">
+            <span className={`absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[10px] font-semibold whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 pointer-events-none px-1.5 py-0.5 rounded-md shadow ${mobileTooltipClass}`}>
               Social
             </span>
           </button>
