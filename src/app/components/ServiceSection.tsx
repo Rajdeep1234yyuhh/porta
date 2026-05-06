@@ -75,7 +75,7 @@ export default function ServiceSection({ isDarkMode }: ServiceSectionProps) {
     el.style.animation = "none";
     void el.offsetWidth; // force reflow
     el.style.animation = `svc-open ${ANIM_MS}ms linear forwards`;
-    timers.current.push(setTimeout(() => setContent(true), 20));
+    timers.current.push(setTimeout(() => setContent(true), ANIM_MS * 0.37));
   }, [activeIdx]);
 
   /* ── close ── */
@@ -170,9 +170,9 @@ export default function ServiceSection({ isDarkMode }: ServiceSectionProps) {
       </div>
 
       {/* ── grid ── */}
-      <div className="max-w-4xl mx-auto px-3 sm:px-6 w-full relative z-10 py-4">
-        <div className="mb-4">
-          <h2 className={`text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+      <div className="max-w-4xl mx-auto px-2 sm:px-6 w-full relative z-10 py-2 sm:py-4">
+        <div className="mb-2 sm:mb-4">
+          <h2 className={`text-lg sm:text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
             Professional{" "}
             <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
               Services
@@ -180,7 +180,7 @@ export default function ServiceSection({ isDarkMode }: ServiceSectionProps) {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 gap-2 sm:gap-2.5">
           {allServices.map((svc, i) => {
             const Icon = ICON_MAP[svc.icon];
             const c    = configs[i];
@@ -189,21 +189,21 @@ export default function ServiceSection({ isDarkMode }: ServiceSectionProps) {
                 key={svc.slug}
                 ref={(el) => { cardRefs.current[i] = el; }}
                 onClick={() => openCard(i)}
-                className={`group flex flex-col gap-3 px-4 py-4 rounded-xl border cursor-pointer select-none
+                className={`group flex flex-col gap-2 sm:gap-3 px-3 py-3 sm:px-4 sm:py-4 rounded-xl border cursor-pointer select-none
                   transition-all duration-200 hover:shadow-lg hover:scale-[1.012]
                   ${isDarkMode ? `bg-[#1c1c1e] border-[#2a2a2a] ${c.border}` : `bg-white border-slate-200 ${c.border}`}
                   ${activeIdx !== null ? "opacity-30 pointer-events-none" : "opacity-100"}`}
               >
-                <div className="flex items-center gap-3">
-                  <div className={`shrink-0 w-9 h-9 rounded-lg flex items-center justify-center shadow-md bg-gradient-to-br ${c.gradient} group-hover:scale-110 group-hover:rotate-3 transition-all duration-200`}>
-                    <Icon className="text-white w-4 h-4" />
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className={`shrink-0 w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center shadow-md bg-gradient-to-br ${c.gradient} group-hover:scale-110 group-hover:rotate-3 transition-all duration-200`}>
+                    <Icon className="text-white w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </div>
-                  <h3 className={`text-sm font-bold leading-tight ${isDarkMode ? "text-white" : "text-slate-900"}`}>
+                  <h3 className={`text-xs sm:text-sm font-bold leading-tight ${isDarkMode ? "text-white" : "text-slate-900"}`}>
                     {svc.title}
                   </h3>
-                  <ArrowRight className={`w-3.5 h-3.5 ml-auto shrink-0 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200 ${isDarkMode ? "text-gray-400" : "text-slate-400"}`} />
+                  <ArrowRight className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ml-auto shrink-0 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5 transition-all duration-200 ${isDarkMode ? "text-gray-400" : "text-slate-400"}`} />
                 </div>
-                <p className={`text-xs leading-relaxed line-clamp-3 ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>
+                <p className={`text-[10px] sm:text-xs leading-relaxed line-clamp-2 sm:line-clamp-3 ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>
                   {svc.fullDescription}
                 </p>
               </div>
@@ -223,9 +223,6 @@ export default function ServiceSection({ isDarkMode }: ServiceSectionProps) {
             willChange: "transform",
           }}
         >
-          {/* colour accent bar */}
-          <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${cfg.gradient}`} />
-
           {contentVisible && service && (
             <div className="svc-content-in h-full flex flex-col">
 
