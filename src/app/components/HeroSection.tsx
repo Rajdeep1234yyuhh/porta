@@ -2,7 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
+import Image from "next/image";
 import {
   Download,
   ExternalLink,
@@ -264,60 +265,30 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
   }, []);
 
   React.useEffect(() => {
-    const fi = setInterval(
-      () =>
-        setFullStackCount((p) => {
-          if (p >= 4) {
-            clearInterval(fi);
-            return 4;
-          }
-          return p + 1;
-        }),
-      180,
-    );
-    const si = setInterval(
-      () =>
-        setShopifyCount((p) => {
-          if (p >= 18) {
-            clearInterval(si);
-            return 18;
-          }
-          return p + 1;
-        }),
-      40,
-    );
-    const ci = setInterval(
-      () =>
-        setClientCount((p) => {
-          if (p >= 25) {
-            clearInterval(ci);
-            return 25;
-          }
-          return p + 1;
-        }),
-      50,
-    );
-    const yi = setInterval(
-      () =>
-        setYearsCount((p) => {
-          if (p >= 5) {
-            clearInterval(yi);
-            return 5;
-          }
-          return p + 1;
-        }),
-      300,
-    );
-    return () => {
-      clearInterval(fi);
-      clearInterval(si);
-      clearInterval(ci);
-      clearInterval(yi);
-    };
+    const targets = [
+      { target: 4, setter: setFullStackCount, step: 180 },
+      { target: 18, setter: setShopifyCount, step: 40 },
+      { target: 25, setter: setClientCount, step: 50 },
+      { target: 5, setter: setYearsCount, step: 300 },
+    ];
+    const timers = targets.map(({ target, setter, step }) => {
+      let count = 0;
+      const id = setInterval(() => {
+        count += 1;
+        if (count >= target) {
+          clearInterval(id);
+          setter(target);
+        } else {
+          setter(count);
+        }
+      }, step);
+      return id;
+    });
+    return () => timers.forEach(clearInterval);
   }, []);
 
   /* Color tokens - only colors differ between modes */
-  const t = isDarkMode
+  const t = useMemo(() => isDarkMode
     ? {
         section: "#08090f",
         blob1: "radial-gradient(circle, rgba(0,200,255,0.06), transparent 70%)",
@@ -385,7 +356,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         photoNameText: "text-slate-900",
         photoSubText: "text-slate-500",
         tooltipBg: "bg-slate-800",
-      } as const);
+      } as const), [isDarkMode]);
 
   /* Core stack icons */
   const techStack = (
@@ -638,10 +609,13 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                 }}
                 className="rounded-2xl p-2 shadow-xl"
               >
-                <img
+                <Image
                   src="/DP.jpg"
                   alt="Rajdeep"
+                  width={112}
+                  height={144}
                   className="w-28 h-36 object-cover rounded-xl"
+                  priority
                 />
               </div>
               <div className="absolute -top-2 -right-2 bg-green-500 text-white px-2 py-0.5 rounded-full text-[10px] font-semibold shadow flex items-center gap-1">
@@ -1186,10 +1160,13 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                     }}
                     className="rounded-2xl p-3 shadow-2xl transition-all duration-500 hover:scale-[1.02]"
                   >
-                    <img
+                    <Image
                       src="/DP.jpg"
                       alt="Professional Photo"
+                      width={208}
+                      height={256}
                       className="w-44 h-56 lg:w-52 lg:h-64 object-cover rounded-xl"
+                      priority
                     />
                   </div>
                   <div className="absolute -top-3 -right-3 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg flex items-center gap-1.5">

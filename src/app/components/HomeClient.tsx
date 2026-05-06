@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import Contact from "./Contact";
+import React, { useState, useEffect, useRef, useCallback, useMemo } from "react";
+import dynamic from "next/dynamic";
 import Navbar from "./Navbar";
 import { ViewSwitcherDesktop } from "./ViewSwitcher";
 import HeroSection from "./HeroSection";
-import ProjectSection from "./ProjectSection";
-import ServiceSection from "./ServiceSection";
-import QuickSolutions from "./QuickSolutions";
 import QuickFixFAB from "./QuickFixFAB";
 import { allProjects } from "../data/projects";
+
+const ProjectSection = dynamic(() => import("./ProjectSection"), { ssr: false });
+const ServiceSection = dynamic(() => import("./ServiceSection"), { ssr: false });
+const QuickSolutions = dynamic(() => import("./QuickSolutions"), { ssr: false });
+const Contact = dynamic(() => import("./Contact"), { ssr: false });
 
 const SECTION_IDS = [
   "home",
@@ -89,13 +91,13 @@ export default function HomeClient() {
     return () => window.removeEventListener("wheel", handler);
   }, [current, goTo]);
 
-  const slides = [
+  const slides = useMemo(() => [
     <HeroSection key="hero" isDarkMode={isDarkMode} scrollToSection={scrollToSection} />,
     <ProjectSection key="projects" isDarkMode={isDarkMode} projects={allProjects} />,
     <ServiceSection key="services" isDarkMode={isDarkMode} />,
     <QuickSolutions key="quick" isDarkMode={isDarkMode} scrollToSection={scrollToSection} />,
     <Contact key="contact" isDarkMode={isDarkMode} />,
-  ];
+  ], [isDarkMode, scrollToSection]);
 
   // Navbar height - slides rest below this, but travel past it when animating
   const NAV_H = 84;

@@ -30,11 +30,27 @@ const securityHeaders = [
   },
 ];
 
+const immutableCache = [
+  { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+];
+
 const nextConfig: NextConfig = {
   headers: async () => [
     {
       source: "/(.*)",
       headers: securityHeaders,
+    },
+    {
+      source: "/images/(.*)",
+      headers: immutableCache,
+    },
+    {
+      source: "/fonts/(.*)",
+      headers: immutableCache,
+    },
+    {
+      source: "/_next/static/(.*)",
+      headers: immutableCache,
     },
   ],
 };
