@@ -1176,7 +1176,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                         color: t.statNum,
                       }}
                     >
-                      Hi, I&apos;m Rajdeep
+                      Hi, I&apos;m Rajdeep !
                     </span>
                   </div>
                   <div
