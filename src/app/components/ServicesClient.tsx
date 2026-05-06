@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Globe, Database, Code, CheckCircle } from "lucide-react";
+import { Globe, Database, Code, CheckCircle, Layers, ShoppingBag, Package, Bot, Cpu, Monitor } from "lucide-react";
 import { allServices } from "../data/services";
 import Navbar from "./Navbar";
 
@@ -10,24 +10,39 @@ const ICON_MAP = {
   globe: Globe,
   database: Database,
   code: Code,
+  layers: Layers,
+  shoppingBag: ShoppingBag,
+  package: Package,
+  bot: Bot,
+  cpu: Cpu,
+  monitor: Monitor,
 };
 
 const gradients = [
+  "from-violet-500 to-purple-600",
+  "from-green-500 to-emerald-600",
   "from-blue-500 to-cyan-500",
-  "from-purple-500 to-pink-500",
-  "from-orange-500 to-red-500",
+  "from-indigo-500 to-blue-600",
+  "from-orange-500 to-amber-500",
+  "from-teal-500 to-cyan-600",
 ];
 
 const borderHover = [
+  "hover:border-violet-500/50 hover:shadow-violet-500/20",
+  "hover:border-green-500/50 hover:shadow-green-500/20",
   "hover:border-blue-500/50 hover:shadow-blue-500/20",
-  "hover:border-purple-500/50 hover:shadow-purple-500/20",
+  "hover:border-indigo-500/50 hover:shadow-indigo-500/20",
   "hover:border-orange-500/50 hover:shadow-orange-500/20",
+  "hover:border-teal-500/50 hover:shadow-teal-500/20",
 ];
 
 const tagColors = [
+  "bg-violet-500/10 text-violet-500 border-violet-500/30",
+  "bg-green-500/10 text-green-500 border-green-500/30",
   "bg-blue-500/10 text-blue-500 border-blue-500/30",
-  "bg-purple-500/10 text-purple-500 border-purple-500/30",
+  "bg-indigo-500/10 text-indigo-500 border-indigo-500/30",
   "bg-orange-500/10 text-orange-500 border-orange-500/30",
+  "bg-teal-500/10 text-teal-500 border-teal-500/30",
 ];
 
 export default function ServicesClient() {
