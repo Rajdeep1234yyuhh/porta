@@ -47,7 +47,7 @@ export const allProjects: Project[] = [
     id: 3,
     title: "ShopFruitful E-commerce Website",
     description:
-      "Custom e-commerce storefront developed using Shopify and Liquid. Features include responsive design, optimized product listings, seamless cart and checkout flow, and personalized UI enhancements crafted with CSS for an elegant shopping experience.",
+      "Custom Shopify and Liquid storefront with responsive design, optimized product listings, smooth cart and checkout flow, and polished CSS UI enhancements.",
     mediaType: "video",
     video: "fruitful.mp4",
     image: "/images/shopfruitful-thumbnail.jpg",
@@ -106,7 +106,7 @@ export const allProjects: Project[] = [
     id: 9,
     title: "Zanera - Imitation Jewellery E-commerce Platform",
     description:
-      "An online jewellery platform offering stylish and affordable imitation jewellery, including ethnic, traditional, and modern designs crafted for everyday wear and special occasions.",
+      "Shopify jewellery store for affordable imitation pieces, covering ethnic, traditional, and modern designs for daily wear and special occasions.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -118,7 +118,7 @@ export const allProjects: Project[] = [
     id: 10,
     title: "The Anvik - Ethnic Jewellery E-commerce Platform",
     description:
-      "An online jewellery store offering handcrafted designer earrings, jhumkas, chandbalis, and traditional jewellery sets tailored for weddings, festive occasions, and everyday wear.",
+      "Shopify jewellery store for handcrafted earrings, jhumkas, chandbalis, and traditional sets for weddings, festivals, and everyday wear.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -130,7 +130,7 @@ export const allProjects: Project[] = [
     id: 11,
     title: "Heer House of Jewellery - Handcrafted Bridal Jewellery Platform",
     description:
-      "An online jewellery platform specializing in handcrafted bridal and occasion-based jewellery, offering kundan sets, anklets, earrings, and bespoke accessories designed with traditional techniques and modern aesthetics.",
+      "Shopify bridal jewellery platform featuring handcrafted kundan sets, anklets, earrings, and bespoke accessories with traditional techniques and modern styling.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -142,7 +142,7 @@ export const allProjects: Project[] = [
     id: 12,
     title: "Fruitful - Fruit-Based Skincare E-commerce Platform",
     description:
-      "A skincare e-commerce platform offering fruit-powered, vegan, and beginner-friendly skincare products designed to simplify daily routines with clean formulations and natural ingredients.",
+      "Shopify skincare store for fruit-powered, vegan, beginner-friendly products built around clean formulas and simple daily routines.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -154,7 +154,7 @@ export const allProjects: Project[] = [
     id: 13,
     title: "Giisha Beauty - Ayurvedic Haircare E-commerce Platform",
     description:
-      "A haircare-focused e-commerce platform offering Ayurvedic-inspired treatments like hair oils, masks, and grooming tools, combining traditional Indian rituals with modern science for healthy, glossy hair.",
+      "Shopify haircare store for Ayurvedic-inspired oils, masks, and grooming tools, blending Indian rituals with modern healthy-hair care.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -166,7 +166,7 @@ export const allProjects: Project[] = [
     id: 14,
     title: "Roslyn by Demi - Women's Fashion E-commerce Platform",
     description:
-      "A fashion e-commerce platform offering chic, modern women's clothing including dresses, co-ord sets, tops, and accessories, designed to blend elegance, comfort, and contemporary style.",
+      "Shopify fashion store for modern women's dresses, co-ord sets, tops, and accessories focused on elegance, comfort, and contemporary style.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -178,7 +178,7 @@ export const allProjects: Project[] = [
     id: 15,
     title: "Nishorama - Gen-Z Ethnic Fashion E-commerce Platform",
     description:
-      "A direct-to-consumer fashion platform offering bold, handcrafted ethnic wear like block-printed kurtis, fusion outfits, and contemporary desi styles designed for modern Gen-Z audiences.",
+      "Shopify D2C fashion store for Gen-Z ethnic wear, including block-printed kurtis, fusion outfits, and contemporary desi styles.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -190,7 +190,7 @@ export const allProjects: Project[] = [
     id: 16,
     title: "Vintage Loom - Handcrafted Cotton Ethnic Wear Platform",
     description:
-      "A fashion e-commerce platform offering handcrafted cotton ethnic wear including suit sets, kurtas, and sarees, designed with handblock printing techniques and rooted in sustainable artisan craftsmanship.",
+      "Shopify ethnic wear store for handcrafted cotton suit sets, kurtas, and sarees rooted in handblock printing and artisan craftsmanship.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -214,7 +214,7 @@ export const allProjects: Project[] = [
     id: 18,
     title: "Aekay - Fashion Accessories & Jewellery E-commerce Platform",
     description:
-      "An online fashion accessories platform offering trendy, affordable jewellery including rings, earrings, necklaces, and bracelets, designed for everyday wear with a focus on durability, style, and accessibility.",
+      "Shopify accessories store for affordable rings, earrings, necklaces, and bracelets, focused on everyday style, durability, and accessibility.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Razorpay/Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -226,7 +226,7 @@ export const allProjects: Project[] = [
     id: 19,
     title: "The House of Hoor - Handcrafted Ethnic Wear E-commerce Platform",
     description:
-      "A premium fashion e-commerce platform offering handcrafted ethnic wear including suit sets, anarkalis, co-ord sets, and kurtas, rooted in handblock printing and designed with a blend of traditional craftsmanship and modern elegance.",
+      "Shopify ethnic fashion store for handcrafted suit sets, anarkalis, co-ords, and kurtas with handblock prints and modern elegance.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -238,7 +238,7 @@ export const allProjects: Project[] = [
     id: 20,
     title: "Gelato Vinto - Artisanal Gelato & Dessert E-commerce Platform",
     description:
-      "An online dessert platform offering authentic Italian-style artisanal gelato, gelato cakes, sorbets, and sugar-free options, crafted with natural ingredients and designed to deliver a premium dessert experience.",
+      "Shopify dessert store for Italian-style artisanal gelato, gelato cakes, sorbets, and sugar-free options made with natural ingredients.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -250,7 +250,7 @@ export const allProjects: Project[] = [
     id: 21,
     title: "Homebagh - Online Plants & Home Decor E-commerce Platform",
     description:
-      "An e-commerce platform offering indoor and outdoor plants, planters, and gardening accessories, focused on creating greener, aesthetically pleasing living spaces with easy-to-maintain plant solutions.",
+      "Shopify plants and decor store for indoor/outdoor plants, planters, and gardening accessories that support greener living spaces.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -262,7 +262,7 @@ export const allProjects: Project[] = [
     id: 22,
     title: "The Mesh Store - Trendy Women's Fashion & Accessories E-commerce Platform",
     description:
-      "A fashion e-commerce platform offering trendy women's clothing, bags, and accessories ranging from everyday basics to party and gala outfits, with a focus on cruelty-free materials and bold, modern styles.",
+      "Shopify fashion store for women's clothing, bags, and accessories, from everyday basics to party looks with bold cruelty-free styling.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -274,7 +274,7 @@ export const allProjects: Project[] = [
     id: 23,
     title: "Kapda Shop - Online Fabric & Textile Marketplace",
     description:
-      "An e-commerce platform offering a wide range of premium fabrics including cotton, silk, linen, velvet, and georgette, catering to designers, boutiques, and individuals for both retail and bulk sourcing.",
+      "Shopify textile marketplace for premium cotton, silk, linen, velvet, and georgette fabrics across retail and bulk sourcing.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -286,7 +286,7 @@ export const allProjects: Project[] = [
     id: 24,
     title: "Bombay Blossom - Handcrafted Bags & Jewellery E-commerce Platform",
     description:
-      "A handcrafted fashion e-commerce platform offering artisanal bags, jewellery, and accessories made from traditional Indian textiles, recycled fabrics, and handloom techniques, promoting sustainable fashion and supporting local artisans.",
+      "Shopify handcrafted fashion store for bags, jewellery, and accessories made with Indian textiles, recycled fabrics, and handloom techniques.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -298,7 +298,7 @@ export const allProjects: Project[] = [
     id: 25,
     title: "Armor by Smugglerz - Men's Innerwear & Loungewear E-commerce Platform",
     description:
-      "A men's fashion e-commerce platform offering premium innerwear, boxers, trunks, and loungewear with bold prints, performance fabrics, and comfort-focused designs tailored for everyday wear.",
+      "Shopify men's innerwear store for boxers, trunks, and loungewear with bold prints, performance fabrics, and everyday comfort.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],
@@ -310,7 +310,7 @@ export const allProjects: Project[] = [
     id: 26,
     title: "DIY by Tok - Kids DIY Kits & Educational Toys E-commerce Platform",
     description:
-      "An e-commerce platform offering creative DIY kits and educational toys for children, designed to enhance hands-on learning, creativity, and engagement through fun, activity-based experiences.",
+      "Shopify kids store for DIY kits and educational toys that encourage hands-on learning, creativity, and activity-based play.",
     mediaType: "image",
     tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
     categories: ["Shopify"],

@@ -64,3 +64,9 @@ export const allServices: ServiceData[] = [
     technologies: ["Python", "OpenAI API", "HuggingFace", "TensorFlow", "LLaMA 2", "BERT"],
   },
 ];
+
+export const getServiceBySlug = (slug: string) =>
+  allServices.find((service) => service.slug === slug);
+
+export const getServiceIndex = (slug: string) =>
+  allServices.findIndex((service) => service.slug === slug);

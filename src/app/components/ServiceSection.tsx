@@ -45,7 +45,7 @@ const ServiceSection: React.FC<ServiceSectionProps> = ({ isDarkMode }) => {
             return (
               <Link
                 key={service.slug}
-                href={`/services#${service.slug}`}
+                href={`/services/${service.slug}`}
                 className={`group flex items-center gap-4 px-4 py-3 rounded-xl border transition-all duration-200 hover:shadow-lg hover:scale-[1.012] ${isDarkMode ? `bg-[#1c1c1e] border-[#2a2a2a] ${cfg.border}` : `bg-white border-slate-200 ${cfg.border}`}`}
               >
                 {/* Icon */}
