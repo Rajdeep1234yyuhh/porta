@@ -623,12 +623,14 @@ export default function TerminalPage() {
             rajdeep@portfolio — terminal v{VERSION}
           </span>
           <Link href="/" onClick={(e) => e.stopPropagation()}
-            style={{ fontSize: 11, color: "#2a5a40", textDecoration: "none",
-              padding: "3px 10px", border: "1px solid #0d2a1a", borderRadius: 4,
-              transition: "color 0.15s, border-color 0.15s" }}
-            onMouseEnter={(e) => { const el = e.currentTarget; el.style.color="#00ccaa"; el.style.borderColor="#00ccaa"; }}
-            onMouseLeave={(e) => { const el = e.currentTarget; el.style.color="#2a5a40"; el.style.borderColor="#0d2a1a"; }}>
-            ← portfolio
+            style={{ fontSize: 11, color: "#00ccaa", textDecoration: "none",
+              padding: "4px 12px", border: "1px solid rgba(0,204,170,0.35)",
+              borderRadius: 5, fontWeight: 600, letterSpacing: "0.06em",
+              background: "rgba(0,204,170,0.08)",
+              transition: "all 0.15s ease", display: "inline-flex", alignItems: "center", gap: 5 }}
+            onMouseEnter={(e) => { const el = e.currentTarget; el.style.background="rgba(0,204,170,0.18)"; el.style.borderColor="rgba(0,204,170,0.7)"; el.style.color="#00ffcc"; el.style.boxShadow="0 0 12px rgba(0,204,170,0.25)"; }}
+            onMouseLeave={(e) => { const el = e.currentTarget; el.style.background="rgba(0,204,170,0.08)"; el.style.borderColor="rgba(0,204,170,0.35)"; el.style.color="#00ccaa"; el.style.boxShadow="none"; }}>
+            ← Portfolio
           </Link>
         </div>
 

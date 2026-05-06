@@ -105,7 +105,7 @@ export const allServices: ServiceData[] = [
     shortDescription:
       "Complex technical problem-solving using core CS fundamentals — algorithms, systems, automation, and more.",
     fullDescription:
-      "Got a technical challenge that doesn't fit neatly into a category? I apply core computer science knowledge — algorithms, data structures, system design, and software engineering — to tackle problems that require real thinking. From automation scripts to system architecture, if it's a technical problem, I can work through it.",
+      "Got a technical challenge that doesn't fit neatly into a category? I apply core computer science knowledge — algorithms, data structures, system design, and software engineering — to tackle problems that require real thinking. I also take on research-driven technical work: investigating approaches, evaluating trade-offs, building proofs of concept, and turning findings into actionable solutions. From automation scripts to system architecture to exploratory research, if it's a technical problem, I can work through it.",
     icon: "cpu",
     features: [
       "Algorithm & data structure design",

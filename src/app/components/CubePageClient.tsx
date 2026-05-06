@@ -1,1436 +1,229 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
-
-import {
-  useRef,
-  useState,
-  useEffect,
-  Suspense,
-  Component,
-  ReactNode,
-} from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { RoundedBox, Text, Float, useTexture } from "@react-three/drei";
-import * as THREE from "three";
-
-// ── Constants ─────────────────────────────────────────────────────────────────
-
-const SECTIONS = [
-  { label: "Home", icon: "⌂", color: "#7c3aed" },
-  { label: "About", icon: "◎", color: "#2563eb" },
-  { label: "Projects", icon: "◈", color: "#059669" },
-  { label: "Services", icon: "◇", color: "#d97706" },
-  { label: "Skills", icon: "▲", color: "#db2777" },
-  { label: "Contact", icon: "✉", color: "#0891b2" },
-];
-
-const FACE_POSITIONS: [number, number, number][] = [
-  [0, 0, 1.52],
-  [1.52, 0, 0],
-  [0, 0, -1.52],
-  [-1.52, 0, 0],
-  [0, 1.52, 0],
-  [0, -1.52, 0],
-];
-const FACE_ROTATIONS: [number, number, number][] = [
-  [0, 0, 0],
-  [0, Math.PI / 2, 0],
-  [0, Math.PI, 0],
-  [0, -Math.PI / 2, 0],
-  [-Math.PI / 2, 0, 0],
-  [Math.PI / 2, 0, 0],
-];
-const TARGETS = [
-  new THREE.Euler(0, 0, 0),
-  new THREE.Euler(0, Math.PI / 2, 0),
-  new THREE.Euler(0, Math.PI, 0),
-  new THREE.Euler(0, -Math.PI / 2, 0),
-  new THREE.Euler(Math.PI / 2, 0, 0),
-  new THREE.Euler(-Math.PI / 2, 0, 0),
-];
-const REST_TILT = new THREE.Quaternion().setFromEuler(
-  new THREE.Euler(0.06, 0.1, 0),
-);
-
-const SKILL_SYMS = ["▲", "⚛", "⬡", "◈", "⬟", "⬢"];
-const SKILL_COLORS = [
-  "#e2e8f0",
-  "#61DAFB",
-  "#96BF48",
-  "#38BDF8",
-  "#FFD343",
-  "#68A063",
-];
-const FACE_DESC = [
-  "",
-  "Developer · AI Engineer",
-  "Web & AI Projects",
-  "Professional Services",
-  "Tech Stack",
-  "Get In Touch",
-];
-
-type CardItem = { title: string; lines: string[] };
-const SECTION_CARDS: CardItem[][] = [
-  [
-    { title: "About", lines: ["Full Stack Dev", "AI / ML Engineer"] },
-    { title: "Skills", lines: ["Next.js · React", "Shopify · Python"] },
-    { title: "Stats", lines: ["25+ Projects", "2+ Yrs Exp"] },
-  ],
-  [
-    { title: "Experience", lines: ["2+ yrs production", "web & AI apps"] },
-    { title: "Education", lines: ["B.Tech", "Computer Science"] },
-    { title: "Available", lines: ["Freelance & Full-time"] },
-  ],
-  [
-    {
-      title: "E-commerce",
-      lines: ["Next.js · Shopify", "Headless storefront"],
-    },
-    { title: "AI Dashboard", lines: ["React · Python", "ML analytics"] },
-    { title: "API Gateway", lines: ["Node.js · MongoDB", "REST + Auth"] },
-  ],
-  [
-    { title: "Web Dev", lines: ["Next.js · React", "Performance first"] },
-    { title: "Shopify", lines: ["Headless stores", "Custom themes"] },
-    { title: "AI / ML", lines: ["Integrations", "Pipelines"] },
-  ],
-  [
-    { title: "Frontend", lines: ["Next.js 90%", "React 95%"] },
-    { title: "Backend", lines: ["Node.js 80%", "Python 75%"] },
-    { title: "AI / ML", lines: ["TF 65%", "LangChain 70%"] },
-  ],
-  [
-    { title: "Email", lines: ["rajdeepkotoky@gmail.com"] },
-    { title: "GitHub", lines: ["Rajdeep1234yyuhh"] },
-    { title: "LinkedIn", lines: ["linkedin.com/in/rajdeep"] },
-  ],
-];
-
-// ── Error boundary for texture loading ───────────────────────────────────────
-
-class TextureErrorBoundary extends Component<
-  { fallback: ReactNode; children: ReactNode },
-  { error: boolean }
-> {
-  state = { error: false };
-  static getDerivedStateFromError() {
-    return { error: true };
-  }
-  render() {
-    return this.state.error ? this.props.fallback : this.props.children;
-  }
-}
-
-// ── Skill badge — colored ring with logo (when available) or initial ──────────
-
-const SKILL_LOGOS = [
-  "/logos/nextjs.png",
-  "/logos/reactjs.png",
-  "/logos/shopify.png",
-  "/logos/tailwind.png",
-  "/logos/python.png",
-  "/logos/nodejs.png",
-];
-const SKILL_INITIALS = ["N", "R", "S", "T", "P", "N"];
-// Key changes whenever logo paths change — forces error boundary reset in dev
-const LOGOS_KEY = SKILL_LOGOS.join("|");
-
-// Preload into useTexture cache so texture survives face switches
-useTexture.preload("/DP.jpg");
-SKILL_LOGOS.forEach((p) => useTexture.preload(p));
-
-function SkillBadge({
-  x,
-  y,
-  z,
-  color,
-  initial,
-}: {
-  x: number;
-  y: number;
-  z: number;
-  color: string;
-  initial: string;
-}) {
-  return (
-    <group position={[x, y, z]}>
-      <mesh>
-        <circleGeometry args={[0.175, 48]} />
-        <meshBasicMaterial color={color} transparent opacity={0.15} />
-      </mesh>
-      <mesh position={[0, 0, 0.003]}>
-        <circleGeometry args={[0.138, 48]} />
-        <meshBasicMaterial color="#0a0a14" />
-      </mesh>
-      <Text
-        position={[0, 0, 0.01]}
-        fontSize={0.115}
-        color={color}
-        anchorX="center"
-        anchorY="middle"
-      >
-        {initial}
-      </Text>
-    </group>
-  );
-}
-
-function SkillBadgesWithLogos({
-  y1,
-  y2,
-  z,
-  xOffset = -0.75 - 0.38,
-}: {
-  y1: number;
-  y2: number;
-  z: number;
-  xOffset?: number;
-}) {
-  const logos = useTexture(SKILL_LOGOS);
-  return (
-    <>
-      {[0, 1, 2].map((i) => (
-        <group key={i} position={[xOffset + i * 0.42, y1, z]}>
-          <mesh>
-            <circleGeometry args={[0.175, 48]} />
-            <meshBasicMaterial
-              color={SKILL_COLORS[i]}
-              transparent
-              opacity={0.15}
-            />
-          </mesh>
-          <mesh position={[0, 0, 0.003]}>
-            <circleGeometry args={[0.138, 48]} />
-            <meshBasicMaterial color="#0a0a14" />
-          </mesh>
-          <mesh position={[0, 0, 0.01]}>
-            <planeGeometry args={[0.19, 0.19]} />
-            <meshBasicMaterial map={logos[i]} toneMapped={false} transparent />
-          </mesh>
-        </group>
-      ))}
-      {[3, 4, 5].map((i) => (
-        <group key={i} position={[xOffset + (i - 3) * 0.42, y2, z]}>
-          <mesh>
-            <circleGeometry args={[0.175, 48]} />
-            <meshBasicMaterial
-              color={SKILL_COLORS[i]}
-              transparent
-              opacity={0.15}
-            />
-          </mesh>
-          <mesh position={[0, 0, 0.003]}>
-            <circleGeometry args={[0.138, 48]} />
-            <meshBasicMaterial color="#0a0a14" />
-          </mesh>
-          <mesh position={[0, 0, 0.01]}>
-            <planeGeometry args={[0.19, 0.19]} />
-            <meshBasicMaterial map={logos[i]} toneMapped={false} transparent />
-          </mesh>
-        </group>
-      ))}
-    </>
-  );
-}
-
-// ── Home face ─────────────────────────────────────────────────────────────────
-
-function HomeFaceInner() {
-  const photoTexture = useTexture("/DP.jpg");
-
-  // Active face — left half: photo + badges. Right half: name/info/button.
-  // Left half center x = -0.75, right half center x = +0.75
-  const BX = -0.75; // badge column center
-  const fallback = (
-    <>
-      {[0, 1, 2].map((i) => (
-        <SkillBadge
-          key={i}
-          x={BX - 0.38 + i * 0.38}
-          y={-0.72}
-          z={0.006}
-          color={SKILL_COLORS[i]}
-          initial={SKILL_INITIALS[i]}
-        />
-      ))}
-      {[3, 4, 5].map((i) => (
-        <SkillBadge
-          key={i}
-          x={BX - 0.38 + (i - 3) * 0.38}
-          y={-0.98}
-          z={0.006}
-          color={SKILL_COLORS[i]}
-          initial={SKILL_INITIALS[i]}
-        />
-      ))}
-    </>
-  );
-
-  return (
-    <>
-      {/* ── Left half ── */}
-      {/* Purple border frame */}
-      <mesh position={[-0.75, 0.42, 0.002]}>
-        <planeGeometry args={[1.28, 1.66]} />
-        <meshBasicMaterial color="#7c3aed" transparent opacity={0.18} />
-      </mesh>
-      {/* Portrait photo */}
-      <mesh position={[-0.75, 0.42, 0.004]}>
-        <planeGeometry args={[1.2, 1.58]} />
-        <meshBasicMaterial map={photoTexture} toneMapped={false} />
-      </mesh>
-      {/* Skill badges — centered under photo, x offset from left-half center */}
-      <TextureErrorBoundary key={LOGOS_KEY} fallback={fallback}>
-        <Suspense fallback={fallback}>
-          <SkillBadgesWithLogos
-            y1={-0.72}
-            y2={-1.18}
-            z={0.006}
-            xOffset={BX - 0.38}
-          />
-        </Suspense>
-      </TextureErrorBoundary>
-
-
-      {/* ── Right half ── */}
-      <Text
-        position={[0.75, 1.13, 0.006]}
-        fontSize={0.155}
-        color="#ffffff"
-        anchorX="center"
-        anchorY="middle"
-        letterSpacing={0.04}
-        maxWidth={1.3}
-      >
-        Rajdeep Kotoky
-      </Text>
-      <mesh position={[0.75, 0.89, 0.006]}>
-        <planeGeometry args={[1.1, 0.003]} />
-        <meshBasicMaterial color="rgba(255,255,255,0.15)" />
-      </mesh>
-      <Text
-        position={[0.75, 0.71, 0.006]}
-        fontSize={0.086}
-        color="rgba(255,255,255,0.5)"
-        anchorX="center"
-        anchorY="middle"
-        letterSpacing={0.03}
-      >
-        Full Stack Developer
-      </Text>
-      <Text
-        position={[0.75, 0.57, 0.006]}
-        fontSize={0.086}
-        color="rgba(255,255,255,0.5)"
-        anchorX="center"
-        anchorY="middle"
-        letterSpacing={0.03}
-      >
-        AI / ML Engineer
-      </Text>
-      <mesh position={[0.75, 0.41, 0.006]}>
-        <planeGeometry args={[1.1, 0.003]} />
-        <meshBasicMaterial color="rgba(255,255,255,0.08)" />
-      </mesh>
-      <Text
-        position={[0.75, 0.17, 0.006]}
-        fontSize={0.076}
-        color="rgba(255,255,255,0.35)"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={1.28}
-        lineHeight={1.8}
-        textAlign="center"
-      >
-        {
-          "Building web apps with Next.js,\nReact & Shopify.\nAI/ML integrations."
-        }
-      </Text>
-      {(
-        [
-          ["25+", "Projects"],
-          ["2+", "Years"],
-          ["100%", "Quality"],
-        ] as [string, string][]
-      ).map(([v, l], i) => (
-        <group key={l} position={[0.29 + i * 0.495, -0.33, 0.006]}>
-          <Text
-            position={[0, 0.09, 0]}
-            fontSize={0.128}
-            color="#ffffff"
-            anchorX="center"
-            anchorY="middle"
-          >
-            {v}
-          </Text>
-          <Text
-            position={[0, -0.09, 0]}
-            fontSize={0.056}
-            color="rgba(255,255,255,0.28)"
-            anchorX="center"
-            anchorY="middle"
-            letterSpacing={0.05}
-          >
-            {l.toUpperCase()}
-          </Text>
-        </group>
-      ))}
-      <Text
-        position={[0.75, -0.67, 0.006]}
-        fontSize={0.068}
-        color="rgba(255,255,255,0.2)"
-        anchorX="center"
-        anchorY="middle"
-        letterSpacing={0.06}
-      >
-        India · Open to work
-      </Text>
-      <group position={[0.75, -0.97, 0.006]}>
-        {/* 3D body — raised slab */}
-        <RoundedBox args={[1.14, 0.27, 0.055]} radius={0.055} smoothness={4}>
-          <meshStandardMaterial
-            color="#1a0a30"
-            metalness={0.7}
-            roughness={0.25}
-            emissive="#7c3aed"
-            emissiveIntensity={0.18}
-          />
-        </RoundedBox>
-        {/* Top face colour overlay */}
-        <mesh position={[0, 0, 0.029]}>
-          <planeGeometry args={[1.1, 0.23]} />
-          <meshBasicMaterial color="#7c3aed" transparent opacity={0.22} />
-        </mesh>
-        {/* Top edge highlight */}
-        <mesh position={[0, 0.105, 0.029]}>
-          <planeGeometry args={[1.1, 0.006]} />
-          <meshBasicMaterial color="#c4b5fd" transparent opacity={0.55} />
-        </mesh>
-        <Text
-          position={[0, 0, 0.036]}
-          fontSize={0.082}
-          color="#ffffff"
-          anchorX="center"
-          anchorY="middle"
-          letterSpacing={0.14}
-        >
-          MORE INFO
-        </Text>
-      </group>
-    </>
-  );
-}
-
-// ── Other faces: icon left / label right ─────────────────────────────────────
-
-function OtherFaceContent({
-  index,
-  isActive,
-  onOpen,
-}: {
-  index: number;
-  isActive: boolean;
-  onOpen: () => void;
-}) {
-  const s = SECTIONS[index];
-  const btnMat = useRef<THREE.MeshStandardMaterial>(null);
-  const t = useRef(Math.random() * Math.PI * 2);
-
-  useFrame((_, delta) => {
-    t.current += delta;
-    if (btnMat.current && isActive)
-      btnMat.current.emissiveIntensity =
-        0.28 + Math.sin(t.current * 1.8) * 0.14;
-  });
-
-  // Non-active: flat face — just icon + label, no protruding door panels
-  if (!isActive) {
-    return (
-      <>
-        <Text
-          position={[0, 0.22, 0.002]}
-          fontSize={0.85}
-          color={s.color}
-          anchorX="center"
-          anchorY="middle"
-        >
-          {s.icon}
-        </Text>
-        <Text
-          position={[0, -0.72, 0.002]}
-          fontSize={0.145}
-          color="rgba(255,255,255,0.45)"
-          anchorX="center"
-          anchorY="middle"
-          letterSpacing={0.08}
-        >
-          {s.label.toUpperCase()}
-        </Text>
-      </>
-    );
-  }
-
-  // Active face — flat, with MORE INFO button
-  return (
-    <>
-      <Text
-        position={[0, 0.28, 0.004]}
-        fontSize={0.88}
-        color={s.color}
-        anchorX="center"
-        anchorY="middle"
-      >
-        {s.icon}
-      </Text>
-      <Text
-        position={[0, -0.62, 0.004]}
-        fontSize={0.2}
-        color="#ffffff"
-        anchorX="center"
-        anchorY="middle"
-        letterSpacing={0.06}
-      >
-        {s.label.toUpperCase()}
-      </Text>
-      <mesh position={[0, -0.88, 0.004]}>
-        <planeGeometry args={[1.6, 0.003]} />
-        <meshBasicMaterial color={s.color} transparent opacity={0.5} />
-      </mesh>
-      <Text
-        position={[0, -1.06, 0.004]}
-        fontSize={0.09}
-        color="#94a3b8"
-        anchorX="center"
-        anchorY="middle"
-        maxWidth={2.6}
-        textAlign="center"
-      >
-        {FACE_DESC[index]}
-      </Text>
-      <group
-        position={[0, -1.28, 0.004]}
-        onClick={(e) => {
-          e.stopPropagation();
-          if (isActive) onOpen();
-        }}
-      >
-        <RoundedBox args={[1.1, 0.26, 0.018]} radius={0.06} smoothness={3}>
-          <meshBasicMaterial color="rgba(255,255,255,0.1)" />
-        </RoundedBox>
-        <Text
-          position={[0, 0, 0.012]}
-          fontSize={0.082}
-          color="rgba(255,255,255,0.7)"
-          anchorX="center"
-          anchorY="middle"
-          letterSpacing={0.1}
-        >
-          MORE INFO
-        </Text>
-      </group>
-    </>
-  );
-}
-
-// ── Staggered info card ───────────────────────────────────────────────────────
-
-function InfoCard({
-  card,
-  color,
-  index,
-  isOpen,
-}: {
-  card: CardItem;
-  color: string;
-  index: number;
-  isOpen: boolean;
-}) {
-  const ref = useRef<THREE.Group>(null);
-  const prog = useRef({ val: 0, vel: 0 });
-  const delay = index * 0.09;
-  const timer = useRef(0);
-
-  useFrame((_, delta) => {
-    if (!ref.current) return;
-    if (isOpen) {
-      timer.current += delta;
-      // Wait for panel to reach ~70% of its journey before cards appear
-      if (timer.current < 0.18 + delay) {
-        ref.current.scale.setScalar(0.001);
-        return;
-      }
-      const force = 320 * (1 - prog.current.val) - 22 * prog.current.vel;
-      prog.current.vel += force * delta;
-      prog.current.val += prog.current.vel * delta;
-    } else {
-      timer.current = 0;
-      prog.current.val = THREE.MathUtils.lerp(prog.current.val, 0, delta * 16);
-      prog.current.vel = 0;
-    }
-    const p = Math.max(0.001, prog.current.val);
-    ref.current.scale.setScalar(p);
-    // subtle upward rise as they expand
-    ref.current.position.y = THREE.MathUtils.lerp(-0.15, 0, Math.min(prog.current.val, 1));
-  });
-
-  const xPos = [-1.0, 0, 1.0][index] ?? 0;
-
-  return (
-    <group ref={ref} position={[xPos, 0.18, 0.07]}>
-      {/* Card body */}
-      <RoundedBox args={[0.88, 1.48, 0.07]} radius={0.07} smoothness={4}>
-        <meshStandardMaterial color="#0f0f22" metalness={0.75} roughness={0.22} />
-      </RoundedBox>
-      {/* Glass tint overlay */}
-      <mesh position={[0, 0, 0.037]}>
-        <planeGeometry args={[0.88, 1.48]} />
-        <meshBasicMaterial color={color} transparent opacity={0.06} />
-      </mesh>
-      {/* Top accent bar */}
-      <mesh position={[0, 0.71, 0.038]}>
-        <planeGeometry args={[0.78, 0.045]} />
-        <meshBasicMaterial color={color} transparent opacity={0.9} />
-      </mesh>
-      {/* Left edge glow line */}
-      <mesh position={[-0.42, 0, 0.038]}>
-        <planeGeometry args={[0.006, 1.3]} />
-        <meshBasicMaterial color={color} transparent opacity={0.4} />
-      </mesh>
-      <Text position={[0, 0.47, 0.042]} fontSize={0.115} color="#ffffff" anchorX="center" anchorY="middle" letterSpacing={0.03} maxWidth={0.78} textAlign="center">
-        {card.title}
-      </Text>
-      <mesh position={[0, 0.3, 0.042]}>
-        <planeGeometry args={[0.65, 0.003]} />
-        <meshBasicMaterial color="rgba(255,255,255,0.12)" />
-      </mesh>
-      {card.lines.map((line, j) => (
-        <Text key={j} position={[0, 0.14 - j * 0.2, 0.042]} fontSize={0.082} color="#94a3b8" anchorX="center" anchorY="middle" maxWidth={0.78} textAlign="center">
-          {line}
-        </Text>
-      ))}
-    </group>
-  );
-}
-
-// ── Info panel — face expands toward camera ───────────────────────────────────
-
-function InfoPanel({
-  isOpen,
-  active,
-  onClose,
-}: {
-  isOpen: boolean;
-  active: number;
-  onClose: () => void;
-}) {
-  const ref = useRef<THREE.Group>(null);
-  // Z: starts at cube face position (-0.7 = cube back z + face offset), ends at 2.2 (in front of camera)
-  const posZ = useRef({ val: -0.7, vel: 0 });
-  const scaleS = useRef({ val: 0.32, vel: 0 });
-  const wasOpen = useRef(false);
-
-  useFrame((_, delta) => {
-    if (!ref.current) return;
-
-    // Reset to start position when newly opened
-    if (isOpen && !wasOpen.current) {
-      posZ.current.val = -0.7;
-      posZ.current.vel = 0;
-      scaleS.current.val = 0.32;
-      scaleS.current.vel = 0;
-    }
-    wasOpen.current = isOpen;
-
-    // Spring Z — zooms from cube face toward camera
-    const tZ = isOpen ? 2.2 : -0.7;
-    const zForce = 240 * (tZ - posZ.current.val) - 22 * posZ.current.vel;
-    posZ.current.vel += zForce * delta;
-    posZ.current.val += posZ.current.vel * delta;
-
-    // Spring scale — grows from face-sized (0.32) to full (1.0) with slight overshoot
-    const tS = isOpen ? 1 : 0.32;
-    const sForce = 260 * (tS - scaleS.current.val) - 20 * scaleS.current.vel;
-    scaleS.current.vel += sForce * delta;
-    scaleS.current.val += scaleS.current.vel * delta;
-
-    ref.current.position.z = posZ.current.val;
-    ref.current.scale.setScalar(Math.max(0.001, scaleS.current.val));
-    ref.current.visible = isOpen || scaleS.current.val > 0.05;
-  });
-
-  const s = SECTIONS[active];
-  const cards = SECTION_CARDS[active] ?? [];
-
-  return (
-    <group ref={ref} position={[0, 0, -0.7]}>
-      {/* ── Backdrop — deep metallic slab ── */}
-      <RoundedBox args={[3.15, 3.15, 0.1]} radius={0.1} smoothness={5} position={[0, 0, -0.1]}>
-        <meshStandardMaterial color="#0c0c1e" metalness={0.9} roughness={0.15} />
-      </RoundedBox>
-      {/* Glass inner layer */}
-      <mesh position={[0, 0, -0.04]}>
-        <planeGeometry args={[3.08, 3.08]} />
-        <meshBasicMaterial color={s.color} transparent opacity={0.04} />
-      </mesh>
-      {/* Top glow bar */}
-      <mesh position={[0, 1.535, -0.04]}>
-        <planeGeometry args={[3.15, 0.07]} />
-        <meshBasicMaterial color={s.color} />
-      </mesh>
-      {/* Outer edge highlights — four thin lines */}
-      {/* top */}
-      <mesh position={[0, 1.57, -0.03]}><planeGeometry args={[3.15, 0.008]} /><meshBasicMaterial color="#c4b5fd" transparent opacity={0.6} /></mesh>
-      {/* left */}
-      <mesh position={[-1.572, 0, -0.03]}><planeGeometry args={[0.008, 3.15]} /><meshBasicMaterial color="#c4b5fd" transparent opacity={0.25} /></mesh>
-      {/* right */}
-      <mesh position={[1.572, 0, -0.03]}><planeGeometry args={[0.008, 3.15]} /><meshBasicMaterial color="#c4b5fd" transparent opacity={0.25} /></mesh>
-      {/* bottom */}
-      <mesh position={[0, -1.57, -0.03]}><planeGeometry args={[3.15, 0.008]} /><meshBasicMaterial color="#c4b5fd" transparent opacity={0.15} /></mesh>
-
-      {/* Section label */}
-      <Text position={[0, 1.25, 0.006]} fontSize={0.2} color="#ffffff" anchorX="center" anchorY="middle" letterSpacing={0.1}>
-        {s.label.toUpperCase()}
-      </Text>
-      <mesh position={[0, 1.04, 0.006]}>
-        <planeGeometry args={[2.7, 0.004]} />
-        <meshBasicMaterial color={s.color} transparent opacity={0.5} />
-      </mesh>
-
-      {/* Staggered cards */}
-      {cards.slice(0, 3).map((card, i) => (
-        <InfoCard key={`${active}-${i}`} card={card} color={s.color} index={i} isOpen={isOpen} />
-      ))}
-
-      {/* Close button */}
-      <group position={[0, -1.35, 0.006]} onClick={(e) => { e.stopPropagation(); onClose(); }}>
-        <RoundedBox args={[1.18, 0.3, 0.055]} radius={0.06} smoothness={4}>
-          <meshStandardMaterial color="#16162a" metalness={0.8} roughness={0.2} emissive="#7c3aed" emissiveIntensity={0.1} />
-        </RoundedBox>
-        {/* top highlight */}
-        <mesh position={[0, 0.14, 0.03]}>
-          <planeGeometry args={[1.14, 0.005]} />
-          <meshBasicMaterial color="#a78bfa" transparent opacity={0.6} />
-        </mesh>
-        <Text position={[0, 0, 0.034]} fontSize={0.09} color="#ffffff" anchorX="center" anchorY="middle" letterSpacing={0.14}>
-          CLOSE ✕
-        </Text>
-      </group>
-    </group>
-  );
-}
-
-// ── 3D Background ─────────────────────────────────────────────────────────────
-
-function Background3D() {
-  const ringRef = useRef<THREE.Mesh>(null);
-  const groupRef = useRef<THREE.Group>(null);
-
-  useFrame((_, delta) => {
-    if (ringRef.current) ringRef.current.rotation.z += delta * 0.18;
-    if (ringRef.current) ringRef.current.rotation.x += delta * 0.07;
-    if (groupRef.current) groupRef.current.rotation.y += delta * 0.06;
-  });
-
-  return (
-    <>
-      {/* Grid floor */}
-      <gridHelper
-        args={[60, 40, "#6d28d9", "#3b1f7a"]}
-        position={[0, -5.5, 0]}
-      />
-
-      {/* Slow rotating outer ring */}
-      <mesh ref={ringRef} position={[0, 0, -10]}>
-        <torusGeometry args={[7.5, 0.045, 8, 120]} />
-        <meshBasicMaterial color="#a78bfa" transparent opacity={0.6} />
-      </mesh>
-      <mesh position={[0, 0, -10]} rotation={[Math.PI / 3, 0, 0]}>
-        <torusGeometry args={[10, 0.03, 8, 120]} />
-        <meshBasicMaterial color="#60a5fa" transparent opacity={0.35} />
-      </mesh>
-
-      {/* Wireframe icosahedron far back */}
-      <group ref={groupRef} position={[0, 0, -14]}>
-        <mesh>
-          <icosahedronGeometry args={[4.5, 0]} />
-          <meshBasicMaterial
-            color="#a78bfa"
-            wireframe
-            transparent
-            opacity={0.25}
-          />
-        </mesh>
-      </group>
-
-      {/* Floating orbs */}
-      <Float speed={1.1} floatIntensity={2.2} rotationIntensity={0}>
-        <mesh position={[-7, 3, -8]}>
-          <sphereGeometry args={[0.32, 16, 16]} />
-          <meshStandardMaterial
-            color="#7c3aed"
-            emissive="#7c3aed"
-            emissiveIntensity={2.5}
-            transparent
-            opacity={0.85}
-          />
-        </mesh>
-      </Float>
-      <Float speed={0.75} floatIntensity={1.8} rotationIntensity={0}>
-        <mesh position={[7, -2.5, -7]}>
-          <sphereGeometry args={[0.22, 16, 16]} />
-          <meshStandardMaterial
-            color="#2563eb"
-            emissive="#2563eb"
-            emissiveIntensity={2.5}
-            transparent
-            opacity={0.8}
-          />
-        </mesh>
-      </Float>
-      <Float speed={1.4} floatIntensity={1.5} rotationIntensity={0}>
-        <mesh position={[5, 4, -11]}>
-          <sphereGeometry args={[0.14, 16, 16]} />
-          <meshStandardMaterial
-            color="#db2777"
-            emissive="#db2777"
-            emissiveIntensity={3}
-            transparent
-            opacity={0.7}
-          />
-        </mesh>
-      </Float>
-
-      {/* Background scene lights */}
-      <pointLight
-        position={[-8, 6, -6]}
-        intensity={1.4}
-        color="#7c3aed"
-        distance={30}
-      />
-      <pointLight
-        position={[8, -4, -6]}
-        intensity={0.9}
-        color="#2563eb"
-        distance={24}
-      />
-      <pointLight
-        position={[0, 8, -10]}
-        intensity={0.7}
-        color="#c4b5fd"
-        distance={28}
-      />
-    </>
-  );
-}
-
-// ── Mobile Nav — CSS 3D buttons ──────────────────────────────────────────────
-
-function MobileNavButtons({
-  active,
-  setActive,
-}: {
-  active: number;
-  setActive: (i: number) => void;
-}) {
-  return (
-    <div style={{
-      display: "grid",
-      gridTemplateColumns: "repeat(3, 1fr)",
-      gap: 10,
-      padding: "16px 14px 20px",
-      perspective: "600px",
-    }}>
-      {SECTIONS.map((sec, i) => {
-        const isActive = active === i;
-        return (
-          <button
-            key={i}
-            onClick={() => setActive(i)}
-            style={{
-              position: "relative",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 5,
-              padding: "12px 6px 10px",
-              borderRadius: 14,
-              border: `1px solid ${isActive ? sec.color : "rgba(255,255,255,0.08)"}`,
-              background: isActive
-                ? `linear-gradient(160deg, ${sec.color}28 0%, ${sec.color}0a 100%)`
-                : "linear-gradient(160deg, rgba(28,18,56,0.95) 0%, rgba(14,10,34,0.95) 100%)",
-              boxShadow: isActive
-                ? `0 0 20px ${sec.color}50, 0 6px 20px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.14), inset 0 -2px 0 rgba(0,0,0,0.5)`
-                : "0 6px 18px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.07), inset 0 -2px 0 rgba(0,0,0,0.45)",
-              transform: isActive
-                ? "translateY(1px) rotateX(1deg)"
-                : "translateY(0) rotateX(4deg)",
-              transformStyle: "preserve-3d",
-              cursor: "pointer",
-              transition: "all 0.18s cubic-bezier(0.34,1.56,0.64,1)",
-              outline: "none",
-              WebkitTapHighlightColor: "transparent",
-            }}
-          >
-            {/* top-edge highlight line */}
-            <div style={{
-              position: "absolute",
-              top: 0,
-              left: "12%",
-              right: "12%",
-              height: 1,
-              borderRadius: 1,
-              background: isActive
-                ? `linear-gradient(90deg, transparent, ${sec.color}cc, transparent)`
-                : "linear-gradient(90deg, transparent, rgba(255,255,255,0.14), transparent)",
-            }} />
-            {/* icon */}
-            <span style={{
-              fontSize: 22,
-              lineHeight: 1,
-              filter: isActive ? `drop-shadow(0 0 6px ${sec.color})` : "none",
-              transition: "filter 0.18s ease",
-            }}>
-              {sec.icon}
-            </span>
-            {/* label */}
-            <span style={{
-              fontSize: 9,
-              fontWeight: 700,
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
-              color: isActive ? "#ffffff" : "rgba(255,255,255,0.35)",
-              transition: "color 0.18s ease",
-            }}>
-              {sec.label}
-            </span>
-            {/* active bottom glow bar */}
-            {isActive && (
-              <div style={{
-                position: "absolute",
-                bottom: 0,
-                left: "20%",
-                right: "20%",
-                height: 2,
-                borderRadius: 2,
-                background: sec.color,
-                boxShadow: `0 0 8px ${sec.color}`,
-              }} />
-            )}
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-// ── Cube ─────────────────────────────────────────────────────────────────────
-
-function Cube({
-  active,
-  dragDelta,
-  twistDelta,
-  isOpen,
-  onOpen,
-  onClose,
-}: {
-  active: number;
-  dragDelta: React.RefObject<{ x: number; y: number }>;
-  twistDelta: React.RefObject<number>;
-  isOpen: boolean;
-  onOpen: () => void;
-  onClose: () => void;
-}) {
-  const groupRef = useRef<THREE.Group>(null);
-  const targetQ = useRef(new THREE.Quaternion());
-  const dragQ = useRef(new THREE.Quaternion());
-  // Spring state for position
-  const posZ = useRef({ val: 0, vel: 0 });
-  const posY = useRef({ val: 0, vel: 0 });
-  // Scale punch on open
-  const scaleSpring = useRef({ val: 1, vel: 0 });
-  const wasOpen = useRef(false);
-
-  useEffect(() => {
-    targetQ.current.setFromEuler(TARGETS[active]);
-    dragQ.current.identity();
-  }, [active]);
-
-  useFrame((_, delta) => {
-    if (!groupRef.current || !dragDelta.current) return;
-
-    if (!isOpen) {
-      if (dragDelta.current.x !== 0 || dragDelta.current.y !== 0) {
-        const qHoriz = new THREE.Quaternion().setFromAxisAngle(
-          new THREE.Vector3(0, 1, 0),
-          dragDelta.current.x,
-        );
-        const qVert = new THREE.Quaternion().setFromAxisAngle(
-          new THREE.Vector3(1, 0, 0),
-          dragDelta.current.y,
-        );
-        dragQ.current.premultiply(qHoriz.multiply(qVert));
-        dragDelta.current.x = 0;
-        dragDelta.current.y = 0;
-      }
-      // Twist (Z rotation from two-finger rotate on mobile)
-      if (twistDelta.current !== 0) {
-        const qTwist = new THREE.Quaternion().setFromAxisAngle(
-          new THREE.Vector3(0, 0, 1),
-          twistDelta.current,
-        );
-        dragQ.current.premultiply(qTwist);
-        twistDelta.current = 0;
-      }
-    }
-
-    const dragLen = 1 - Math.abs(dragQ.current.w);
-    const tiltS = isOpen ? 0 : Math.max(0, 1 - dragLen * 6);
-    const blended = new THREE.Quaternion().slerp(REST_TILT, tiltS);
-    // When opening, snap straight-on so the door effect is clean
-    const goal = isOpen
-      ? targetQ.current.clone()
-      : targetQ.current.clone().multiply(blended).multiply(dragQ.current);
-    groupRef.current.quaternion.slerp(goal, delta * (isOpen ? 8 : 2.5));
-
-    // Scale punch when transitioning open → kick it small then spring back to 1
-    if (isOpen && !wasOpen.current) {
-      scaleSpring.current.val = 0.88;
-      scaleSpring.current.vel = 0;
-    }
-    wasOpen.current = isOpen;
-    const scaleForce =
-      260 * (1 - scaleSpring.current.val) - 18 * scaleSpring.current.vel;
-    scaleSpring.current.vel += scaleForce * delta;
-    scaleSpring.current.val += scaleSpring.current.vel * delta;
-    groupRef.current.scale.setScalar(scaleSpring.current.val);
-
-    // Spring position — pushes cube back smoothly
-    const tZ = isOpen ? -2.2 : 0;
-    const tY = isOpen ? -0.18 : 0;
-    const zForce = 180 * (tZ - posZ.current.val) - 20 * posZ.current.vel;
-    const yForce = 180 * (tY - posY.current.val) - 20 * posY.current.vel;
-    posZ.current.vel += zForce * delta;
-    posZ.current.val += posZ.current.vel * delta;
-    posY.current.vel += yForce * delta;
-    posY.current.val += posY.current.vel * delta;
-    groupRef.current.position.z = posZ.current.val;
-    groupRef.current.position.y = posY.current.val;
-  });
-
-  return (
-    <group ref={groupRef}>
-      {/* Body */}
-      <RoundedBox args={[3, 3, 3]} radius={0.08} smoothness={6} castShadow>
-        <meshStandardMaterial
-          color="#22223a"
-          metalness={1.0}
-          roughness={0.04}
-          envMapIntensity={1.2}
-        />
-      </RoundedBox>
-
-      {/* Face 0 – Home */}
-      <group position={[0, 0, 1.52]}>
-        <Suspense fallback={null}>
-          <HomeFaceInner />
-        </Suspense>
-      </group>
-
-      {/* Faces 1–5 */}
-      {[1, 2, 3, 4, 5].map((i) => (
-        <group
-          key={i}
-          position={FACE_POSITIONS[i]}
-          rotation={FACE_ROTATIONS[i]}
-        >
-          <OtherFaceContent index={i} isActive={active === i} onOpen={onOpen} />
-        </group>
-      ))}
-    </group>
-  );
-}
-
-// ── Scene ─────────────────────────────────────────────────────────────────────
-
-function Scene({
-  active,
-  dragDelta,
-  twistDelta,
-  isOpen,
-  onOpen,
-  onClose,
-}: {
-  active: number;
-  dragDelta: React.RefObject<{ x: number; y: number }>;
-  twistDelta: React.RefObject<number>;
-  isOpen: boolean;
-  onOpen: () => void;
-  onClose: () => void;
-}) {
-  return (
-    <>
-      <ambientLight intensity={0.5} />
-      {/* Key light — sharp highlight top-right */}
-      <directionalLight
-        position={[6, 9, 6]}
-        intensity={3.5}
-        castShadow
-        color="#ffffff"
-      />
-      {/* Fill light — left side cool reflection */}
-      <directionalLight position={[-6, 3, 4]} intensity={1.8} color="#c4b5fd" />
-      {/* Back rim — separates cube from background */}
-      <directionalLight
-        position={[0, -5, -6]}
-        intensity={1.2}
-        color="#60a5fa"
-      />
-      {/* Front face fill */}
-      <directionalLight position={[0, 0, 8]} intensity={1.0} color="#ffffff" />
-      <pointLight position={[4, 4, 4]} intensity={1.2} color="#a78bfa" />
-      <pointLight position={[-4, -3, 2]} intensity={0.6} color="#60a5fa" />
-      <pointLight position={[0, 6, -4]} intensity={0.9} color="#ffffff" />
-      <Background3D />
-
-      <Cube
-        active={active}
-        dragDelta={dragDelta}
-        twistDelta={twistDelta}
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onClose={onClose}
-      />
-
-      <InfoPanel isOpen={isOpen} active={active} onClose={onClose} />
-    </>
-  );
-}
-
-// ── Export ────────────────────────────────────────────────────────────────────
+import Link from "next/link";
 
 export default function CubePageClient() {
-  const [active, setActive] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
-  const dragDelta = useRef({ x: 0, y: 0 });
-  const isDragging = useRef(false);
-  const lastPointer = useRef({ x: 0, y: 0 });
-  const lastPinch = useRef<number | null>(null);
-  const lastMidpoint = useRef<{ x: number; y: number } | null>(null);
-  const lastAngle = useRef<number | null>(null);
-  const twistDelta = useRef(0);
-  // Track fingers by identifier so swapping indices doesn't corrupt deltas
-  const fingerMap = useRef<Map<number, { x: number; y: number }>>(new Map());
-  const canvasWrapRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setIsOpen(false);
-  }, [active]);
-
-  // Prevent page scroll on touch — must be non-passive so preventDefault works
-  useEffect(() => {
-    const el = canvasWrapRef.current;
-    if (!el) return;
-    const block = (e: TouchEvent) => e.preventDefault();
-    el.addEventListener("touchmove", block, { passive: false });
-    return () => {
-      el.removeEventListener("touchmove", block);
-    };
-  }, []);
-
-  useEffect(() => {
-    let last = 0;
-    const handler = (e: WheelEvent) => {
-      const now = Date.now();
-      if (now - last < 500) return;
-      last = now;
-      if (isOpen) {
-        setIsOpen(false);
-        return;
-      }
-      setActive((p) => (e.deltaY > 0 ? (p + 1) % 6 : (p - 1 + 6) % 6));
-    };
-    window.addEventListener("wheel", handler, { passive: true });
-    return () => window.removeEventListener("wheel", handler);
-  }, [isOpen]);
-
-  const onMouseDown = (e: React.MouseEvent) => {
-    if (isOpen) return;
-    isDragging.current = true;
-    lastPointer.current = { x: e.clientX, y: e.clientY };
-  };
-  const onMouseMove = (e: React.MouseEvent) => {
-    if (!isDragging.current) return;
-    dragDelta.current = {
-      x: (e.clientX - lastPointer.current.x) * 0.008,
-      y: (e.clientY - lastPointer.current.y) * 0.008,
-    };
-    lastPointer.current = { x: e.clientX, y: e.clientY };
-  };
-  const onMouseUp = () => {
-    isDragging.current = false;
-  };
-
-  const isMobile = () => window.matchMedia("(max-width: 640px)").matches;
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    if (isOpen) return;
-    if (e.touches.length === 1) {
-      isDragging.current = true;
-      lastPointer.current = {
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY,
-      };
-      fingerMap.current.clear();
-    } else if (e.touches.length === 2 && isMobile()) {
-      isDragging.current = false;
-      // Store by identifier so index swaps don't corrupt deltas
-      fingerMap.current.set(e.touches[0].identifier, {
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY,
-      });
-      fingerMap.current.set(e.touches[1].identifier, {
-        x: e.touches[1].clientX,
-        y: e.touches[1].clientY,
-      });
-      const dx = e.touches[0].clientX - e.touches[1].clientX;
-      const dy = e.touches[0].clientY - e.touches[1].clientY;
-      lastAngle.current = Math.atan2(dy, dx);
-      lastPinch.current = Math.sqrt(dx * dx + dy * dy);
-    }
-  };
-
-  const onTouchMove = (e: React.TouchEvent) => {
-    if (isOpen) return;
-    if (e.touches.length === 1 && isDragging.current) {
-      dragDelta.current = {
-        x: (e.touches[0].clientX - lastPointer.current.x) * 0.012,
-        y: (e.touches[0].clientY - lastPointer.current.y) * 0.012,
-      };
-      lastPointer.current = {
-        x: e.touches[0].clientX,
-        y: e.touches[0].clientY,
-      };
-    } else if (
-      e.touches.length === 2 &&
-      fingerMap.current.size === 2 &&
-      isMobile()
-    ) {
-      let totalDx = 0,
-        totalDy = 0,
-        count = 0;
-      // Each finger delta computed against its own last position (by identifier)
-      for (let i = 0; i < e.touches.length; i++) {
-        const t = e.touches[i];
-        const prev = fingerMap.current.get(t.identifier);
-        if (prev) {
-          totalDx += t.clientX - prev.x;
-          totalDy += t.clientY - prev.y;
-          count++;
-        }
-        // Update stored position for this finger
-        fingerMap.current.set(t.identifier, { x: t.clientX, y: t.clientY });
-      }
-      if (count > 0) {
-        dragDelta.current = {
-          x: (totalDx / count) * 0.012,
-          y: (totalDy / count) * 0.012,
-        };
-      }
-      const adx = e.touches[0].clientX - e.touches[1].clientX;
-      const ady = e.touches[0].clientY - e.touches[1].clientY;
-      const angle = Math.atan2(ady, adx);
-      if (lastAngle.current !== null) {
-        let dAngle = angle - lastAngle.current;
-        if (dAngle > Math.PI) dAngle -= Math.PI * 2;
-        if (dAngle < -Math.PI) dAngle += Math.PI * 2;
-        twistDelta.current -= dAngle * 0.7; // negated to match natural rotation
-      }
-      lastAngle.current = angle;
-      lastPinch.current = Math.sqrt(adx * adx + ady * ady);
-    }
-  };
-
-  const onTouchEnd = () => {
-    isDragging.current = false;
-    lastPinch.current = null;
-    lastMidpoint.current = null;
-    lastAngle.current = null;
-    fingerMap.current.clear();
-  };
-
-  const s = SECTIONS[active];
-
   return (
-    <div
-      style={{
-        width: "100vw",
-        height: "100vh",
-        background:
-          "radial-gradient(ellipse at 50% 50%, #2d1b6e 0%, #1a1040 35%, #0e0a2a 70%, #080618 100%)",
-        position: "relative",
-        overflow: "hidden",
-      }}
-    >
+    <div style={{
+      width: "100vw",
+      height: "100vh",
+      background: "radial-gradient(ellipse at 50% 50%, #2d1b6e 0%, #1a1040 35%, #0e0a2a 70%, #080618 100%)",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      position: "relative",
+      overflow: "hidden",
+      fontFamily: "'Outfit', 'Inter', sans-serif",
+    }}>
       <style>{`
-        @media (max-width: 640px) {
-          .cube-canvas-wrap {
-            position: absolute !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 44% !important;
-            height: 56% !important;
-          }
-          .cube-dots { display: none !important; }
-          .cube-label { display: none !important; }
-          .cube-back { top: 14px !important; left: 14px !important; }
-          .mobile-nav-3d { display: block !important; }
+        @keyframes spin-slow {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(360deg); }
         }
+        @keyframes spin-reverse {
+          from { transform: rotate(0deg); }
+          to   { transform: rotate(-360deg); }
+        }
+        @keyframes pulse-glow {
+          0%, 100% { opacity: 0.5; transform: scale(1); }
+          50%       { opacity: 1;   transform: scale(1.08); }
+        }
+        @keyframes float-up {
+          0%, 100% { transform: translateY(0); }
+          50%       { transform: translateY(-10px); }
+        }
+        @keyframes fade-in {
+          from { opacity: 0; transform: translateY(18px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .ring-1 {
+          animation: spin-slow 18s linear infinite;
+        }
+        .ring-2 {
+          animation: spin-reverse 26s linear infinite;
+        }
+        .ring-3 {
+          animation: spin-slow 38s linear infinite;
+        }
+        .icon-float {
+          animation: float-up 4s ease-in-out infinite;
+        }
+        .fade-1 { animation: fade-in 0.7s ease forwards; }
+        .fade-2 { animation: fade-in 0.7s ease 0.15s forwards; opacity: 0; }
+        .fade-3 { animation: fade-in 0.7s ease 0.3s forwards;  opacity: 0; }
+        .fade-4 { animation: fade-in 0.7s ease 0.45s forwards; opacity: 0; }
+        .fade-5 { animation: fade-in 0.7s ease 0.6s forwards;  opacity: 0; }
+        .back-btn {
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.18);
+          backdrop-filter: blur(8px);
+        }
+        .back-btn:hover {
+          background: rgba(167,139,250,0.18) !important;
+          border-color: rgba(167,139,250,0.55) !important;
+          color: #ffffff !important;
+          box-shadow: 0 0 18px rgba(124,58,237,0.35);
+        }
+        .back-btn:hover .back-arrow { transform: translateX(-3px); }
+        .back-arrow { display: inline-block; transition: transform 0.18s ease; }
       `}</style>
 
-      {/* Nav dots */}
-      <div
-        className="cube-dots"
-        style={{
-          position: "fixed",
-          right: 22,
-          top: "50%",
-          transform: "translateY(-50%)",
-          display: "flex",
-          flexDirection: "column",
-          gap: 10,
-          zIndex: 10,
-        }}
-      >
-        {SECTIONS.map((sec, i) => (
-          <button
-            key={i}
-            onClick={() => setActive(i)}
-            style={{
-              width: 8,
-              height: 8,
+      {/* Decorative rings */}
+      <div className="ring-1" style={{
+        position: "absolute",
+        width: 520,
+        height: 520,
+        borderRadius: "50%",
+        border: "1px solid rgba(167,139,250,0.18)",
+        pointerEvents: "none",
+      }} />
+      <div className="ring-2" style={{
+        position: "absolute",
+        width: 720,
+        height: 720,
+        borderRadius: "50%",
+        border: "1px dashed rgba(96,165,250,0.12)",
+        pointerEvents: "none",
+      }} />
+      <div className="ring-3" style={{
+        position: "absolute",
+        width: 940,
+        height: 940,
+        borderRadius: "50%",
+        border: "1px solid rgba(167,139,250,0.07)",
+        pointerEvents: "none",
+      }} />
+
+      {/* Glow orbs */}
+      <div style={{
+        position: "absolute",
+        top: "18%",
+        left: "14%",
+        width: 200,
+        height: 200,
+        borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(124,58,237,0.28) 0%, transparent 70%)",
+        pointerEvents: "none",
+      }} />
+      <div style={{
+        position: "absolute",
+        bottom: "20%",
+        right: "12%",
+        width: 260,
+        height: 260,
+        borderRadius: "50%",
+        background: "radial-gradient(circle, rgba(37,99,235,0.22) 0%, transparent 70%)",
+        pointerEvents: "none",
+      }} />
+
+      {/* Content */}
+      <div style={{ position: "relative", zIndex: 10, textAlign: "center", padding: "0 24px" }}>
+
+        {/* Icon */}
+        <div className="icon-float fade-1" style={{ marginBottom: 28 }}>
+          <div style={{
+            width: 72,
+            height: 72,
+            borderRadius: 20,
+            background: "linear-gradient(135deg, rgba(124,58,237,0.35) 0%, rgba(37,99,235,0.25) 100%)",
+            border: "1px solid rgba(167,139,250,0.35)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            margin: "0 auto",
+            boxShadow: "0 0 32px rgba(124,58,237,0.3), inset 0 1px 0 rgba(255,255,255,0.12)",
+          }}>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(196,181,253,0.9)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+        </div>
+
+        {/* Label */}
+        <div className="fade-2" style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          background: "rgba(124,58,237,0.15)",
+          border: "1px solid rgba(167,139,250,0.25)",
+          borderRadius: 100,
+          padding: "5px 16px",
+          marginBottom: 22,
+        }}>
+          <div style={{
+            width: 6,
+            height: 6,
+            borderRadius: "50%",
+            background: "#a78bfa",
+            boxShadow: "0 0 8px #a78bfa",
+            animation: "pulse-glow 2s ease-in-out infinite",
+          }} />
+          <span style={{ color: "#c4b5fd", fontSize: 11, fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase" }}>
+            In Development
+          </span>
+        </div>
+
+        {/* Heading */}
+        <h1 className="fade-3" style={{
+          fontSize: "clamp(42px, 8vw, 80px)",
+          fontWeight: 900,
+          lineHeight: 1.06,
+          letterSpacing: "-0.03em",
+          margin: "0 0 18px",
+          background: "linear-gradient(135deg, #ffffff 30%, #c4b5fd 65%, #93c5fd 100%)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          backgroundClip: "text",
+        }}>
+          Coming Soon
+        </h1>
+
+        {/* Subtext */}
+        <p className="fade-4" style={{
+          color: "rgba(255,255,255,0.38)",
+          fontSize: "clamp(13px, 2vw, 16px)",
+          lineHeight: 1.7,
+          maxWidth: 400,
+          margin: "0 auto 40px",
+        }}>
+          Something new is being built here.<br />
+          Check back soon.
+        </p>
+
+        {/* Divider dots */}
+        <div className="fade-4" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, marginBottom: 40 }}>
+          {["#7c3aed", "#2563eb", "#db2777"].map((c, i) => (
+            <div key={i} style={{
+              width: 5,
+              height: 5,
               borderRadius: "50%",
-              padding: 0,
-              cursor: "pointer",
-              transition: "all 0.2s",
-              border: `1.5px solid ${active === i ? sec.color : "rgba(255,255,255,0.2)"}`,
-              background: active === i ? sec.color : "transparent",
-            }}
-          />
-        ))}
-      </div>
+              background: c,
+              boxShadow: `0 0 8px ${c}`,
+              animation: `pulse-glow ${1.8 + i * 0.3}s ease-in-out ${i * 0.2}s infinite`,
+            }} />
+          ))}
+        </div>
 
-      {/* Section label */}
-      <div
-        className="cube-label"
-        style={{
-          position: "fixed",
-          bottom: 24,
-          left: "50%",
-          transform: "translateX(-50%)",
-          textAlign: "center",
-          zIndex: 10,
-          pointerEvents: "none",
-        }}
-      >
-        <p
-          style={{
-            color: s.color,
-            fontSize: "0.75rem",
-            fontWeight: 600,
-            letterSpacing: "0.15em",
-            textTransform: "uppercase",
-            margin: 0,
-          }}
-        >
-          {s.label}
-        </p>
-        <p
-          style={{
-            color: "rgba(255,255,255,0.18)",
-            fontSize: "0.58rem",
-            letterSpacing: "0.1em",
-            margin: "4px 0 0",
-            textTransform: "uppercase",
-          }}
-        >
-          {isOpen ? "tap CLOSE · or scroll" : "scroll · drag · tap MORE INFO"}
-        </p>
-      </div>
-
-      {/* Back */}
-      <a
-        className="cube-back"
-        href="/"
-        style={{
-          position: "fixed",
-          top: 22,
-          left: 22,
-          color: "rgba(255,255,255,0.22)",
-          fontSize: "0.65rem",
-          letterSpacing: "0.12em",
-          textDecoration: "none",
+        {/* Back button */}
+        <Link href="/" className="back-btn fade-5" style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: 8,
+          color: "rgba(255,255,255,0.75)",
+          fontSize: 12,
+          fontWeight: 700,
+          letterSpacing: "0.14em",
           textTransform: "uppercase",
-          zIndex: 10,
-        }}
-      >
-        ← Portfolio
-      </a>
-
-      {/* Canvas */}
-      <div
-        ref={canvasWrapRef}
-        className="cube-canvas-wrap"
-        style={{
-          position: "absolute",
-          inset: 0,
-          cursor: isOpen ? "default" : isDragging.current ? "grabbing" : "grab",
-        }}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onMouseLeave={onMouseUp}
-        onTouchStart={onTouchStart}
-        onTouchMove={onTouchMove}
-        onTouchEnd={onTouchEnd}
-      >
-        <Canvas
-          camera={{ position: [0, 0, 7.2], fov: 42 }}
-          gl={{ antialias: true, alpha: true }}
-          style={{ position: "absolute", inset: 0, background: "transparent" }}
-          shadows
-        >
-          <Scene
-            active={active}
-            dragDelta={dragDelta}
-            twistDelta={twistDelta}
-            isOpen={isOpen}
-            onOpen={() => setIsOpen(true)}
-            onClose={() => setIsOpen(false)}
-          />
-        </Canvas>
-      </div>
-
-      {/* Mobile 3D Navbar — bottom 44%, desktop: hidden */}
-      <div
-        className="mobile-nav-3d"
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "43%",
-          display: "none",
-          zIndex: 5,
-          background: "rgba(8, 4, 22, 0.85)",
-          backdropFilter: "blur(12px)",
-          borderTop: "1px solid rgba(255,255,255,0.06)",
-        }}
-      >
-        <MobileNavButtons active={active} setActive={setActive} />
+          textDecoration: "none",
+          padding: "9px 20px",
+          borderRadius: 100,
+          transition: "all 0.2s ease",
+        }}>
+          <span className="back-arrow">←</span>
+          Back to Portfolio
+        </Link>
       </div>
     </div>
   );
