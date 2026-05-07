@@ -218,7 +218,7 @@ const QuickFixFAB = ({ scrollToSection }: QuickFixFABProps) => {
         }
       `}</style>
 
-      <div className="quick-fix-fab fixed bottom-10 right-8 z-50">
+      <div className="quick-fix-fab fixed bottom-10 right-8 z-50 hidden">
         <span
           aria-hidden="true"
           className={`mobile-help-nudge ${showHelpNudge ? "is-visible" : ""}`}
