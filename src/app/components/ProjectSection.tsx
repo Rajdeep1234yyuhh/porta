@@ -445,8 +445,8 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
               </button>
             </div>
             {activeTab === "tech"
-              ? <ProjectCarousel isDarkMode={isDarkMode} projects={aiProjects} desktopPerView={1} accent="tech" label="AI / ML & Software" showHeader={false} onCardClick={openProject} />
-              : <ProjectCarousel isDarkMode={isDarkMode} projects={shopifyProjects} desktopPerView={1} accent="shopify" label="Shopify Stores" showHeader={false} onCardClick={openProject} />
+              ? <ProjectCarousel key="mobile-tech-carousel" isDarkMode={isDarkMode} projects={aiProjects} desktopPerView={1} accent="tech" label="AI / ML & Software" showHeader={false} onCardClick={openProject} />
+              : <ProjectCarousel key="mobile-shopify-carousel" isDarkMode={isDarkMode} projects={shopifyProjects} desktopPerView={1} accent="shopify" label="Shopify Stores" showHeader={false} onCardClick={openProject} />
             }
           </div>
 
