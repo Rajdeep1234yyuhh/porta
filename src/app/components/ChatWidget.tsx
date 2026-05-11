@@ -151,6 +151,7 @@ export default function ChatWidget() {
                 ? "bg-white/5 border-white/10 text-white placeholder-gray-500 focus:border-violet-500/50"
                 : "bg-slate-50 border-slate-200 text-slate-900 placeholder-slate-400 focus:border-violet-400"
             }`}
+            style={{ fontSize: "16px" }}
           />
           <button
             onClick={send}
