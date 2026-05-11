@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 const SYSTEM_PROMPT = `You are the AI assistant for Rajdeep Kotoky's portfolio website. Help visitors quickly understand Rajdeep's work, services, skills, and how to contact him. Be friendly, concise, confident, and professional.
 
 ## About Rajdeep Kotoky
@@ -82,8 +85,19 @@ Rajdeep has worked on many Shopify stores across skincare, jewellery, fashion, p
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
+    const groqApiKey = process.env.GROQ_API_KEY?.trim();
 
-    if (!process.env.GROQ_API_KEY) {
+    if (!groqApiKey) {
+      console.error("GROQ_API_KEY is missing for chat route", {
+        vercelEnv: process.env.VERCEL_ENV,
+        nodeEnv: process.env.NODE_ENV,
+        hasGroqKey: Object.prototype.hasOwnProperty.call(
+          process.env,
+          "GROQ_API_KEY",
+        ),
+        groqKeyLength: process.env.GROQ_API_KEY?.length ?? 0,
+      });
+
       return NextResponse.json(
         {
           error:
@@ -99,7 +113,7 @@ export async function POST(req: NextRequest) {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.GROQ_API_KEY}`,
+          Authorization: `Bearer ${groqApiKey}`,
         },
         body: JSON.stringify({
           model: "llama-3.3-70b-versatile",
