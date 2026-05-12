@@ -23,7 +23,15 @@ export const allProjects: Project[] = [
     video: "https://youtu.be/A_9EQWd8N1A",
     videoStartTime: 29,
     image: "/images/ecommerce-thumbnail.jpg",
-    tech: ["Next.js", "Tailwind CSS", "Node.js", "firebase", "python", "AI", "ML"],
+    tech: [
+      "Next.js",
+      "Tailwind CSS",
+      "Node.js",
+      "firebase",
+      "python",
+      "AI",
+      "ML",
+    ],
     categories: ["AI/ML", "Web Development"],
     demo: "https://dhiti.ai/",
     github: "https://github.com/Rajdeep1234yyuhh/mks",
@@ -37,7 +45,16 @@ export const allProjects: Project[] = [
     mediaType: "video",
     video: "yeco.mp4",
     image: "/images/analytics-dashboard-thumbnail.jpg",
-    tech: ["React", "Tailwind CSS", "Node.js", "Firebase", "Next.js", "TypeScript", "LLaMA API", "Database Integration"],
+    tech: [
+      "React",
+      "Tailwind CSS",
+      "Node.js",
+      "Firebase",
+      "Next.js",
+      "TypeScript",
+      "LLaMA API",
+      "Database Integration",
+    ],
     categories: ["AI/ML", "Web Development"],
     demo: "https://yeco-bice.vercel.app/",
     github: "https://github.com/Rajdeep1234yyuhh/yeco",
@@ -63,7 +80,14 @@ export const allProjects: Project[] = [
     description:
       "A two-stage intelligent dialogue system for Assam tourism, featuring a MuRIL-based intent classifier across 44 intents with ~97% accuracy and a semantic retrieval module over 221,799 Q&A pairs covering 51 destinations - designed for low-resource code-mixed NLP.",
     mediaType: "image",
-    tech: ["Python", "PyTorch", "MuRIL", "HuggingFace Transformers", "NumPy", "Jupyter Notebook"],
+    tech: [
+      "Python",
+      "PyTorch",
+      "MuRIL",
+      "HuggingFace Transformers",
+      "NumPy",
+      "Jupyter Notebook",
+    ],
     categories: ["NLP", "Deep Learning", "Research"],
     demo: "#",
     github: "#",
@@ -72,7 +96,8 @@ export const allProjects: Project[] = [
   {
     id: 6,
     title: "Data Collector Application",
-    description: "Collects data for model training. Collects data from users and stores them in a structured format.",
+    description:
+      "Collects data for model training. Collects data from users and stores them in a structured format.",
     mediaType: "image",
     tech: ["Next.js", "Firebase"],
     categories: ["Web Development", "AI/ML"],
@@ -108,7 +133,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify jewellery store for affordable imitation pieces, covering ethnic, traditional, and modern designs for daily wear and special occasions.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://zanera.in/",
     github: "#",
@@ -120,7 +151,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify jewellery store for handcrafted earrings, jhumkas, chandbalis, and traditional sets for weddings, festivals, and everyday wear.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://www.theanvik.com/",
     github: "#",
@@ -132,7 +169,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify bridal jewellery platform featuring handcrafted kundan sets, anklets, earrings, and bespoke accessories with traditional techniques and modern styling.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://heerhouseofjewellery.com/",
     github: "#",
@@ -144,7 +187,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify skincare store for fruit-powered, vegan, beginner-friendly products built around clean formulas and simple daily routines.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://shopfruitful.com/",
     github: "#",
@@ -156,7 +205,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify haircare store for Ayurvedic-inspired oils, masks, and grooming tools, blending Indian rituals with modern healthy-hair care.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://www.giishabeauty.com/",
     github: "#",
@@ -168,7 +223,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify fashion store for modern women's dresses, co-ord sets, tops, and accessories focused on elegance, comfort, and contemporary style.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://roslynbydemi.com/",
     github: "#",
@@ -180,7 +241,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify D2C fashion store for Gen-Z ethnic wear, including block-printed kurtis, fusion outfits, and contemporary desi styles.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://www.nishorama.com/",
     github: "#",
@@ -192,23 +259,17 @@ export const allProjects: Project[] = [
     description:
       "Shopify ethnic wear store for handcrafted cotton suit sets, kurtas, and sarees rooted in handblock printing and artisan craftsmanship.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://www.vintageloom.com/",
     github: "#",
     date: "2026",
-  },
-  {
-    id: 17,
-    title: "Bloomegg - Performance Marketing & E-commerce Growth Agency",
-    description:
-      "A digital marketing agency specializing in performance marketing, social media advertising, and e-commerce growth strategies, helping brands scale revenue through data-driven campaigns and creative execution.",
-    mediaType: "image",
-    tech: ["JavaScript", "HTML", "CSS", "Analytics Tools", "Ad Platforms (Google, Meta)"],
-    categories: ["Web Development"],
-    demo: "https://bloomegg.com/",
-    github: "#",
-    date: "2024",
   },
   {
     id: 18,
@@ -216,7 +277,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify accessories store for affordable rings, earrings, necklaces, and bracelets, focused on everyday style, durability, and accessibility.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Razorpay/Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Razorpay/Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://aekay.in/",
     github: "#",
@@ -228,7 +295,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify ethnic fashion store for handcrafted suit sets, anarkalis, co-ords, and kurtas with handblock prints and modern elegance.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://thehouseofhoor.com/",
     github: "#",
@@ -240,7 +313,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify dessert store for Italian-style artisanal gelato, gelato cakes, sorbets, and sugar-free options made with natural ingredients.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://www.gelatovinto.com/",
     github: "#",
@@ -252,7 +331,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify plants and decor store for indoor/outdoor plants, planters, and gardening accessories that support greener living spaces.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://homebagh.com/",
     github: "#",
@@ -260,11 +345,18 @@ export const allProjects: Project[] = [
   },
   {
     id: 22,
-    title: "The Mesh Store - Trendy Women's Fashion & Accessories E-commerce Platform",
+    title:
+      "The Mesh Store - Trendy Women's Fashion & Accessories E-commerce Platform",
     description:
       "Shopify fashion store for women's clothing, bags, and accessories, from everyday basics to party looks with bold cruelty-free styling.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://themeshstore.co/",
     github: "#",
@@ -276,7 +368,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify textile marketplace for premium cotton, silk, linen, velvet, and georgette fabrics across retail and bulk sourcing.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://kapdashop.com/",
     github: "#",
@@ -288,7 +386,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify handcrafted fashion store for bags, jewellery, and accessories made with Indian textiles, recycled fabrics, and handloom techniques.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://www.bombayblossom.com/",
     github: "#",
@@ -296,11 +400,18 @@ export const allProjects: Project[] = [
   },
   {
     id: 25,
-    title: "Armor by Smugglerz - Men's Innerwear & Loungewear E-commerce Platform",
+    title:
+      "Armor by Smugglerz - Men's Innerwear & Loungewear E-commerce Platform",
     description:
       "Shopify men's innerwear store for boxers, trunks, and loungewear with bold prints, performance fabrics, and everyday comfort.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://armorbysmugglerz.com/",
     github: "#",
@@ -312,7 +423,13 @@ export const allProjects: Project[] = [
     description:
       "Shopify kids store for DIY kits and educational toys that encourage hands-on learning, creativity, and activity-based play.",
     mediaType: "image",
-    tech: ["Shopify", "JavaScript", "HTML", "CSS", "Payment Gateway Integration"],
+    tech: [
+      "Shopify",
+      "JavaScript",
+      "HTML",
+      "CSS",
+      "Payment Gateway Integration",
+    ],
     categories: ["Shopify"],
     demo: "https://diybytok.com/",
     github: "#",
