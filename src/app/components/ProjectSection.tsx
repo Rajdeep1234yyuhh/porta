@@ -282,6 +282,18 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
 
   const clearTimers = () => { timers.current.forEach(clearTimeout); timers.current = []; };
 
+  /* driven by chat agent navigation */
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const tab = (e as CustomEvent<"tech" | "shopify">).detail;
+      setActiveTab(tab);
+      setAllFilter(tab);
+      setShowAll(true);
+    };
+    window.addEventListener("set-project-tab", handler);
+    return () => window.removeEventListener("set-project-tab", handler);
+  }, []);
+
   const openProject = useCallback((project: Project, cardEl: HTMLElement) => {
     if (activeProject !== null || isClosing) return;
     const sec = sectionRef.current;

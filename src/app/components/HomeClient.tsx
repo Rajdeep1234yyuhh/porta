@@ -64,6 +64,15 @@ export default function HomeClient() {
     [goTo],
   );
 
+  // Chat agent navigation
+  useEffect(() => {
+    const handler = (e: Event) => {
+      scrollToSection((e as CustomEvent<string>).detail);
+    };
+    window.addEventListener("navigate-to-section", handler);
+    return () => window.removeEventListener("navigate-to-section", handler);
+  }, [scrollToSection]);
+
   // Keyboard
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {

@@ -36,12 +36,27 @@ Rajdeep Kotoky is a Full-Stack Developer, Shopify expert & AI/ML Engineer based 
 - **WhatsApp:** 8638752315
 
 ## How to Respond
-- If someone asks about Rajdeep's skills, services, or background — answer from the info above
-- If someone wants to hire or collaborate — give them the contact options and encourage them to reach out
-- If someone asks about pricing — explain that pricing depends on scope and suggest they contact Rajdeep directly to discuss
-- If someone asks something outside your knowledge (specific projects, availability, etc.) — be honest and direct them to contact Rajdeep
-- Keep responses short and conversational — 2-4 sentences unless more detail is genuinely useful
-- Never make up information not provided above`;
+- Keep answers short and conversational: 2-4 sentences.
+- If someone asks about Rajdeep's skills, services, or background — answer from the info above.
+- If someone wants to hire or collaborate — give them the contact options and encourage them to reach out.
+- If someone asks about pricing — say pricing depends on scope and suggest contacting Rajdeep.
+- If someone asks something outside your knowledge — be honest and direct them to contact Rajdeep.
+- Never make up information not provided above.
+
+## Response Format — CRITICAL
+You MUST always respond with valid raw JSON only. No markdown, no code fences, no extra text outside the JSON.
+Use this exact shape:
+{"reply":"your response text here","action":null}
+
+Set "action" to one of these strings (or null if none applies):
+- "ask_projects"   → user asks about projects, portfolio, or what Rajdeep has built (offer to show them)
+- "show_tech"      → user specifically wants tech / AI / software / full-stack projects
+- "show_shopify"   → user specifically wants Shopify / e-commerce work
+- "show_services"  → user asks about services, what Rajdeep offers, or what he can do for them
+- "show_contact"   → user wants to hire, get a quote, reach out, or contact Rajdeep
+
+Example:
+{"reply":"Rajdeep has built several AI and Shopify projects. Would you like to see them?","action":"ask_projects"}`;
 
 export async function POST(req: NextRequest) {
   try {
@@ -95,10 +110,21 @@ export async function POST(req: NextRequest) {
     }
 
     const data = await response.json();
-    const content =
-      data.choices?.[0]?.message?.content ??
-      "Sorry, I couldn't generate a response.";
-    return NextResponse.json({ content });
+    const raw: string = data.choices?.[0]?.message?.content ?? "";
+
+    let content = raw;
+    let action: string | null = null;
+    try {
+      // strip accidental markdown code fences if the model wraps JSON
+      const cleaned = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/, "").trim();
+      const parsed = JSON.parse(cleaned);
+      content = parsed.reply ?? raw;
+      action = parsed.action ?? null;
+    } catch {
+      content = raw || "Sorry, I couldn't generate a response.";
+    }
+
+    return NextResponse.json({ content, action });
   } catch (err) {
     console.error("Chat route error:", err);
     return NextResponse.json(

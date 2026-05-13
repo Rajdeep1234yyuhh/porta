@@ -1,12 +1,40 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { MessageCircle, X, Send, Bot, Phone, Mail } from "lucide-react";
+import { MessageCircle, X, Send, Bot, Phone, Mail, ChevronRight } from "lucide-react";
+
+interface Choice {
+  label: string;
+  navigate?: string;
+  tab?: string;
+}
 
 interface Message {
   role: "user" | "assistant";
   content: string;
+  choices?: Choice[];
+  choiceUsed?: boolean;
 }
+
+const ACTION_CHOICES: Record<string, Choice[]> = {
+  ask_projects: [
+    { label: "Tech / AI Projects", navigate: "projects", tab: "tech" },
+    { label: "Shopify Stores",      navigate: "projects", tab: "shopify" },
+    { label: "No thanks" },
+  ],
+  show_tech: [
+    { label: "View Tech Projects",   navigate: "projects", tab: "tech" },
+  ],
+  show_shopify: [
+    { label: "View Shopify Stores",  navigate: "projects", tab: "shopify" },
+  ],
+  show_services: [
+    { label: "See Services", navigate: "services" },
+  ],
+  show_contact: [
+    { label: "Go to Contact", navigate: "contact" },
+  ],
+};
 
 const WELCOME: Message = {
   role: "assistant",
@@ -14,21 +42,20 @@ const WELCOME: Message = {
 };
 
 export default function ChatWidget() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen]       = useState(false);
   const [messages, setMessages] = useState<Message[]>([WELCOME]);
-  const [input, setInput] = useState("");
+  const [input, setInput]     = useState("");
   const [loading, setLoading] = useState(false);
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark]   = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef  = useRef<HTMLInputElement>(null);
 
-  /* sync dark mode with root class */
+  /* sync dark mode */
   useEffect(() => {
     const sync = () => setIsDark(document.documentElement.classList.contains("dark"));
     sync();
     const saved = localStorage.getItem("theme");
     if (saved) setIsDark(saved === "dark");
-
     const observer = new MutationObserver(sync);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
@@ -41,12 +68,36 @@ export default function ChatWidget() {
     }
   }, [open, messages]);
 
+  const navigateTo = (navigate?: string, tab?: string) => {
+    if (!navigate) return;
+    if (tab) {
+      window.dispatchEvent(new CustomEvent("set-project-tab", { detail: tab }));
+    }
+    // portfolio uses a slide system — trigger HomeClient's goTo via event
+    window.dispatchEvent(new CustomEvent("navigate-to-section", { detail: navigate }));
+  };
+
+  const handleChoice = (choice: Choice, msgIdx: number) => {
+    // mark choices as consumed so buttons disappear
+    setMessages((prev) =>
+      prev.map((m, i) => (i === msgIdx ? { ...m, choiceUsed: true } : m))
+    );
+    // echo user selection
+    setMessages((prev) => [...prev, { role: "user", content: choice.label }]);
+    // navigate if applicable
+    if (choice.navigate) {
+      navigateTo(choice.navigate, choice.tab);
+      setOpen(false);
+    }
+  };
+
   const send = async () => {
     const text = input.trim();
     if (!text || loading) return;
     const userMsg: Message = { role: "user", content: text };
-    const next = [...messages, userMsg];
-    setMessages(next);
+    // strip choices from history before sending to API (keep only role+content)
+    const history = [...messages, userMsg].map(({ role, content }) => ({ role, content }));
+    setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setLoading(true);
 
@@ -54,15 +105,15 @@ export default function ChatWidget() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: next }),
+        body: JSON.stringify({ messages: history }),
       });
       const data = await res.json();
-      setMessages([...next, {
-        role: "assistant",
-        content: data.content ?? data.error ?? "Something went wrong. Please try again.",
-      }]);
+      const content: string = data.content ?? data.error ?? "Something went wrong. Please try again.";
+      const action: string | null = data.action ?? null;
+      const choices = action && ACTION_CHOICES[action] ? ACTION_CHOICES[action] : undefined;
+      setMessages((prev) => [...prev, { role: "assistant", content, choices }]);
     } catch {
-      setMessages([...next, {
+      setMessages((prev) => [...prev, {
         role: "assistant",
         content: "Network error. Please try again or email kotoky10@gmail.com directly.",
       }]);
@@ -82,7 +133,7 @@ export default function ChatWidget() {
         className={`fixed bottom-24 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] max-w-sm flex flex-col rounded-2xl shadow-2xl border overflow-hidden transition-all duration-300 origin-bottom-right ${
           open ? "scale-100 opacity-100 pointer-events-auto" : "scale-90 opacity-0 pointer-events-none"
         } ${isDark ? "bg-[#1c1c1e] border-white/10" : "bg-white border-slate-200"}`}
-        style={{ height: "460px" }}
+        style={{ height: "480px" }}
       >
         {/* header */}
         <div className={`flex items-center gap-3 px-4 py-3 shrink-0 border-b ${isDark ? "border-white/8 bg-[#141414]" : "border-slate-100 bg-slate-50"}`}>
@@ -104,7 +155,7 @@ export default function ChatWidget() {
         {/* messages */}
         <div className="flex-1 overflow-y-auto px-3 py-3 space-y-2.5">
           {messages.map((m, i) => (
-            <div key={i} className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+            <div key={i} className={`flex flex-col ${m.role === "user" ? "items-end" : "items-start"}`}>
               <div
                 className={`max-w-[82%] text-xs leading-relaxed px-3 py-2 rounded-2xl ${
                   m.role === "user"
@@ -116,6 +167,30 @@ export default function ChatWidget() {
               >
                 {m.content}
               </div>
+
+              {/* choice buttons — only for assistant messages with unused choices */}
+              {m.role === "assistant" && m.choices && !m.choiceUsed && (
+                <div className="flex flex-wrap gap-1.5 mt-1.5 max-w-[90%]">
+                  {m.choices.map((c) => (
+                    <button
+                      key={c.label}
+                      onClick={() => handleChoice(c, i)}
+                      className={`flex items-center gap-1 text-[11px] font-semibold px-2.5 py-1.5 rounded-xl border transition-all duration-150 hover:scale-[1.03] active:scale-95 ${
+                        c.navigate
+                          ? isDark
+                            ? "bg-violet-500/15 border-violet-500/30 text-violet-300 hover:bg-violet-500/25"
+                            : "bg-violet-50 border-violet-200 text-violet-700 hover:bg-violet-100"
+                          : isDark
+                          ? "bg-white/5 border-white/10 text-gray-400 hover:bg-white/10"
+                          : "bg-slate-50 border-slate-200 text-slate-500 hover:bg-slate-100"
+                      }`}
+                    >
+                      {c.label}
+                      {c.navigate && <ChevronRight className="w-3 h-3 opacity-60" />}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           ))}
 
