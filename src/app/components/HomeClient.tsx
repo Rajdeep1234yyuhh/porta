@@ -9,10 +9,12 @@ import ProjectSection from "./ProjectSection";
 import ServiceSection from "./ServiceSection";
 import QuickSolutions from "./QuickSolutions";
 import QuickFixFAB from "./QuickFixFAB";
+import TestimonialSection from "./TestimonialSection";
 import { allProjects } from "../data/projects";
 
 const SECTION_IDS = [
   "home",
+  "testimonials",
   "projects",
   "services",
   "quick-solutions",
@@ -100,6 +102,7 @@ export default function HomeClient() {
 
   const slides = [
     <HeroSection key="hero" isDarkMode={isDarkMode} scrollToSection={scrollToSection} />,
+    <TestimonialSection key="testimonials" isDarkMode={isDarkMode} />,
     <ProjectSection key="projects" isDarkMode={isDarkMode} projects={allProjects} />,
     <ServiceSection key="services" isDarkMode={isDarkMode} />,
     <QuickSolutions key="quick" isDarkMode={isDarkMode} scrollToSection={scrollToSection} />,
