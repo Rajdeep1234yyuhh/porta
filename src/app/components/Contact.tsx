@@ -36,6 +36,9 @@ interface ContactProps {
   isDarkMode: boolean;
 }
 
+const PHONE = process.env.NEXT_PUBLIC_PHONE ?? "";
+const EMAIL = process.env.NEXT_PUBLIC_EMAIL ?? "";
+
 const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
   return (
     <section
@@ -67,7 +70,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
             <h3 className={`text-sm font-bold mb-3 ${isDarkMode ? "text-white" : "text-slate-900"}`}>Contact Information</h3>
 
             <a
-              href="mailto:kotoky10@gmail.com"
+              href={`mailto:${EMAIL}`}
               className={`flex items-center p-2.5 rounded-lg mb-3 transition-all duration-200 group ${isDarkMode ? "hover:bg-[#242424]" : "hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50"}`}
             >
               <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200 shrink-0">
@@ -76,7 +79,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
               <div>
                 <div className={`text-[10px] font-medium uppercase tracking-wider mb-0.5 ${isDarkMode ? "text-gray-500" : "text-slate-400"}`}>Email</div>
                 <div className={`text-xs font-medium ${isDarkMode ? "text-gray-300 group-hover:text-white" : "text-slate-700 group-hover:text-slate-900"}`}>
-                  kotoky10@gmail.com
+                  {EMAIL}
                 </div>
               </div>
             </a>
@@ -88,9 +91,9 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                   { href: "https://github.com/Rajdeep1234yyuhh", icon: <GithubIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-gray-500/50" : "hover:bg-gradient-to-br hover:from-gray-700 hover:to-gray-900 hover:border-gray-400" },
                   { href: "https://www.linkedin.com/in/rajdeep-kotoky-2273561a0/", icon: <LinkedinIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-blue-500/50" : "hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-700 hover:border-blue-300" },
                   { href: "https://www.instagram.com/radioactive_gigs/", icon: <InstagramIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-pink-500/50" : "hover:bg-gradient-to-br hover:from-pink-500 hover:to-orange-400 hover:border-pink-300" },
-                  { href: "tel:+918638752315", icon: <Phone className="w-4 h-4" />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-green-500/50" : "hover:bg-gradient-to-br hover:from-green-500 hover:to-emerald-600 hover:border-green-300" },
-                  { href: "https://wa.me/918638752315", icon: <WhatsAppIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-[#25D366]/50" : "hover:bg-[#25D366] hover:border-[#25D366]" },
-                  { href: "mailto:kotoky10@gmail.com", icon: <GmailIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-red-500/50" : "hover:bg-gradient-to-br hover:from-red-500 hover:to-orange-500 hover:border-red-300" },
+                  { href: `tel:+${PHONE}`, icon: <Phone className="w-4 h-4" />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-green-500/50" : "hover:bg-gradient-to-br hover:from-green-500 hover:to-emerald-600 hover:border-green-300" },
+                  { href: `https://wa.me/${PHONE}`, icon: <WhatsAppIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-[#25D366]/50" : "hover:bg-[#25D366] hover:border-[#25D366]" },
+                  { href: `mailto:${EMAIL}`, icon: <GmailIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-red-500/50" : "hover:bg-gradient-to-br hover:from-red-500 hover:to-orange-500 hover:border-red-300" },
                 ].map(({ href, icon, hoverClass }, i) => (
                   <a
                     key={i}
@@ -138,7 +141,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
             </div>
 
             <a
-              href="mailto:kotoky10@gmail.com"
+              href={`mailto:${EMAIL}`}
               className={`group inline-flex items-center w-full justify-center px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-gray-900 text-white hover:bg-gray-800"}`}
             >
               Start a Conversation

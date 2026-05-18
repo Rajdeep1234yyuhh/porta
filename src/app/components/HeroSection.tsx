@@ -33,7 +33,7 @@ import {
 } from "react-icons/si";
 import { MdDesignServices, MdWeb } from "react-icons/md";
 
-const PHONE = "8638752315";
+const PHONE = process.env.NEXT_PUBLIC_PHONE ?? "";
 
 interface HeroSectionProps {
   isDarkMode: boolean;
@@ -477,7 +477,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
           <span className="floating-action-label">WhatsApp</span>
         </a>
         <a
-          href={`tel:+91${PHONE}`}
+          href={`tel:+${PHONE}`}
           onClick={() => setContactOpen(false)}
           className="floating-action-option"
           style={{ color: "#60a5fa" }}

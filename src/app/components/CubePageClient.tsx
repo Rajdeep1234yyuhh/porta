@@ -1059,12 +1059,12 @@ function ContactRow({ c, yPos }: { c: ContactItem; yPos: number }) {
 function ContactFaceActive() {
   const s = SECTIONS[5];
   const contacts: ContactItem[] = [
-    { icon: "✉",  label: "EMAIL",     value: "kotoky10@gmail.com",       color: "#7c3aed", href: "mailto:kotoky10@gmail.com" },
-    { icon: "☎",  label: "PHONE",     value: "+91 8638752315",            color: "#059669", href: "tel:+918638752315" },
-    { icon: "⌥",  label: "GITHUB",    value: "Rajdeep1234yyuhh",         color: "#e2e8f0", href: "https://github.com/Rajdeep1234yyuhh" },
-    { icon: "in", label: "LINKEDIN",  value: "rajdeep-kotoky-2273561a0", color: "#0891b2", href: "https://www.linkedin.com/in/rajdeep-kotoky-2273561a0/" },
-    { icon: "ig", label: "INSTAGRAM", value: "@radioactive_gigs",        color: "#db2777", href: "https://www.instagram.com/radioactive_gigs/" },
-    { icon: "wa", label: "WHATSAPP",  value: "+91 8638752315",            color: "#25D366", href: "https://wa.me/918638752315" },
+    { icon: "✉",  label: "EMAIL",     value: process.env.NEXT_PUBLIC_EMAIL ?? "",              color: "#7c3aed", href: `mailto:${process.env.NEXT_PUBLIC_EMAIL ?? ""}` },
+    { icon: "☎",  label: "PHONE",     value: `+${process.env.NEXT_PUBLIC_PHONE ?? ""}`,         color: "#059669", href: `tel:+${process.env.NEXT_PUBLIC_PHONE ?? ""}` },
+    { icon: "⌥",  label: "GITHUB",    value: "Rajdeep1234yyuhh",                                color: "#e2e8f0", href: "https://github.com/Rajdeep1234yyuhh" },
+    { icon: "in", label: "LINKEDIN",  value: "rajdeep-kotoky-2273561a0",                        color: "#0891b2", href: "https://www.linkedin.com/in/rajdeep-kotoky-2273561a0/" },
+    { icon: "ig", label: "INSTAGRAM", value: "@radioactive_gigs",                               color: "#db2777", href: "https://www.instagram.com/radioactive_gigs/" },
+    { icon: "wa", label: "WHATSAPP",  value: `+${process.env.NEXT_PUBLIC_PHONE ?? ""}`,         color: "#25D366", href: `https://wa.me/${process.env.NEXT_PUBLIC_PHONE ?? ""}` },
   ];
   const rowY = [0.65, 0.27, -0.11, -0.49, -0.87, -1.25];
 

@@ -5,7 +5,7 @@ import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import { SpeedDial } from "primereact/speeddial";
 
-const PHONE = "8638752315";
+const PHONE = process.env.NEXT_PUBLIC_PHONE ?? "";
 const HELP_NUDGE_INITIAL_DELAY_MS = 1200;
 const HELP_NUDGE_INTERVAL_MS = 15000;
 const HELP_NUDGE_VISIBLE_MS = 6000;

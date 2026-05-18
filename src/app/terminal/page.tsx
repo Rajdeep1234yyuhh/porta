@@ -81,8 +81,8 @@ const ABOUT: Line[] = [
   o("│  Years      5+    of experience"),
   o("│"),
   s("│  Status     ● Available for new projects"),
-  o("│  Email      kotoky10@gmail.com"),
-  o("│  Phone      +91 86387 52315"),
+  o(`│  Email      ${process.env.NEXT_PUBLIC_EMAIL ?? ""}`),
+  o(`│  Phone      +${process.env.NEXT_PUBLIC_PHONE ?? ""}`),
   a("└─────────────────────────────────────────────────────"),
 ];
 
@@ -368,16 +368,16 @@ const EXPERIENCE: Line[] = [
 const CONTACT: Line[] = [
   a("┌─ Contact ───────────────────────────────────────────"),
   o("│"),
-  h("│  Email      kotoky10@gmail.com"),
-  h("│  WhatsApp   +91 86387 52315"),
-  h("│  Phone      +91 86387 52315"),
+  h(`│  Email      ${process.env.NEXT_PUBLIC_EMAIL ?? ""}`),
+  h(`│  WhatsApp   +${process.env.NEXT_PUBLIC_PHONE ?? ""}`),
+  h(`│  Phone      +${process.env.NEXT_PUBLIC_PHONE ?? ""}`),
   o("│"),
   s("│  Response   Usually within 24 hours"),
   o("│  Open for   Freelance · Contract · Full-time"),
   o("│"),
   o("│  Direct links:"),
-  d("│    wa.me/918638752315"),
-  d("│    mailto:kotoky10@gmail.com"),
+  d(`│    wa.me/${process.env.NEXT_PUBLIC_PHONE ?? ""}`),
+  d(`│    mailto:${process.env.NEXT_PUBLIC_EMAIL ?? ""}`),
   o("│"),
   a("└─────────────────────────────────────────────────────"),
 ];

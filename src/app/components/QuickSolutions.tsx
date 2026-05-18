@@ -3,7 +3,7 @@
 import { useState, type CSSProperties } from "react";
 import { Zap, CheckCircle, MessageCircle, Phone, ChevronDown, Gift, Wallet } from "lucide-react";
 
-const PHONE = "919999999999";
+const PHONE = process.env.NEXT_PUBLIC_PHONE ?? "";
 
 interface QuickSolutionsProps {
   isDarkMode: boolean;

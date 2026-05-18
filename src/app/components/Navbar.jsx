@@ -17,7 +17,8 @@ import {
 } from "lucide-react";
 import { ViewSwitcherMobile } from "./ViewSwitcher";
 
-const PHONE = "8638752315";
+const PHONE = process.env.NEXT_PUBLIC_PHONE ?? "";
+const EMAIL = process.env.NEXT_PUBLIC_EMAIL ?? "";
 
 const WhatsAppIcon = () => (
   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -229,7 +230,7 @@ const Navbar = ({
           <div className={`w-px h-5 ${isDarkMode ? "bg-white/10" : "bg-gray-200"}`} />
 
           {/* SMS */}
-          <a href={`sms:+91${PHONE}`}
+          <a href={`sms:+${PHONE}`}
             className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-blue-400 hover:bg-white/10" : "text-gray-500 hover:text-blue-500 hover:bg-gray-100"}`}>
             <MessageSquare className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" />
             <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">Message</span>
@@ -238,7 +239,7 @@ const Navbar = ({
           <div className={`w-px h-5 ${isDarkMode ? "bg-white/10" : "bg-gray-200"}`} />
 
           {/* Phone */}
-          <a href={`tel:+91${PHONE}`}
+          <a href={`tel:+${PHONE}`}
             className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-emerald-400 hover:bg-white/10" : "text-gray-500 hover:text-emerald-600 hover:bg-gray-100"}`}>
             <Phone className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" />
             <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">Call</span>
@@ -247,7 +248,7 @@ const Navbar = ({
           <div className={`w-px h-5 ${isDarkMode ? "bg-white/10" : "bg-gray-200"}`} />
 
           {/* Email */}
-          <a href="mailto:kotoky10@gmail.com"
+          <a href={`mailto:${EMAIL}`}
             className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-violet-400 hover:bg-white/10" : "text-gray-500 hover:text-violet-600 hover:bg-gray-100"}`}>
             <Mail className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" />
             <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">Email</span>

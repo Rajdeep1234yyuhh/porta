@@ -115,7 +115,7 @@ export default function ChatWidget() {
     } catch {
       setMessages((prev) => [...prev, {
         role: "assistant",
-        content: "Network error. Please try again or email kotoky10@gmail.com directly.",
+        content: `Network error. Please try again or email ${process.env.NEXT_PUBLIC_EMAIL ?? "Rajdeep"} directly.`,
       }]);
     } finally {
       setLoading(false);
@@ -216,13 +216,13 @@ export default function ChatWidget() {
         {/* quick-contact buttons */}
         <div className={`shrink-0 flex items-center gap-2 px-3 py-2 border-t ${isDark ? "border-white/8" : "border-slate-100"}`}>
           <a
-            href="tel:+918638752315"
+            href={`tel:+${process.env.NEXT_PUBLIC_PHONE ?? ""}`}
             className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-150 hover:scale-[1.03] active:scale-95 border ${isDark ? "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10" : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"}`}
           >
             <Phone className="w-3 h-3" /> Call
           </a>
           <a
-            href="https://wa.me/918638752315"
+            href={`https://wa.me/${process.env.NEXT_PUBLIC_PHONE ?? ""}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-150 hover:scale-[1.03] active:scale-95 bg-[#25D366]/10 border border-[#25D366]/30 text-[#25D366] hover:bg-[#25D366]/20"
@@ -231,7 +231,7 @@ export default function ChatWidget() {
             WhatsApp
           </a>
           <a
-            href="mailto:kotoky10@gmail.com"
+            href={`mailto:${process.env.NEXT_PUBLIC_EMAIL ?? ""}`}
             className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-150 hover:scale-[1.03] active:scale-95 border ${isDark ? "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10" : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"}`}
           >
             <Mail className="w-3 h-3" /> Email
