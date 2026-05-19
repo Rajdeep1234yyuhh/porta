@@ -88,4 +88,14 @@ export const testimonials: Testimonial[] = [
     initial: "A",
     avatarColor: "#E91E63",
   },
+  {
+    id: "9",
+    name: "Anup Borah",
+    role: "Google Reviewer",
+    rating: 5,
+    text: "Great developer to work with. Very skilled technically, communicates well, and the project is going very smoothly. Really happy with the progress and quality of work so far.",
+    date: "just now",
+    initial: "A",
+    avatarColor: "#009688",
+  },
 ];
