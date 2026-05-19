@@ -37,11 +37,14 @@ function GoogleIcon() {
 
 function TestimonialCard({ t, isDarkMode }: { t: Testimonial; isDarkMode: boolean }) {
   return (
-    <div
-      className={`flex-shrink-0 w-72 sm:w-80 rounded-2xl p-4 mx-2 flex flex-col gap-3 border transition-shadow
+    <a
+      href="https://share.google/kl4CoOLSq221n1mIl"
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`flex-shrink-0 w-72 sm:w-80 rounded-2xl p-4 mx-2 flex flex-col gap-3 border transition-all cursor-pointer
         ${isDarkMode
-          ? "bg-[#1c1c1e] border-white/8 hover:border-white/15"
-          : "bg-white border-slate-200 hover:border-slate-300 shadow-sm hover:shadow-md"
+          ? "bg-[#1c1c1e] border-white/8 hover:border-white/25 hover:bg-[#242424]"
+          : "bg-white border-slate-200 hover:border-slate-400 shadow-sm hover:shadow-md"
         }`}
     >
       {/* Top row: avatar + name + Google icon */}
@@ -62,15 +65,9 @@ function TestimonialCard({ t, isDarkMode }: { t: Testimonial; isDarkMode: boolea
             </p>
           </div>
         </div>
-        <a
-          href="https://share.google/kl4CoOLSq221n1mIl"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="shrink-0 flex items-center gap-1 mt-0.5 hover:opacity-70 transition-opacity"
-          onClick={(e) => e.stopPropagation()}
-        >
+        <div className="shrink-0 flex items-center gap-1 mt-0.5">
           <GoogleIcon />
-        </a>
+        </div>
       </div>
 
       {/* Stars + date */}
@@ -89,7 +86,7 @@ function TestimonialCard({ t, isDarkMode }: { t: Testimonial; isDarkMode: boolea
           Left a 5-star rating
         </p>
       )}
-    </div>
+    </a>
   );
 }
 
