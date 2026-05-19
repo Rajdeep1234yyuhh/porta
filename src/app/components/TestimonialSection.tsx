@@ -108,7 +108,7 @@ function MarqueeRow({
   return (
     <div className="overflow-hidden w-full">
       <div
-        className="flex"
+        className="flex w-max"
         style={{
           animation: `${reverse ? "marquee-rev" : "marquee-fwd"} ${items.length * 6}s linear infinite`,
         }}
