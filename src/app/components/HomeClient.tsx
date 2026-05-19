@@ -22,22 +22,15 @@ const SECTION_IDS = [
 ];
 
 export default function HomeClient() {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const isDark = localStorage.getItem("theme") === "dark";
+    document.documentElement.classList.toggle("dark", isDark);
+    return isDark;
+  });
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
   const touchStartY = useRef<number | null>(null);
   const wheelLock = useRef(false);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      setIsDarkMode(true);
-      document.documentElement.classList.add("dark");
-    } else {
-      setIsDarkMode(false);
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
 
   const toggleTheme = () => {
     const next = !isDarkMode;

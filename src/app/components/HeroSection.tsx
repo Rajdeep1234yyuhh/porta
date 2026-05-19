@@ -264,61 +264,37 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
   }, []);
 
   React.useEffect(() => {
-    const fi = setInterval(
-      () =>
-        setFullStackCount((p) => {
-          if (p >= 4) {
-            clearInterval(fi);
-            return 4;
-          }
-          return p + 1;
-        }),
-      180,
-    );
-    const si = setInterval(
-      () =>
-        setShopifyCount((p) => {
-          if (p >= 18) {
-            clearInterval(si);
-            return 18;
-          }
-          return p + 1;
-        }),
-      40,
-    );
-    const ci = setInterval(
-      () =>
-        setClientCount((p) => {
-          if (p >= 25) {
-            clearInterval(ci);
-            return 25;
-          }
-          return p + 1;
-        }),
-      50,
-    );
-    const yi = setInterval(
-      () =>
-        setYearsCount((p) => {
-          if (p >= 5) {
-            clearInterval(yi);
-            return 5;
-          }
-          return p + 1;
-        }),
-      300,
-    );
-    return () => {
-      clearInterval(fi);
-      clearInterval(si);
-      clearInterval(ci);
-      clearInterval(yi);
+    const targets   = [4,                18,             25,           5          ];
+    const intervals = [180,              40,             50,           300        ];
+    const setters   = [setFullStackCount, setShopifyCount, setClientCount, setYearsCount];
+    const values    = [0, 0, 0, 0];
+    const lastTick  = [0, 0, 0, 0];
+    const done      = [false, false, false, false];
+    let rafId: number;
+
+    const tick = (time: number) => {
+      let anyPending = false;
+      for (let i = 0; i < targets.length; i++) {
+        if (done[i]) continue;
+        if (time - lastTick[i] >= intervals[i]) {
+          lastTick[i] = time;
+          values[i] = Math.min(values[i] + 1, targets[i]);
+          setters[i](values[i]);
+          if (values[i] >= targets[i]) done[i] = true;
+          else anyPending = true;
+        } else {
+          anyPending = true;
+        }
+      }
+      if (anyPending) rafId = requestAnimationFrame(tick);
     };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
   }, []);
 
   /* Color tokens - only colors differ between modes */
-  const t = isDarkMode
-    ? {
+  const t = React.useMemo(() => isDarkMode ? {
         section: "#08090f",
         blob1: "radial-gradient(circle, rgba(0,200,255,0.06), transparent 70%)",
         blob2: "radial-gradient(circle, rgba(120,0,255,0.05), transparent 70%)",
@@ -350,8 +326,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         photoNameText: "text-white",
         photoSubText: "text-gray-400",
         tooltipBg: "bg-gray-900",
-      }
-    : ({
+      } : {
         section: "#ffffff",
         blob1:
           "radial-gradient(circle, rgba(109,40,217,0.04), transparent 70%)",
@@ -385,7 +360,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         photoNameText: "text-slate-900",
         photoSubText: "text-slate-500",
         tooltipBg: "bg-slate-800",
-      } as const);
+      }, [isDarkMode]);
 
   /* Core stack icons */
   const techStack = (

@@ -6,7 +6,7 @@ import {
   ChevronLeft, ChevronRight, X, Calendar, Play, Pause,
 } from "lucide-react";
 import Image from "next/image";
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { Project } from "../data/projects";
 
 interface ProjectSectionProps {
@@ -338,8 +338,8 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
     timers.current.push(setTimeout(() => { setActiveProject(null); setIsClosing(false); }, PROJ_ANIM_MS));
   };
 
-  const aiProjects      = projects.filter((p) => !p.categories.includes("Shopify"));
-  const shopifyProjects = projects.filter((p) =>  p.categories.includes("Shopify"));
+  const aiProjects      = useMemo(() => projects.filter((p) => !p.categories.includes("Shopify")), [projects]);
+  const shopifyProjects = useMemo(() => projects.filter((p) =>  p.categories.includes("Shopify")), [projects]);
   const filteredAll     = allFilter === "tech" ? aiProjects : shopifyProjects;
 
   const tabBase     = `flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200`;

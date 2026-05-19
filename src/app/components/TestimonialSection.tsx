@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useMemo, memo } from "react";
 import { testimonials, type Testimonial } from "../data/testimonials";
 
 interface Props {
@@ -35,7 +35,7 @@ function GoogleIcon() {
   );
 }
 
-function TestimonialCard({ t, isDarkMode }: { t: Testimonial; isDarkMode: boolean }) {
+const TestimonialCard = memo(function TestimonialCard({ t, isDarkMode }: { t: Testimonial; isDarkMode: boolean }) {
   return (
     <div
       className={`flex-shrink-0 w-72 sm:w-80 rounded-2xl p-4 mx-2 flex flex-col gap-3 border transition-shadow
@@ -91,7 +91,7 @@ function TestimonialCard({ t, isDarkMode }: { t: Testimonial; isDarkMode: boolea
       )}
     </div>
   );
-}
+});
 
 function MarqueeRow({
   items,
@@ -102,19 +102,17 @@ function MarqueeRow({
   reverse: boolean;
   isDarkMode: boolean;
 }) {
-  // Duplicate for seamless loop
-  const doubled = [...items, ...items];
+  const doubled = useMemo(() => [...items, ...items], [items]);
+  const animStyle = useMemo(
+    () => ({ animation: `${reverse ? "marquee-rev" : "marquee-fwd"} ${items.length * 6}s linear infinite` }),
+    [reverse, items.length],
+  );
 
   return (
     <div className="overflow-hidden w-full">
-      <div
-        className="flex"
-        style={{
-          animation: `${reverse ? "marquee-rev" : "marquee-fwd"} ${items.length * 6}s linear infinite`,
-        }}
-      >
+      <div className="flex" style={animStyle}>
         {doubled.map((t, i) => (
-          <TestimonialCard key={`${t.id}-${i}`} t={t} isDarkMode={isDarkMode} />
+          <TestimonialCard key={`${t.id}-${i < items.length ? "a" : "b"}`} t={t} isDarkMode={isDarkMode} />
         ))}
       </div>
     </div>

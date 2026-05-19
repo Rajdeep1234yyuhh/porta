@@ -53,9 +53,8 @@ export default function ChatWidget() {
   /* sync dark mode */
   useEffect(() => {
     const sync = () => setIsDark(document.documentElement.classList.contains("dark"));
-    sync();
     const saved = localStorage.getItem("theme");
-    if (saved) setIsDark(saved === "dark");
+    setIsDark(saved ? saved === "dark" : document.documentElement.classList.contains("dark"));
     const observer = new MutationObserver(sync);
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
     return () => observer.disconnect();
