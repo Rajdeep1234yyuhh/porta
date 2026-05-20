@@ -2,6 +2,7 @@
 
 import { useRef } from "react";
 import { testimonials, type Testimonial } from "../data/testimonials";
+import { useSound } from "../context/SoundContext";
 
 interface Props {
   isDarkMode: boolean;
@@ -36,11 +37,14 @@ function GoogleIcon() {
 }
 
 function TestimonialCard({ t, isDarkMode }: { t: Testimonial; isDarkMode: boolean }) {
+  const { playClick, playHover } = useSound();
   return (
     <a
       href="https://share.google/kl4CoOLSq221n1mIl"
       target="_blank"
       rel="noopener noreferrer"
+      onClick={playClick}
+      onMouseEnter={playHover}
       className={`flex-shrink-0 w-72 sm:w-80 rounded-2xl p-4 mx-2 flex flex-col gap-3 border transition-all cursor-pointer
         ${isDarkMode
           ? "bg-[#1c1c1e] border-white/8 hover:border-white/25 hover:bg-[#242424]"
@@ -119,6 +123,7 @@ function MarqueeRow({
 }
 
 export default function TestimonialSection({ isDarkMode }: Props) {
+  const { playClick } = useSound();
   const sectionRef = useRef<HTMLElement>(null);
 
   const half = Math.ceil(testimonials.length / 2);
@@ -198,6 +203,7 @@ export default function TestimonialSection({ isDarkMode }: Props) {
           href="https://share.google/kl4CoOLSq221n1mIl"
           target="_blank"
           rel="noopener noreferrer"
+          onClick={playClick}
           className={`inline-flex items-center gap-2 text-xs font-semibold px-4 py-2 rounded-xl border
             transition-all duration-150 hover:scale-105 active:scale-95
             ${isDarkMode

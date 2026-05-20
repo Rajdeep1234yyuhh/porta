@@ -3,6 +3,7 @@
 "use client";
 
 import React from "react";
+import { useSound } from "../context/SoundContext";
 import {
   Download,
   ExternalLink,
@@ -247,6 +248,7 @@ const MINOR_STACK = [
 ];
 
 const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
+  const { playClick } = useSound();
   const [fullStackCount, setFullStackCount] = React.useState(0);
   const [shopifyCount, setShopifyCount] = React.useState(0);
   const [clientCount, setClientCount] = React.useState(0);
@@ -465,7 +467,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
           href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20would%20like%20to%20get%20in%20touch%21`}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => setContactOpen(false)}
+          onClick={() => { playClick(); setContactOpen(false); }}
           className="floating-action-option"
           style={{ color: "#25D366" }}
           aria-label="WhatsApp"
@@ -478,7 +480,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         </a>
         <a
           href={`tel:+91${PHONE}`}
-          onClick={() => setContactOpen(false)}
+          onClick={() => { playClick(); setContactOpen(false); }}
           className="floating-action-option"
           style={{ color: "#60a5fa" }}
           aria-label="Call me"
@@ -490,7 +492,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
       </div>
       <button
         className="hero-contact-button"
-        onClick={() => setContactOpen((o) => !o)}
+        onClick={() => { playClick(); setContactOpen((o) => !o); }}
         style={{
           display: "inline-flex",
           alignItems: "center",
@@ -841,7 +843,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             }}
           >
             <button
-              onClick={() => scrollToSection("projects")}
+              onClick={() => { playClick(); scrollToSection("projects"); }}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -863,6 +865,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               href="/resume.pdf"
               target="_blank"
               rel="noopener noreferrer"
+              onClick={playClick}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -1104,7 +1107,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   }}
                 >
                   <button
-                    onClick={() => scrollToSection("projects")}
+                    onClick={() => { playClick(); scrollToSection("projects"); }}
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
@@ -1127,6 +1130,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                     href="/resume.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={playClick}
                     style={{
                       display: "inline-flex",
                       alignItems: "center",

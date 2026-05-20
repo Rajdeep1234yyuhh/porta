@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import LenisProvider from "./components/LenisProvider";
 import ChatWidget from "./components/ChatWidget";
+import { SoundProvider } from "./context/SoundContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -86,8 +87,10 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
-        <LenisProvider>{children}</LenisProvider>
-        <ChatWidget />
+        <SoundProvider>
+          <LenisProvider>{children}</LenisProvider>
+          <ChatWidget />
+        </SoundProvider>
       </body>
     </html>
   );

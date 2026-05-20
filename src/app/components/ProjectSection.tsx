@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useSound } from "../context/SoundContext";
 import { Project } from "../data/projects";
 
 interface ProjectSectionProps {
@@ -29,11 +30,13 @@ const getYoutubeVideoId = (url: string): string | null => {
 };
 
 const YouTubeEmbed = ({ videoId, startTime }: { videoId: string; startTime?: number }) => {
+  const { playClick } = useSound();
   const [playing, setPlaying] = useState(true);
   const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const toggle = (e: React.MouseEvent) => {
     e.stopPropagation();
+    playClick();
     const func = playing ? "pauseVideo" : "playVideo";
     iframeRef.current?.contentWindow?.postMessage(
       JSON.stringify({ event: "command", func, args: [] }), "*"
@@ -86,6 +89,7 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
   isDarkMode, projects, desktopPerView, accent, label,
   showHeader = true, onCardClick,
 }) => {
+  const { playClick, playHover } = useSound();
   const [perView, setPerView]           = useState(desktopPerView);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [expandedDesc, setExpandedDesc] = useState<Set<number>>(new Set());
@@ -163,7 +167,8 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
       <div className="flex flex-col gap-2 p-3">
         <div className="relative">
           <button
-            onClick={prev} disabled={currentIndex === 0}
+            onClick={() => { playClick(); prev(); }} disabled={currentIndex === 0}
+            onMouseEnter={playHover}
             className={`absolute left-0 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 bg-gradient-to-br ${arrowGrad} text-white ${currentIndex === 0 ? "opacity-25 cursor-not-allowed" : "hover:scale-110 cursor-pointer"}`}
           >
             <ChevronLeft className="w-3.5 h-3.5" />
@@ -184,8 +189,8 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
                   <div key={project.id} className="shrink-0 px-1 sm:px-1.5" style={{ width: `${cardWidth}%` }}>
                     <div
                       className={`flex flex-col rounded-xl border overflow-hidden transition-colors duration-200 cursor-pointer ${isDarkMode ? `bg-[#222] border-[#2e2e2e] ${cardBorder}` : `bg-slate-50 border-slate-200 ${cardBorder}`}`}
-                      onClick={onCardClick ? (e) => onCardClick(project, e.currentTarget as HTMLElement) : undefined}
-                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 32px -4px ${shadowColor}`; }}
+                      onClick={onCardClick ? (e) => { playClick(); onCardClick(project, e.currentTarget as HTMLElement); } : undefined}
+                      onMouseEnter={(e) => { playHover(); (e.currentTarget as HTMLElement).style.boxShadow = `0 8px 32px -4px ${shadowColor}`; }}
                       onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.boxShadow = ""; }}
                     >
                       {((project.mediaType === "video" && project.video) || project.image) && (
@@ -210,7 +215,7 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
                         <p className={`text-[11px] sm:text-xs lg:text-sm leading-relaxed ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>
                           {isDescExpanded ? desc : needsMore ? shortDesc + "..." : desc}
                           {needsMore && (
-                            <button onClick={(e) => toggleDesc(index, e)} className={`ml-1 font-medium ${demoCls}`}>
+                            <button onClick={(e) => { playClick(); toggleDesc(index, e); }} className={`ml-1 font-medium ${demoCls}`}>
                               {isDescExpanded ? " less" : <MoreHorizontal className="w-3 h-3 inline" />}
                             </button>
                           )}
@@ -221,7 +226,7 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
                           ))}
                           {project.tech.length > 4 && (
                             <button
-                              onClick={(e) => toggleTech(index, e)}
+                              onClick={(e) => { playClick(); toggleTech(index, e); }}
                               className={`text-[9px] font-medium px-1.5 py-0.5 rounded border ${isTechExpanded ? isDarkMode ? "bg-red-500/15 text-red-400 border-red-500/25" : "bg-red-50 text-red-700 border-red-200" : isDarkMode ? "bg-[#2a2a2a] text-gray-400 border-[#333]" : "bg-gray-100 text-gray-600 border-gray-200"}`}
                             >
                               {isTechExpanded ? "less" : `+${project.tech.length - 4}`}
@@ -229,10 +234,10 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
                           )}
                         </div>
                         <div className={`flex gap-2.5 pt-1.5 border-t ${isDarkMode ? "border-white/[0.05]" : "border-slate-100"}`}>
-                          <a href={project.demo} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className={`flex items-center gap-1 text-[10px] font-medium ${demoCls}`}>
+                          <a href={project.demo} target="_blank" rel="noopener noreferrer" onClick={(e) => { playClick(); e.stopPropagation(); }} className={`flex items-center gap-1 text-[10px] font-medium ${demoCls}`}>
                             <ExternalLink className="w-2.5 h-2.5" /> Live Demo
                           </a>
-                          <a href={project.github} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className={`flex items-center gap-1 text-[10px] font-medium ${isDarkMode ? "text-gray-500 hover:text-white" : "text-slate-400 hover:text-slate-800"}`}>
+                          <a href={project.github} target="_blank" rel="noopener noreferrer" onClick={(e) => { playClick(); e.stopPropagation(); }} className={`flex items-center gap-1 text-[10px] font-medium ${isDarkMode ? "text-gray-500 hover:text-white" : "text-slate-400 hover:text-slate-800"}`}>
                             <GitBranch className="w-2.5 h-2.5" /> Code
                           </a>
                         </div>
@@ -245,7 +250,8 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
           </div>
 
           <button
-            onClick={next} disabled={currentIndex >= maxIndex}
+            onClick={() => { playClick(); next(); }} disabled={currentIndex >= maxIndex}
+            onMouseEnter={playHover}
             className={`absolute right-0 top-1/2 -translate-y-1/2 z-20 w-7 h-7 rounded-full flex items-center justify-center shadow-lg transition-all duration-200 bg-gradient-to-br ${arrowGrad} text-white ${currentIndex >= maxIndex ? "opacity-25 cursor-not-allowed" : "hover:scale-110 cursor-pointer"}`}
           >
             <ChevronRight className="w-3.5 h-3.5" />
@@ -256,7 +262,7 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
           <div className="flex justify-center gap-1.5">
             {Array.from({ length: maxIndex + 1 }).map((_, i) => (
               <button
-                key={i} onClick={() => setCurrentIndex(i)}
+                key={i} onClick={() => { playClick(); setCurrentIndex(i); }}
                 className={`rounded-full transition-all duration-300 ${i === currentIndex ? `w-4 h-1.5 bg-gradient-to-r ${dotActive}` : `w-1.5 h-1.5 ${isDarkMode ? "bg-[#333] hover:bg-[#444]" : "bg-slate-300 hover:bg-slate-400"}`}`}
               />
             ))}
@@ -268,6 +274,7 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
 };
 
 const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects }) => {
+  const { playClick } = useSound();
   const [activeTab,      setActiveTab]      = useState<"tech" | "shopify">("tech");
   const [showAll,        setShowAll]        = useState(false);
   const [allFilter,      setAllFilter]      = useState<"tech" | "shopify">("tech");
@@ -296,6 +303,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
 
   const openProject = useCallback((project: Project, cardEl: HTMLElement) => {
     if (activeProject !== null || isClosing) return;
+    playClick();
     const sec = sectionRef.current;
     if (!sec) return;
     const sR = sec.getBoundingClientRect();
@@ -328,6 +336,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
 
   const closeProject = () => {
     if (isClosing || !overlayRef.current) return;
+    playClick();
     clearTimers();
     setIsClosing(true);
     setContentVisible(false);
@@ -435,7 +444,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
               </h2>
             </div>
             <button
-              onClick={() => setShowAll(true)}
+              onClick={() => { playClick(); setShowAll(true); }}
               className={`group hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold text-xs transition-all duration-200 ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-slate-900 text-white hover:bg-slate-700"}`}
             >
               View All <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
@@ -445,12 +454,12 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
           {/* Mobile tabs */}
           <div className="flex flex-col gap-3 lg:hidden">
             <div className={`flex gap-1.5 p-1.5 rounded-2xl border ${isDarkMode ? "bg-white/[0.04] border-white/[0.07]" : "bg-slate-100 border-slate-200"}`}>
-              <button onClick={() => setActiveTab("tech")} className={`${tabBase} ${activeTab === "tech" ? tabActive : tabInactive}`}>
+              <button onClick={() => { playClick(); setActiveTab("tech"); }} className={`${tabBase} ${activeTab === "tech" ? tabActive : tabInactive}`}>
                 <span className="w-2 h-2 rounded-full bg-purple-500 shrink-0" />
                 AI / ML &amp; Software
                 <span className={`ml-auto text-[10px] px-1.5 py-0.5 rounded-full border ${activeTab === "tech" ? countActive("tech") : isDarkMode ? "border-white/10 text-gray-500" : "border-slate-200 text-slate-400"}`}>{aiProjects.length}</span>
               </button>
-              <button onClick={() => setActiveTab("shopify")} className={`${tabBase} ${activeTab === "shopify" ? tabActive : tabInactive}`}>
+              <button onClick={() => { playClick(); setActiveTab("shopify"); }} className={`${tabBase} ${activeTab === "shopify" ? tabActive : tabInactive}`}>
                 <span className="w-2 h-2 rounded-full bg-emerald-500 shrink-0" />
                 Shopify Stores
                 <span className={`ml-auto text-[10px] px-1.5 py-0.5 rounded-full border ${activeTab === "shopify" ? countActive("shopify") : isDarkMode ? "border-white/10 text-gray-500" : "border-slate-200 text-slate-400"}`}>{shopifyProjects.length}</span>
@@ -479,7 +488,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
           <div className={`flex items-center justify-between px-4 sm:px-6 py-3.5 shrink-0 border-b ${isDarkMode ? "border-white/[0.06]" : "border-slate-200"}`}>
             <div className="flex items-center gap-3">
               <button
-                onClick={() => setShowAll(false)}
+                onClick={() => { playClick(); setShowAll(false); }}
                 className={`group flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-200 ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-slate-900 text-white hover:bg-slate-700"}`}
               >
                 <ChevronLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" /> Back
@@ -497,7 +506,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
               const count  = f === "tech" ? aiProjects.length : shopifyProjects.length;
               const active = allFilter === f;
               return (
-                <button key={f} onClick={() => setAllFilter(f)}
+                <button key={f} onClick={() => { playClick(); setAllFilter(f); }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-200 ${active ? isDarkMode ? "bg-white/[0.08] text-white" : "bg-white text-slate-900 shadow-sm border border-slate-200" : isDarkMode ? "text-gray-500 hover:text-gray-300" : "text-slate-400 hover:text-slate-600"}`}
                 >
                   {f === "tech" ? "AI / ML & Software" : "Shopify"}
@@ -521,7 +530,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
                   <div
                     key={project.id}
                     className={`flex rounded-xl border overflow-hidden cursor-pointer transition-all duration-200 ${isDarkMode ? "bg-[#1a1a1a] border-[#2a2a2a] hover:border-purple-500/30" : "bg-white border-slate-200 hover:border-purple-300 hover:shadow-sm"}`}
-                    onClick={(e) => openProject(project, e.currentTarget as HTMLElement)}
+                    onClick={(e) => { playClick(); openProject(project, e.currentTarget as HTMLElement); }}
                   >
                     {/* Left: Media — tech projects only */}
                     {hasMedia && !isProjShopify && (
@@ -554,10 +563,10 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
                         </div>
                       )}
                       <div className={`flex gap-2.5 mt-auto pt-1.5 border-t ${isDarkMode ? "border-white/[0.05]" : "border-slate-100"}`}>
-                        <a href={project.demo} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className={`flex items-center gap-1 text-[9px] font-medium ${isDarkMode ? "text-purple-400 hover:text-purple-300" : "text-purple-600 hover:text-purple-700"}`}>
+                        <a href={project.demo} target="_blank" rel="noopener noreferrer" onClick={(e) => { playClick(); e.stopPropagation(); }} className={`flex items-center gap-1 text-[9px] font-medium ${isDarkMode ? "text-purple-400 hover:text-purple-300" : "text-purple-600 hover:text-purple-700"}`}>
                           <ExternalLink className="w-2.5 h-2.5" /> Demo
                         </a>
-                        <a href={project.github} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className={`flex items-center gap-1 text-[9px] font-medium ${isDarkMode ? "text-gray-500 hover:text-white" : "text-slate-400 hover:text-slate-700"}`}>
+                        <a href={project.github} target="_blank" rel="noopener noreferrer" onClick={(e) => { playClick(); e.stopPropagation(); }} className={`flex items-center gap-1 text-[9px] font-medium ${isDarkMode ? "text-gray-500 hover:text-white" : "text-slate-400 hover:text-slate-700"}`}>
                           <GitBranch className="w-2.5 h-2.5" /> Code
                         </a>
                       </div>
@@ -593,7 +602,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
                   )}
                 </div>
                 <button
-                  onClick={closeProject}
+                  onClick={() => { playClick(); closeProject(); }}
                   className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 ${isDarkMode ? "bg-white/10 hover:bg-white/20 text-white" : "bg-slate-100 hover:bg-slate-200 text-slate-600"}`}
                 >
                   <X className="w-4 h-4" />
@@ -637,10 +646,12 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
 
                   <div className={`mt-auto flex gap-3 pt-4 border-t ${isDarkMode ? "border-white/[0.06]" : "border-slate-100"}`}>
                     <a href={proj.demo} target="_blank" rel="noopener noreferrer"
+                      onClick={playClick}
                       className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150 hover:scale-[1.03] ${isDarkMode ? "bg-white/10 hover:bg-white/20 text-white" : "bg-slate-900 hover:bg-slate-700 text-white"}`}>
                       <ExternalLink className="w-3.5 h-3.5" /> Live Demo
                     </a>
                     <a href={proj.github} target="_blank" rel="noopener noreferrer"
+                      onClick={playClick}
                       className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150 hover:scale-[1.03] border ${isDarkMode ? "border-white/[0.1] hover:border-white/[0.2] text-gray-300 hover:text-white" : "border-slate-200 hover:border-slate-300 text-slate-600"}`}>
                       <GitBranch className="w-3.5 h-3.5" /> Source Code
                     </a>

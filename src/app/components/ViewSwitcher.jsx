@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { Box, Terminal } from "lucide-react";
+import { useSound } from "../context/SoundContext";
 
 const VIEWS = [
   {
@@ -25,6 +26,7 @@ const VIEWS = [
 ];
 
 function ViewButtons({ isDarkMode, btnSize, liftClass, tipClass, divClass }) {
+  const { playClick, playHover } = useSound();
   const dividerClass = isDarkMode ? "bg-white/10" : "bg-gray-200";
   const tooltipClass = isDarkMode
     ? "bg-gray-900 text-white"
@@ -37,6 +39,8 @@ function ViewButtons({ isDarkMode, btnSize, liftClass, tipClass, divClass }) {
           {i > 0 && <div className={`w-px ${dividerClass} ${divClass}`} />}
           <Link
             href={view.href}
+            onClick={playClick}
+            onMouseEnter={playHover}
             className={`group relative flex flex-col items-center justify-center ${btnSize} rounded-xl transition-all duration-200 ${
               isDarkMode
                 ? `text-gray-400 ${view.hoverClass.dark}`

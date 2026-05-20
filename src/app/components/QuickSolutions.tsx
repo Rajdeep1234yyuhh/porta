@@ -2,6 +2,7 @@
 
 import { useState, type CSSProperties } from "react";
 import { Zap, CheckCircle, MessageCircle, Phone, ChevronDown, Gift, Wallet } from "lucide-react";
+import { useSound } from "../context/SoundContext";
 
 const PHONE = "919999999999";
 
@@ -20,6 +21,7 @@ const solutions = [
 ];
 
 const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSection }) => {
+  const { playClick } = useSound();
   const [contactOpen, setContactOpen] = useState(false);
 
   return (
@@ -46,7 +48,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSec
           </div>
           <div className="relative shrink-0 self-start sm:self-auto">
             <button
-              onClick={() => setContactOpen((o) => !o)}
+              onClick={() => { playClick(); setContactOpen((o) => !o); }}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:px-5 sm:py-2.5 rounded-xl font-semibold text-white text-xs sm:text-sm bg-green-600 hover:bg-green-500 transition-all duration-100"
               style={{ boxShadow: "0 3px 0 0 #166834" }}
             >
@@ -69,7 +71,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSec
                 href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
                 target="_blank"
                 rel="noopener noreferrer"
-                onClick={() => setContactOpen(false)}
+                onClick={() => { playClick(); setContactOpen(false); }}
                 className="floating-action-option"
                 style={{ color: "#25D366" }}
                 aria-label="WhatsApp"
@@ -80,7 +82,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSec
               </a>
               <a
                 href={`tel:+${PHONE}`}
-                onClick={() => setContactOpen(false)}
+                onClick={() => { playClick(); setContactOpen(false); }}
                 className="floating-action-option"
                 style={{ color: "#60a5fa" }}
                 aria-label="Call me"
@@ -91,7 +93,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSec
               </a>
               <button
                 type="button"
-                onClick={() => { scrollToSection("contact"); setContactOpen(false); }}
+                onClick={() => { playClick(); scrollToSection("contact"); setContactOpen(false); }}
                 className="floating-action-option"
                 style={{ color: "#c084fc" }}
                 aria-label="Message"

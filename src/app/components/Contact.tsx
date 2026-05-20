@@ -1,6 +1,7 @@
 "use client";
 
 import { Mail, Send, Phone } from "lucide-react";
+import { useSound } from "../context/SoundContext";
 
 const GithubIcon = () => (
   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -37,6 +38,7 @@ interface ContactProps {
 }
 
 const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
+  const { playClick } = useSound();
   return (
     <section
       id="contact"
@@ -68,6 +70,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
 
             <a
               href="mailto:kotoky10@gmail.com"
+              onClick={playClick}
               className={`flex items-center p-2.5 rounded-lg mb-3 transition-all duration-200 group ${isDarkMode ? "hover:bg-[#242424]" : "hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50"}`}
             >
               <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center mr-3 group-hover:scale-110 transition-transform duration-200 shrink-0">
@@ -97,6 +100,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
                     href={href}
                     target="_blank"
                     rel="noopener noreferrer"
+                    onClick={playClick}
                     className={`w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-200 border group ${isDarkMode ? "bg-[#242424] border-[#333]" : "bg-white border-slate-200"} ${hoverClass}`}
                   >
                     <span className={`${isDarkMode ? "text-gray-300 group-hover:text-white" : "text-slate-600 group-hover:text-white"}`}>
@@ -139,6 +143,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
 
             <a
               href="mailto:kotoky10@gmail.com"
+              onClick={playClick}
               className={`group inline-flex items-center w-full justify-center px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-gray-900 text-white hover:bg-gray-800"}`}
             >
               Start a Conversation

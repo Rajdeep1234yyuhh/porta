@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useSound } from "../context/SoundContext";
 import {
   Globe, Database, Code, Layers, ShoppingBag, Package,
   Bot, Cpu, Monitor, X, CheckCircle, ArrowRight, ExternalLink,
@@ -30,6 +31,7 @@ const configs = [
 const ANIM_MS = 900;
 
 export default function ServiceSection({ isDarkMode }: ServiceSectionProps) {
+  const { playClick, playHover } = useSound();
   const [activeIdx, setActiveIdx]       = useState<number | null>(null);
   const [contentVisible, setContent]    = useState(false);
   const [isClosing, setIsClosing]       = useState(false);
@@ -188,7 +190,8 @@ export default function ServiceSection({ isDarkMode }: ServiceSectionProps) {
               <div
                 key={svc.slug}
                 ref={(el) => { cardRefs.current[i] = el; }}
-                onClick={() => openCard(i)}
+                onClick={() => { playClick(); openCard(i); }}
+                onMouseEnter={playHover}
                 className={`group flex flex-col gap-2 sm:gap-3 px-3 py-3 sm:px-4 sm:py-4 rounded-xl border cursor-pointer select-none
                   transition-all duration-200 hover:shadow-lg hover:scale-[1.012]
                   ${isDarkMode ? `bg-[#1c1c1e] border-[#2a2a2a] ${c.border}` : `bg-white border-slate-200 ${c.border}`}
@@ -240,7 +243,7 @@ export default function ServiceSection({ isDarkMode }: ServiceSectionProps) {
                   </p>
                 </div>
                 <button
-                  onClick={closeCard}
+                  onClick={() => { playClick(); closeCard(); }}
                   className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-150 hover:scale-110 active:scale-95 ${
                     isDarkMode ? "bg-white/10 hover:bg-white/20 text-white" : "bg-slate-100 hover:bg-slate-200 text-slate-600"
                   }`}
@@ -295,6 +298,7 @@ export default function ServiceSection({ isDarkMode }: ServiceSectionProps) {
                 </div>
                 <Link
                   href={`/services/${service.slug}`}
+                  onClick={playClick}
                   className={`shrink-0 flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg transition-all duration-150 hover:scale-105 active:scale-95 ${
                     isDarkMode ? "bg-white/10 hover:bg-white/20 text-white" : "bg-slate-900 hover:bg-slate-700 text-white"
                   }`}
