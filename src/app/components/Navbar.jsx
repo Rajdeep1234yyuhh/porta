@@ -9,6 +9,7 @@ import {
   FolderOpen,
   Briefcase,
   Mail,
+  Star,
   Zap,
   Phone,
   Info,
@@ -16,8 +17,9 @@ import {
   MessageSquare,
   Volume2,
   VolumeX,
+  Box,
+  Terminal,
 } from "lucide-react";
-import { ViewSwitcherMobile } from "./ViewSwitcher";
 import { useSoundEffects } from "../hooks/useSoundEffects";
 
 const PHONE = "8638752315";
@@ -63,6 +65,7 @@ const Navbar = ({
 
   const navItems = [
     { label: "Home", icon: Home, section: "home" },
+    { label: "Reviews", icon: Star, section: "testimonials" },
     { label: "Projects", icon: FolderOpen, section: "projects" },
     { label: "Services", icon: Briefcase, section: "services" },
     { label: "Contact", icon: Mail, section: "contact" },
@@ -482,11 +485,6 @@ const Navbar = ({
 
         <div className={`w-px h-5 ${mobileDividerClass} mx-0.5`} />
 
-        {/* View switcher: Cube + Terminal */}
-        <ViewSwitcherMobile isDarkMode={isDarkMode} />
-
-        <div className={`w-px h-5 ${mobileDividerClass} mx-0.5`} />
-
         {/* Social */}
         <div className="relative" ref={socialRef}>
           <button
@@ -507,6 +505,28 @@ const Navbar = ({
               "--floating-origin": "top right",
             }}
           >
+            <Link
+              href="/cube"
+              onClick={() => { playClick(); setSocialOpen(false); }}
+              className="floating-action-option"
+              style={{ color: "#a78bfa" }}
+              aria-label="Cube View"
+              title="Cube View"
+            >
+              <Box className="w-4 h-4" />
+              <span className="floating-action-label">Cube</span>
+            </Link>
+            <Link
+              href="/terminal"
+              onClick={() => { playClick(); setSocialOpen(false); }}
+              className="floating-action-option"
+              style={{ color: "#34d399" }}
+              aria-label="Terminal View"
+              title="Terminal View"
+            >
+              <Terminal className="w-4 h-4" />
+              <span className="floating-action-label">Terminal</span>
+            </Link>
             <a
               href="https://github.com/Rajdeep1234yyuhh"
               target="_blank"
