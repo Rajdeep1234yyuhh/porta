@@ -145,12 +145,12 @@ const Navbar = ({
             </span>
           </button>
           <div
-            className={`absolute top-full left-1/2 z-50 mt-3 flex -translate-x-1/2 gap-2 floating-action-menu ${
+            className={`absolute top-full right-0 z-50 mt-3 flex gap-2 floating-action-menu ${
               quickOpen ? "is-open" : "is-closed"
             }`}
             style={{
               "--floating-closed-y": "-8px",
-              "--floating-origin": "top center",
+              "--floating-origin": "top right",
             }}
           >
             <a
@@ -390,12 +390,12 @@ const Navbar = ({
             </span>
           </button>
           <div
-            className={`absolute top-full left-1/2 z-50 mt-3 flex -translate-x-1/2 gap-2 floating-action-menu ${
+            className={`absolute top-full right-0 z-50 mt-3 flex gap-2 floating-action-menu ${
               quickOpen ? "is-open" : "is-closed"
             }`}
             style={{
               "--floating-closed-y": "-8px",
-              "--floating-origin": "top center",
+              "--floating-origin": "top right",
             }}
           >
             <a
