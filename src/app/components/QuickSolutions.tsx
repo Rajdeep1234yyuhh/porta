@@ -57,7 +57,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSec
               <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${contactOpen ? "rotate-180" : ""}`} />
             </button>
             <div
-              className={`absolute right-0 top-full z-20 mt-3 flex gap-2 floating-action-menu ${
+              className={`absolute left-0 sm:left-auto sm:right-0 top-full z-20 mt-3 flex gap-2 floating-action-menu ${
                 contactOpen ? "is-open" : "is-closed"
               }`}
               style={
