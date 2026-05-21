@@ -132,7 +132,7 @@ export default function ChatWidget() {
     <>
       {/* panel */}
       <div
-        className={`fixed bottom-24 right-4 sm:right-6 z-50 w-[calc(100vw-2rem)] max-w-sm flex flex-col rounded-2xl shadow-2xl border overflow-hidden transition-all duration-300 origin-bottom-right ${
+        className={`fixed bottom-24 left-4 right-4 sm:left-auto sm:w-96 sm:right-6 z-50 flex flex-col rounded-2xl shadow-2xl border overflow-hidden transition-all duration-300 origin-bottom-right ${
           open ? "scale-100 opacity-100 pointer-events-auto" : "scale-90 opacity-0 pointer-events-none"
         } ${isDark ? "bg-[#1c1c1e] border-white/10" : "bg-white border-slate-200"}`}
         style={{ height: "480px", maxHeight: "calc(100dvh - 6.5rem)" }}
