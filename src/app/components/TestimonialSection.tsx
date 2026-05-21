@@ -45,7 +45,7 @@ function TestimonialCard({ t, isDarkMode }: { t: Testimonial; isDarkMode: boolea
       rel="noopener noreferrer"
       onClick={playClick}
       onMouseEnter={playHover}
-      className={`flex-shrink-0 w-72 sm:w-80 rounded-2xl p-4 mx-2 flex flex-col gap-3 border transition-all cursor-pointer
+      className={`flex-shrink-0 w-52 sm:w-72 lg:w-80 rounded-2xl p-3 sm:p-4 mx-1.5 flex flex-col gap-2 sm:gap-3 border transition-all cursor-pointer
         ${isDarkMode
           ? "bg-[#1c1c1e] border-white/8 hover:border-white/25 hover:bg-[#242424]"
           : "bg-white border-slate-200 hover:border-slate-400 shadow-sm hover:shadow-md"
@@ -55,7 +55,7 @@ function TestimonialCard({ t, isDarkMode }: { t: Testimonial; isDarkMode: boolea
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-2.5 min-w-0">
           <div
-            className="w-9 h-9 rounded-full flex items-center justify-center text-white text-sm font-bold shrink-0"
+            className="w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold shrink-0"
             style={{ background: t.avatarColor }}
           >
             {t.initial}
@@ -162,7 +162,7 @@ export default function TestimonialSection({ isDarkMode }: Props) {
       </div>
 
       {/* ── Header ── */}
-      <div className="relative z-10 px-4 sm:px-8 mb-5 sm:mb-7 text-center">
+      <div className="relative z-10 px-4 sm:px-8 mb-3 sm:mb-7 text-center">
         {/* Google Reviews badge */}
         <div className="inline-flex items-center gap-2 mb-3 px-3 py-1.5 rounded-full border
           border-slate-200 dark:border-white/10 bg-white/60 dark:bg-white/5 backdrop-blur-sm">
@@ -198,7 +198,7 @@ export default function TestimonialSection({ isDarkMode }: Props) {
       </div>
 
       {/* ── Footer ── */}
-      <div className="relative z-10 text-center mt-5 sm:mt-7 px-4">
+      <div className="relative z-10 text-center mt-3 sm:mt-7 px-4">
         <a
           href="https://share.google/kl4CoOLSq221n1mIl"
           target="_blank"
