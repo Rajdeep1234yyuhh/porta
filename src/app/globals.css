@@ -144,6 +144,15 @@ body {
   transform: translate(-50%, 0);
 }
 
+/* Case study modal slide-up */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.animate-slide-up {
+  animation: slideUp 0.25s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
 /* Hide scrollbars everywhere while keeping scroll functional */
 * {
   scrollbar-width: none;       /* Firefox */
