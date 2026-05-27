@@ -3,10 +3,11 @@
 
 import {
   ExternalLink, GitBranch, ArrowRight, MoreHorizontal,
-  ChevronLeft, ChevronRight, X, Calendar, Play, Pause,
+  ChevronLeft, ChevronRight, X, Calendar, Play, Pause, BookOpen,
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect, useCallback, useRef } from "react";
+import { useRouter } from "next/navigation";
 import { useSound } from "../context/SoundContext";
 import { Project } from "../data/projects";
 
@@ -81,13 +82,14 @@ interface CarouselProps {
   label: string;
   showHeader?: boolean;
   onCardClick?: (project: Project, el: HTMLElement) => void;
+  onCaseStudy?: (project: Project) => void;
 }
 
 const PROJ_ANIM_MS = 900;
 
 const ProjectCarousel: React.FC<CarouselProps> = ({
   isDarkMode, projects, desktopPerView, accent, label,
-  showHeader = true, onCardClick,
+  showHeader = true, onCardClick, onCaseStudy,
 }) => {
   const { playClick, playHover } = useSound();
   const [perView, setPerView]           = useState(desktopPerView);
@@ -240,6 +242,11 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
                           <a href={project.github} target="_blank" rel="noopener noreferrer" onClick={(e) => { playClick(); e.stopPropagation(); }} className={`flex items-center gap-1 text-[10px] font-medium ${isDarkMode ? "text-gray-500 hover:text-white" : "text-slate-400 hover:text-slate-800"}`}>
                             <GitBranch className="w-2.5 h-2.5" /> Code
                           </a>
+                          {project.caseStudy && onCaseStudy && (
+                            <button onClick={(e) => { playClick(); e.stopPropagation(); onCaseStudy(project); }} className={`flex items-center gap-1 text-[10px] font-medium ${isDarkMode ? "text-amber-400 hover:text-amber-300" : "text-amber-600 hover:text-amber-700"}`}>
+                              <BookOpen className="w-2.5 h-2.5" /> Case Study
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -275,12 +282,17 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
 
 const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects }) => {
   const { playClick } = useSound();
+  const router = useRouter();
   const [activeTab,      setActiveTab]      = useState<"tech" | "shopify">("tech");
   const [showAll,        setShowAll]        = useState(false);
   const [allFilter,      setAllFilter]      = useState<"tech" | "shopify">("tech");
   const [activeProject,  setActiveProject]  = useState<Project | null>(null);
   const [contentVisible, setContentVisible] = useState(false);
   const [isClosing,      setIsClosing]      = useState(false);
+
+  const goToCaseStudy = useCallback((project: Project) => {
+    router.push(`/casestudies?project=${project.id}`);
+  }, [router]);
 
   const sectionRef = useRef<HTMLElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -466,18 +478,18 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
               </button>
             </div>
             {activeTab === "tech"
-              ? <ProjectCarousel key="mobile-tech-carousel" isDarkMode={isDarkMode} projects={aiProjects} desktopPerView={1} accent="tech" label="AI / ML & Software" showHeader={false} onCardClick={openProject} />
-              : <ProjectCarousel key="mobile-shopify-carousel" isDarkMode={isDarkMode} projects={shopifyProjects} desktopPerView={1} accent="shopify" label="Shopify Stores" showHeader={false} onCardClick={openProject} />
+              ? <ProjectCarousel key="mobile-tech-carousel" isDarkMode={isDarkMode} projects={aiProjects} desktopPerView={1} accent="tech" label="AI / ML & Software" showHeader={false} onCardClick={openProject} onCaseStudy={goToCaseStudy} />
+              : <ProjectCarousel key="mobile-shopify-carousel" isDarkMode={isDarkMode} projects={shopifyProjects} desktopPerView={1} accent="shopify" label="Shopify Stores" showHeader={false} onCardClick={openProject} onCaseStudy={goToCaseStudy} />
             }
           </div>
 
           {/* Desktop two panels */}
           <div className="hidden lg:flex flex-row gap-4 items-start">
             <div className="flex-[2] min-w-0">
-              <ProjectCarousel isDarkMode={isDarkMode} projects={aiProjects} desktopPerView={2} accent="tech" label="AI / ML & Software" onCardClick={openProject} />
+              <ProjectCarousel isDarkMode={isDarkMode} projects={aiProjects} desktopPerView={2} accent="tech" label="AI / ML & Software" onCardClick={openProject} onCaseStudy={goToCaseStudy} />
             </div>
             <div className="flex-[1] min-w-0">
-              <ProjectCarousel isDarkMode={isDarkMode} projects={shopifyProjects} desktopPerView={1} accent="shopify" label="Shopify Stores" onCardClick={openProject} />
+              <ProjectCarousel isDarkMode={isDarkMode} projects={shopifyProjects} desktopPerView={1} accent="shopify" label="Shopify Stores" onCardClick={openProject} onCaseStudy={goToCaseStudy} />
             </div>
           </div>
         </div>
@@ -569,6 +581,11 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
                         <a href={project.github} target="_blank" rel="noopener noreferrer" onClick={(e) => { playClick(); e.stopPropagation(); }} className={`flex items-center gap-1 text-[9px] font-medium ${isDarkMode ? "text-gray-500 hover:text-white" : "text-slate-400 hover:text-slate-700"}`}>
                           <GitBranch className="w-2.5 h-2.5" /> Code
                         </a>
+                        {project.caseStudy && (
+                          <button onClick={(e) => { playClick(); e.stopPropagation(); goToCaseStudy(project); }} className={`flex items-center gap-1 text-[9px] font-medium ${isDarkMode ? "text-amber-400 hover:text-amber-300" : "text-amber-600 hover:text-amber-700"}`}>
+                            <BookOpen className="w-2.5 h-2.5" /> Case Study
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -644,7 +661,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
                     </div>
                   </div>
 
-                  <div className={`mt-auto flex gap-3 pt-4 border-t ${isDarkMode ? "border-white/[0.06]" : "border-slate-100"}`}>
+                  <div className={`mt-auto flex flex-wrap gap-3 pt-4 border-t ${isDarkMode ? "border-white/[0.06]" : "border-slate-100"}`}>
                     <a href={proj.demo} target="_blank" rel="noopener noreferrer"
                       onClick={playClick}
                       className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150 hover:scale-[1.03] ${isDarkMode ? "bg-white/10 hover:bg-white/20 text-white" : "bg-slate-900 hover:bg-slate-700 text-white"}`}>
@@ -655,6 +672,13 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
                       className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150 hover:scale-[1.03] border ${isDarkMode ? "border-white/[0.1] hover:border-white/[0.2] text-gray-300 hover:text-white" : "border-slate-200 hover:border-slate-300 text-slate-600"}`}>
                       <GitBranch className="w-3.5 h-3.5" /> Source Code
                     </a>
+                    {proj.caseStudy && (
+                      <button
+                        onClick={() => { playClick(); goToCaseStudy(proj); }}
+                        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all duration-150 hover:scale-[1.03] border ${isDarkMode ? "border-amber-500/30 text-amber-400 hover:bg-amber-500/10" : "border-amber-300 text-amber-700 hover:bg-amber-50"}`}>
+                        <BookOpen className="w-3.5 h-3.5" /> Case Study
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

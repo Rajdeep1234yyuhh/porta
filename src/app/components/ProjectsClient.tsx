@@ -1,17 +1,14 @@
 "use client";
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   ExternalLink,
   GitBranch,
-  Search,
-  BookOpen,
-  ChevronUp,
-  ChevronDown,
+  CheckCircle2,
 } from "lucide-react";
 import Image from "next/image";
 import Navbar from "./Navbar";
 import { allProjects, Project } from "../data/projects";
-import CaseStudyModal from "./CaseStudyModal";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function getYoutubeVideoId(url: string): string | null {
@@ -61,23 +58,37 @@ const DEFAULT_ROOM = {
   accent: "#6366f1",
 };
 
+// ─── Inline case-study block ──────────────────────────────────────────────────
+function CsRow({ icon, label, content, isDark, accent }: {
+  icon: string; label: string; content: string; isDark: boolean; accent: string;
+}) {
+  return (
+    <div>
+      <p className="text-[10px] font-bold uppercase tracking-widest mb-1.5 flex items-center gap-1.5"
+        style={{ color: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.4)" }}>
+        <span>{icon}</span>{label}
+      </p>
+      <p className="text-sm leading-relaxed" style={{ color: isDark ? "rgba(255,255,255,0.72)" : "rgba(0,0,0,0.65)" }}>
+        {content}
+      </p>
+    </div>
+  );
+}
+
 // ─── Room card ────────────────────────────────────────────────────────────────
 function RoomCard({
   project,
   index,
-  total,
   isDark,
-  onOpenCaseStudy,
 }: {
   project: Project;
   index: number;
-  total: number;
   isDark: boolean;
-  onOpenCaseStudy: (p: Project) => void;
 }) {
   const theme = ROOM[project.id] ?? DEFAULT_ROOM;
-  const bg = isDark ? theme.dark : theme.light;
+  const bg    = isDark ? theme.dark : theme.light;
   const accent = theme.accent;
+  const cs    = project.caseStudy ?? null;
 
   const youtubeId = project.video ? getYoutubeVideoId(project.video) : null;
   const visualSrc = youtubeId
@@ -85,12 +96,12 @@ function RoomCard({
     : project.image ?? null;
 
   const num = String(index + 1).padStart(2, "0");
-  const tot = String(total).padStart(2, "0");
 
   return (
     <div
-      className="relative w-full overflow-hidden"
-      style={{ height: "100dvh", background: bg, scrollSnapAlign: "start" }}
+      id={`project-${project.id}`}
+      className="relative w-full"
+      style={{ minHeight: "100dvh", background: bg }}
     >
       {/* Decorative oversized room number */}
       <div
@@ -109,32 +120,23 @@ function RoomCard({
       {/* Radial accent glow */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{
-          background: `radial-gradient(ellipse 60% 60% at 15% 50%, ${accent}12 0%, transparent 70%)`,
-        }}
+        style={{ background: `radial-gradient(ellipse 60% 60% at 15% 50%, ${accent}12 0%, transparent 70%)` }}
       />
 
-      {/* Content */}
-      <div className="relative z-10 h-full flex flex-col lg:flex-row items-center gap-10 lg:gap-16 px-6 sm:px-12 lg:px-20 pt-36 pb-14">
+      {/* Main layout: visual left (desktop) + info right */}
+      <div className="relative z-10 flex flex-col lg:flex-row" style={{ paddingTop: "clamp(90px,12vh,130px)" }}>
 
-        {/* Visual panel — desktop only, only when there's a thumbnail */}
+        {/* Visual panel — desktop only */}
         {visualSrc && (
-          <div className="hidden lg:flex w-[42%] flex-shrink-0 h-full items-center">
+          <div className="hidden lg:flex w-[40%] flex-shrink-0 items-start justify-center px-10 pt-4">
             <div
               className="relative w-full rounded-3xl overflow-hidden"
               style={{
                 aspectRatio: "16 / 10",
-                maxHeight: "55vh",
                 boxShadow: `0 40px 80px ${accent}35, 0 0 0 1px ${accent}25`,
               }}
             >
-              <Image
-                src={visualSrc}
-                alt={project.title}
-                fill
-                className="object-cover"
-                unoptimized
-              />
+              <Image src={visualSrc} alt={project.title} fill className="object-cover" unoptimized />
               <div
                 className="absolute inset-0"
                 style={{ background: "linear-gradient(to top, rgba(0,0,0,0.25) 0%, transparent 55%)" }}
@@ -143,21 +145,17 @@ function RoomCard({
           </div>
         )}
 
-        {/* Info */}
+        {/* Scrollable info + case study */}
         <div
-          className={`flex flex-col justify-center w-full ${
-            visualSrc ? "lg:flex-1" : "lg:max-w-2xl lg:mx-auto"
+          className={`flex-1 min-w-0 pb-16 px-6 sm:px-10 ${
+            visualSrc ? "lg:pl-2 lg:pr-16" : "lg:max-w-2xl lg:mx-auto lg:px-10"
           }`}
         >
           {/* Category + counter */}
-          <div className="flex items-center gap-3 mb-5">
+          <div className="flex items-center gap-3 mb-4">
             <span
               className="text-[11px] font-bold tracking-widest uppercase px-3 py-1.5 rounded-full"
-              style={{
-                background: `${accent}20`,
-                color: accent,
-                border: `1px solid ${accent}45`,
-              }}
+              style={{ background: `${accent}20`, color: accent, border: `1px solid ${accent}45` }}
             >
               {project.categories[0]}
             </span>
@@ -165,17 +163,15 @@ function RoomCard({
               className="text-xs font-mono"
               style={{ color: isDark ? "rgba(255,255,255,0.22)" : "rgba(0,0,0,0.22)" }}
             >
-              {num} / {tot}
+              {num}
             </span>
           </div>
 
           {/* Title */}
           <h2
-            className="font-black leading-[1.08] mb-4"
+            className="font-black leading-[1.08] mb-3"
             style={{
-              fontSize: visualSrc
-                ? "clamp(1.6rem, 3.5vw, 3.2rem)"
-                : "clamp(1.8rem, 5vw, 4.5rem)",
+              fontSize: visualSrc ? "clamp(1.5rem, 3vw, 2.8rem)" : "clamp(1.7rem, 4vw, 3.8rem)",
               color: isDark ? "#fff" : "#0d0d0d",
             }}
           >
@@ -184,23 +180,19 @@ function RoomCard({
 
           {/* Description */}
           <p
-            className="text-sm lg:text-base leading-relaxed mb-6 line-clamp-3"
+            className="text-sm lg:text-base leading-relaxed mb-5"
             style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.55)" }}
           >
             {project.description}
           </p>
 
           {/* Tech chips */}
-          <div className="flex flex-wrap gap-2 mb-8">
+          <div className="flex flex-wrap gap-2 mb-5">
             {project.tech.slice(0, 5).map((t) => (
               <span
                 key={t}
                 className="text-xs font-medium px-2.5 py-1 rounded-lg"
-                style={{
-                  background: `${accent}18`,
-                  color: accent,
-                  border: `1px solid ${accent}30`,
-                }}
+                style={{ background: `${accent}18`, color: accent, border: `1px solid ${accent}30` }}
               >
                 {t}
               </span>
@@ -218,22 +210,8 @@ function RoomCard({
             )}
           </div>
 
-          {/* CTA buttons */}
-          <div className="flex flex-wrap gap-3">
-            {project.caseStudy && (
-              <button
-                onClick={() => onOpenCaseStudy(project)}
-                className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-bold text-white transition-all hover:scale-105 active:scale-95"
-                style={{
-                  background: `linear-gradient(135deg, ${accent}, ${accent}bb)`,
-                  boxShadow: `0 8px 24px ${accent}45`,
-                }}
-              >
-                <BookOpen className="w-4 h-4" />
-                Case Study
-              </button>
-            )}
-
+          {/* Links */}
+          <div className="flex flex-wrap gap-3 mb-8">
             {project.demo !== "#" && (
               <a
                 href={project.demo}
@@ -246,11 +224,9 @@ function RoomCard({
                   background: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)",
                 }}
               >
-                <ExternalLink className="w-4 h-4" />
-                Live Demo
+                <ExternalLink className="w-4 h-4" /> Live Demo
               </a>
             )}
-
             {project.github !== "#" && (
               <a
                 href={project.github}
@@ -262,35 +238,67 @@ function RoomCard({
                   color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)",
                 }}
               >
-                <GitBranch className="w-4 h-4" />
-                Code
+                <GitBranch className="w-4 h-4" /> Code
               </a>
             )}
           </div>
+
+          {/* ── Inline case study ── */}
+          {cs && (
+            <div
+              className="rounded-2xl p-5 sm:p-6 space-y-5"
+              style={{
+                background: isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.03)",
+                border: `1px solid ${accent}28`,
+              }}
+            >
+              {/* Header */}
+              <div className="flex items-center gap-2 pb-3"
+                style={{ borderBottom: `1px solid ${isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.07)"}` }}>
+                <span
+                  className="text-xs font-bold tracking-widest uppercase px-2.5 py-1 rounded-full"
+                  style={{ background: `${accent}22`, color: accent, border: `1px solid ${accent}40` }}
+                >
+                  Case Study
+                </span>
+              </div>
+
+              <CsRow icon="📌" label="Overview"       content={cs.overview}   isDark={isDark} accent={accent} />
+              <CsRow icon="🎯" label="The Challenge"  content={cs.challenge}  isDark={isDark} accent={accent} />
+              <CsRow icon="⚡" label="The Solution"   content={cs.solution}   isDark={isDark} accent={accent} />
+
+              {/* Results */}
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-widest mb-3 flex items-center gap-1.5"
+                  style={{ color: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.4)" }}>
+                  <span>✅</span> Key Results
+                </p>
+                <ul className="space-y-2">
+                  {cs.results.map((r, i) => (
+                    <li key={i} className="flex items-start gap-2.5 text-sm leading-relaxed"
+                      style={{ color: isDark ? "rgba(255,255,255,0.72)" : "rgba(0,0,0,0.65)" }}>
+                      <CheckCircle2
+                        className="w-4 h-4 mt-0.5 shrink-0"
+                        style={{ color: accent }}
+                      />
+                      {r}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Scroll hint */}
-      {index < total - 1 && (
-        <div
-          className="absolute bottom-6 left-1/2 -translate-x-1/2 animate-bounce"
-          style={{ color: accent, opacity: 0.35 }}
-        >
-          <ChevronDown className="w-5 h-5" />
-        </div>
-      )}
     </div>
   );
 }
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 export default function ProjectsClient() {
-  const [searchTerm, setSearchTerm]           = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [isDarkMode, setIsDarkMode]           = useState(false);
-  const [currentRoom, setCurrentRoom]         = useState(0);
-  const [caseStudyProject, setCaseStudyProject] = useState<Project | null>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const [isDarkMode,       setIsDarkMode]       = useState(false);
 
   /* sync dark mode */
   useEffect(() => {
@@ -300,12 +308,6 @@ export default function ProjectsClient() {
       setIsDarkMode(true);
       document.documentElement.classList.add("dark");
     }
-  }, []);
-
-  /* prevent body scroll while this page is mounted */
-  useEffect(() => {
-    document.body.style.overflow = "hidden";
-    return () => { document.body.style.overflow = ""; };
   }, []);
 
   const toggleTheme = () => {
@@ -320,58 +322,25 @@ export default function ProjectsClient() {
     window.location.href = `/#${id}`;
   };
 
-  /* filter */
   const categories = ["All", "Web Development", "AI/ML", "Shopify"];
 
-  const filteredProjects = allProjects.filter((p) => {
-    const q = searchTerm.toLowerCase();
-    const matchSearch =
-      p.title.toLowerCase().includes(q) ||
-      p.tech.some((t) => t.toLowerCase().includes(q)) ||
-      p.categories.some((c) => c.toLowerCase().includes(q));
-    const matchCat =
-      selectedCategory === "All" || p.categories.includes(selectedCategory);
-    return matchSearch && matchCat;
-  });
+  const filteredProjects = allProjects.filter((p) =>
+    selectedCategory === "All" || p.categories.includes(selectedCategory)
+  );
 
-  /* reset to room 0 on filter change */
+  /* scroll to specific project from URL param ?project=<id> */
+  const searchParams = useSearchParams();
   useEffect(() => {
-    setCurrentRoom(0);
-    if (containerRef.current)
-      containerRef.current.scrollTop = 0;
-  }, [searchTerm, selectedCategory]);
-
-  /* track current room via IntersectionObserver */
-  useEffect(() => {
-    const container = containerRef.current;
-    if (!container || filteredProjects.length === 0) return;
-    const rooms = Array.from(container.children) as Element[];
-    const io = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((e) => {
-          if (e.isIntersecting && e.intersectionRatio >= 0.5) {
-            const i = rooms.indexOf(e.target);
-            if (i !== -1) setCurrentRoom(i);
-          }
-        });
-      },
-      { threshold: 0.5, root: container }
-    );
-    rooms.forEach((r) => io.observe(r));
-    return () => io.disconnect();
-  }, [filteredProjects]);
-
-  /* programmatic navigation */
-  const goToRoom = useCallback((idx: number) => {
-    const c = containerRef.current;
-    if (!c) return;
-    c.scrollTo({ top: idx * c.clientHeight, behavior: "smooth" });
-    setCurrentRoom(idx);
+    const id = searchParams.get("project");
+    if (!id) return;
+    setTimeout(() => {
+      document.getElementById(`project-${id}`)?.scrollIntoView({ behavior: "smooth" });
+    }, 400);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <>
-      {/* Navbar (its internals are fixed — wrapper has no height) */}
       <div className="relative z-[100]">
         <Navbar
           isDarkMode={isDarkMode}
@@ -381,142 +350,88 @@ export default function ProjectsClient() {
         />
       </div>
 
-      {/* Floating filter bar — centred below the floating dock */}
-      <div
-        className="fixed left-1/2 -translate-x-1/2 z-[80] flex items-center gap-1.5 px-2.5 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors"
-        style={{
-          top: "78px",
-          background: isDarkMode ? "rgba(20,20,20,0.88)" : "rgba(255,255,255,0.88)",
-          border: isDarkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(0,0,0,0.1)",
-        }}
-      >
-        {/* search */}
-        <div className="relative">
-          <Search
-            className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 pointer-events-none"
-            style={{ color: isDarkMode ? "rgba(255,255,255,0.3)" : "rgba(0,0,0,0.3)" }}
-          />
-          <input
-            type="text"
-            placeholder="Search…"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-8 pr-3 py-1.5 rounded-xl text-xs outline-none w-28 sm:w-36 transition-all"
-            style={{
-              background: isDarkMode ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.05)",
-              border: isDarkMode ? "1px solid rgba(255,255,255,0.08)" : "1px solid rgba(0,0,0,0.08)",
-              color: isDarkMode ? "#fff" : "#111",
-            }}
-          />
-        </div>
+      {/* ── Filter dock — same glass container + button style as main navbar ── */}
+      {(() => {
+        const FILTERS = [
+          { short: "All",  full: "All Projects",    cat: "All"             },
+          { short: "Web",  full: "Web Development",  cat: "Web Development" },
+          { short: "AI",   full: "AI / ML",          cat: "AI/ML"           },
+          { short: "Shop", full: "Shopify",           cat: "Shopify"         },
+        ];
+        const btn = (f: typeof FILTERS[0]) => (
+          <button
+            key={f.cat}
+            onClick={() => setSelectedCategory(f.cat)}
+            className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${
+              selectedCategory === f.cat
+                ? "bg-violet-600 text-white shadow-lg shadow-violet-500/30"
+                : isDarkMode
+                  ? "text-gray-400 hover:text-white hover:bg-white/10"
+                  : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"
+            }`}
+          >
+            <span className="text-[11px] font-bold shrink-0 transition-transform duration-200 group-hover:-translate-y-2 leading-none">
+              {f.short}
+            </span>
+            <span className="absolute top-full mt-1.5 left-1/2 -translate-x-1/2 text-[11px] font-semibold tracking-wide whitespace-nowrap opacity-0 -translate-y-1 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-200 ease-out pointer-events-none px-2 py-0.5 rounded-md bg-gray-900 text-white shadow">
+              {f.full}
+            </span>
+          </button>
+        );
 
+        return (
+          <>
+            {/* Desktop — floats at top-left, same level as navbar */}
+            <div className={`fixed top-5 left-8 z-50 hidden lg:flex items-center gap-0.5 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 overflow-visible ${
+              isDarkMode
+                ? "bg-[#141414]/95 border-white/[0.08]"
+                : "bg-white/90 border-gray-200/80 shadow-gray-200/60"
+            }`}>
+              {FILTERS.map(btn)}
+            </div>
+
+            {/* Mobile — compact row just below the fixed navbar */}
+            <div className={`lg:hidden fixed left-0 right-0 z-50 flex items-center justify-center gap-0.5 px-2 py-1.5 border-b overflow-visible ${
+              isDarkMode
+                ? "bg-[#141414]/95 border-white/[0.08]"
+                : "bg-white/90 border-gray-200/80"
+            }`} style={{ top: "76px" }}>
+              {FILTERS.map(btn)}
+            </div>
+          </>
+        );
+      })()}
+
+      {/* Project rooms — normal page flow */}
+      {filteredProjects.length === 0 ? (
         <div
-          className="w-px h-5 mx-0.5"
-          style={{ background: isDarkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)" }}
-        />
-
-        {categories.map((cat) => {
-          const active = selectedCategory === cat;
-          return (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              className="px-3 py-1.5 rounded-xl text-xs font-semibold transition-all"
-              style={{
-                background: active
-                  ? isDarkMode ? "rgba(255,255,255,0.9)" : "rgba(0,0,0,0.85)"
-                  : "transparent",
-                color: active
-                  ? isDarkMode ? "#111" : "#fff"
-                  : isDarkMode ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.45)",
-              }}
-            >
-              {cat}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Rooms scroll container — fixed, covers full viewport */}
-      <div
-        ref={containerRef}
-        className="fixed inset-0 z-[10]"
-        style={{ overflowY: "scroll", scrollSnapType: "y mandatory" }}
-      >
-        {filteredProjects.length === 0 ? (
-          <div
-            className="flex flex-col items-center justify-center gap-4"
+          className="flex flex-col items-center justify-center gap-4"
+          style={{ minHeight: "60vh", background: isDarkMode ? "#0d0d14" : "#f8fafc" }}
+        >
+          <p style={{ color: isDarkMode ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)", fontSize: 14 }}>
+            No projects match your search.
+          </p>
+          <button
+            onClick={() => { setSearchTerm(""); setSelectedCategory("All"); }}
+            className="text-xs px-4 py-2 rounded-xl transition-all hover:scale-105"
             style={{
-              height: "100dvh",
-              background: isDarkMode ? "#0d0d14" : "#f8fafc",
+              background: isDarkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
+              color: isDarkMode ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.6)",
             }}
           >
-            <p style={{ color: isDarkMode ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.35)", fontSize: 14 }}>
-              No projects match your search.
-            </p>
-            <button
-              onClick={() => { setSearchTerm(""); setSelectedCategory("All"); }}
-              className="text-xs px-4 py-2 rounded-xl transition-all hover:scale-105"
-              style={{
-                background: isDarkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
-                color: isDarkMode ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.6)",
-              }}
-            >
-              Clear filters
-            </button>
-          </div>
-        ) : (
-          filteredProjects.map((project, index) => (
-            <RoomCard
-              key={project.id}
-              project={project}
-              index={index}
-              total={filteredProjects.length}
-              isDark={isDarkMode}
-              onOpenCaseStudy={setCaseStudyProject}
-            />
-          ))
-        )}
-      </div>
-
-      {/* Room navigation counter */}
-      <div
-        className="fixed bottom-5 right-5 z-[80] flex items-center gap-2 px-3 py-2 rounded-2xl backdrop-blur-md border"
-        style={{
-          background: isDarkMode ? "rgba(0,0,0,0.45)" : "rgba(255,255,255,0.82)",
-          border: isDarkMode ? "1px solid rgba(255,255,255,0.1)" : "1px solid rgba(0,0,0,0.1)",
-          color: isDarkMode ? "rgba(255,255,255,0.8)" : "rgba(0,0,0,0.7)",
-        }}
-      >
-        <button
-          onClick={() => goToRoom(currentRoom - 1)}
-          disabled={currentRoom === 0}
-          className="w-6 h-6 flex items-center justify-center rounded-lg transition-all hover:scale-110 disabled:opacity-25 disabled:cursor-not-allowed"
-        >
-          <ChevronUp className="w-3.5 h-3.5" />
-        </button>
-
-        <span className="text-xs font-mono font-bold tabular-nums">
-          {String(currentRoom + 1).padStart(2, "0")}
-          <span className="opacity-40 mx-0.5">/</span>
-          {String(filteredProjects.length).padStart(2, "0")}
-        </span>
-
-        <button
-          onClick={() => goToRoom(currentRoom + 1)}
-          disabled={currentRoom >= filteredProjects.length - 1}
-          className="w-6 h-6 flex items-center justify-center rounded-lg transition-all hover:scale-110 disabled:opacity-25 disabled:cursor-not-allowed"
-        >
-          <ChevronDown className="w-3.5 h-3.5" />
-        </button>
-      </div>
-
-      {/* Case study modal */}
-      <CaseStudyModal
-        project={caseStudyProject}
-        isDark={isDarkMode}
-        onClose={() => setCaseStudyProject(null)}
-      />
+            Clear filters
+          </button>
+        </div>
+      ) : (
+        filteredProjects.map((project, index) => (
+          <RoomCard
+            key={project.id}
+            project={project}
+            index={index}
+            isDark={isDarkMode}
+          />
+        ))
+      )}
     </>
   );
 }

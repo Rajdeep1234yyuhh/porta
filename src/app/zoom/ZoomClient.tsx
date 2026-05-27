@@ -9,7 +9,6 @@ import { testimonials } from "../data/testimonials";
 const PERSPECTIVE = 1400;
 const PHONE       = "918638752315";
 const ANIM_MS     = 2200;
-const ARRIVE_DIST = 140;
 
 // Room box geometry (px)
 const ROOM_W = 2200;   // width
@@ -17,8 +16,6 @@ const ROOM_H = 1400;   // height
 const ROOM_D = 1400;   // depth (back wall distance from entrance)
 
 // Slow start → fast end
-const easeIn = (t: number) => t * t * t;
-
 // ── World layout ───────────────────────────────────────────────────────────────
 // [x, z] camera positions for each room (y = 0)
 const ROOM_POS: Record<string, [number, number]> = {
@@ -34,12 +31,9 @@ const ROOM_POS: Record<string, [number, number]> = {
 type RoomId = keyof typeof ROOM_POS;
 
 const ROOMS: { id: RoomId; label: string; icon: string; color: string }[] = [
-  { id: "projects",     label: "Projects",   icon: "🗂️",  color: "#a78bfa" },
+  { id: "projects",     label: "About Me",   icon: "🏠",  color: "#a78bfa" },
   { id: "testimonials", label: "Reviews",    icon: "⭐",  color: "#fbbf24" },
   { id: "about",        label: "About Me",   icon: "👤",  color: "#34d399" },
-  { id: "skills",       label: "Skills",     icon: "⚡",  color: "#60a5fa" },
-  { id: "services",     label: "Quick Fix",  icon: "🐛",  color: "#f472b6" },
-  { id: "contact",      label: "Contact",    icon: "📬",  color: "#818cf8" },
 ];
 
 // Door portal positions in world space (visible from hall)
@@ -47,9 +41,6 @@ const DOORS: { id: RoomId; x: number; z: number; ry: number }[] = [
   { id: "projects",     x:    0, z:  -700, ry:   0 },
   { id: "testimonials", x: -400, z:  -520, ry:  30 },
   { id: "about",        x:  400, z:  -520, ry: -30 },
-  { id: "skills",       x: -380, z:  -870, ry:  20 },
-  { id: "services",     x:  380, z:  -870, ry: -20 },
-  { id: "contact",      x:    0, z: -1150, ry:   0 },
 ];
 
 // ── Stars ──────────────────────────────────────────────────────────────────────
@@ -95,15 +86,6 @@ function FloorGrid() {
 }
 
 // ── Vignette ───────────────────────────────────────────────────────────────────
-const VignetteOverlay = React.forwardRef<HTMLDivElement>((_, ref) => (
-  <div ref={ref} style={{
-    position: "fixed", inset: 0, zIndex: 10, pointerEvents: "none",
-    background: "radial-gradient(ellipse 55% 55% at 50% 50%, transparent 0%, rgba(0,0,0,0.95) 100%)",
-    opacity: 0, willChange: "opacity",
-  }} />
-));
-VignetteOverlay.displayName = "VignetteOverlay";
-
 // ── Hall hero (lives at world origin) ─────────────────────────────────────────
 function HallHero() {
   return (
@@ -220,7 +202,7 @@ function DoorPortal({
 // IMPORTANT: no opacity on the preserve-3d parent — opacity creates a stacking
 // context that flattens all child 3D transforms. Visibility is handled by React
 // conditional rendering instead (only the target room box is ever mounted).
-function RoomBox({ id, color, children }: { id: RoomId; color: string; children: React.ReactNode }) {
+function RoomBox({ id, color, contentReady, children }: { id: RoomId; color: string; contentReady: boolean; children: React.ReactNode }) {
   const [wx, wz] = ROOM_POS[id];
   const boxZ = wz - ROOM_D / 2;
 
@@ -270,9 +252,13 @@ function RoomBox({ id, color, children }: { id: RoomId; color: string; children:
           position: "absolute", inset: 0, pointerEvents: "none",
           background: `radial-gradient(ellipse 70% 45% at 50% 0%,${color}14 0%,transparent 70%)`,
         }} />
-        <div style={{ position: "relative", zIndex: 1, width: "100%", height: "100%",
+        <div style={{
+          position: "relative", zIndex: 1, width: "100%", height: "100%",
           display: "flex", alignItems: "center", justifyContent: "center",
           padding: 40, boxSizing: "border-box", overflowY: "auto",
+          opacity: contentReady ? 1 : 0,
+          transform: contentReady ? "translateY(0)" : "translateY(24px)",
+          transition: "opacity 0.55s ease, transform 0.55s ease",
         }}>
           {children}
         </div>
@@ -330,61 +316,161 @@ function StarRating({ rating }: { rating: number }) {
 
 // ── Room content ───────────────────────────────────────────────────────────────
 function ContentProjects() {
-  const projects = allProjects.slice(0, 4);
+  const featured = allProjects.slice(0, 3);
+  const skills = [
+    { name: "Next.js",    color: "#ffffff" },
+    { name: "React",      color: "#61DAFB" },
+    { name: "TypeScript", color: "#3178C6" },
+    { name: "Node.js",    color: "#68A063" },
+    { name: "Python",     color: "#FFD43B" },
+    { name: "Shopify",    color: "#96BF48" },
+    { name: "Tailwind",   color: "#38BDF8" },
+    { name: "Firebase",   color: "#FFCA28" },
+    { name: "AI / ML",    color: "#a78bfa" },
+    { name: "PostgreSQL", color: "#336791" },
+  ];
+
   return (
-    <div style={{ width: "min(92vw, 960px)", maxHeight: "82dvh", overflowY: "auto", padding: "0 4px" }}>
-      <div style={{ textAlign: "center", marginBottom: 28 }}>
-        <p style={{ color: "rgba(167,139,250,0.6)", fontSize: 10, letterSpacing: "0.15em", fontWeight: 700, marginBottom: 8 }}>PORTFOLIO</p>
-        <h2 style={{ color: "white", fontWeight: 900, fontSize: "clamp(26px,4vw,44px)", margin: 0, letterSpacing: "-0.02em" }}>
-          Selected Work
-        </h2>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 16 }}>
-        {projects.map((p) => (
-          <div key={p.id} style={{
-            borderRadius: 16, border: "1px solid rgba(167,139,250,0.2)",
-            background: "rgba(167,139,250,0.06)",
-            padding: 20, display: "flex", flexDirection: "column", gap: 10,
-          }}>
-            <h3 style={{ color: "white", fontWeight: 700, fontSize: 15, margin: 0, lineHeight: 1.3 }}>{p.title}</h3>
-            <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 12, margin: 0, lineHeight: 1.6 }}>
-              {p.description.slice(0, 100)}…
-            </p>
-            <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 6 }}>
-              {p.tech.slice(0, 3).map((t) => (
-                <span key={t} style={{
-                  fontSize: 10, padding: "2px 8px", borderRadius: 999,
-                  background: "rgba(167,139,250,0.12)",
-                  border: "1px solid rgba(167,139,250,0.2)",
-                  color: "#c4b5fd", fontWeight: 600,
-                }}>{t}</span>
-              ))}
-            </div>
-            <div style={{ display: "flex", gap: 8, marginTop: 4 }}>
-              {p.demo && p.demo !== "#" && (
-                <a href={p.demo} target="_blank" rel="noopener noreferrer" style={{
-                  fontSize: 11, color: "#a78bfa", textDecoration: "none", fontWeight: 600,
-                }}>
-                  Live demo →
-                </a>
-              )}
-              {p.github && p.github !== "#" && (
-                <a href={p.github} target="_blank" rel="noopener noreferrer" style={{
-                  fontSize: 11, color: "rgba(255,255,255,0.35)", textDecoration: "none",
-                }}>
-                  Code
-                </a>
-              )}
-            </div>
-          </div>
-        ))}
-      </div>
-      <div style={{ textAlign: "center", marginTop: 20 }}>
-        <Link href="/projects" style={{
-          fontSize: 12, color: "rgba(167,139,250,0.6)", fontWeight: 600, letterSpacing: "0.05em",
+    <div style={{ width: 2000, padding: "0 40px", boxSizing: "border-box" as const }}>
+
+      {/* ── Hero bio row ── */}
+      <div style={{
+        display: "flex", alignItems: "center", gap: 48,
+        padding: "36px 44px", borderRadius: 28, marginBottom: 44,
+        border: "1.5px solid rgba(167,139,250,0.2)",
+        background: "linear-gradient(120deg, rgba(167,139,250,0.09) 0%, rgba(96,165,250,0.05) 100%)",
+      }}>
+        {/* avatar */}
+        <div style={{
+          width: 160, height: 160, borderRadius: 28, overflow: "hidden",
+          border: "3px solid rgba(167,139,250,0.4)", flexShrink: 0,
+          boxShadow: "0 0 48px rgba(167,139,250,0.2)",
         }}>
-          View all projects →
-        </Link>
+          <Image src="/DP.jpg" alt="Rajdeep" width={160} height={160} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+        </div>
+
+        {/* name + bio */}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 16, marginBottom: 10 }}>
+            <h2 style={{ color: "white", fontWeight: 900, fontSize: 46, margin: 0, letterSpacing: "-0.02em" }}>Rajdeep Kotoky</h2>
+            <span style={{
+              fontSize: 18, fontWeight: 700, letterSpacing: "0.07em",
+              padding: "5px 16px", borderRadius: 999,
+              background: "rgba(74,222,128,0.12)", border: "1.5px solid rgba(74,222,128,0.35)",
+              color: "#4ade80",
+            }}>AVAILABLE</span>
+          </div>
+          <p style={{ color: "#a78bfa", fontSize: 24, margin: "0 0 14px", fontWeight: 600 }}>
+            Full-Stack Dev · AI/ML Engineer · Shopify Expert
+          </p>
+          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 22, margin: 0, lineHeight: 1.7 }}>
+            Based in Assam, India — 5+ years building fast web apps, Shopify stores,
+            and AI-powered products for 25+ clients worldwide.
+          </p>
+        </div>
+
+        {/* stats */}
+        <div style={{ display: "flex", gap: 32, flexShrink: 0 }}>
+          {[["25+","Clients"],["18","Shopify"],["5+","Yrs exp"]].map(([v,l]) => (
+            <div key={l} style={{ textAlign: "center" }}>
+              <p style={{
+                fontWeight: 900, fontSize: 44, margin: 0, lineHeight: 1,
+                background: "linear-gradient(135deg,#a78bfa,#60a5fa)",
+                WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+              }}>{v}</p>
+              <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 18, margin: "6px 0 0", fontWeight: 600, letterSpacing: "0.06em" }}>{l}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* ── Two-column: projects + skills ── */}
+      <div style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: 36 }}>
+
+        {/* Featured projects */}
+        <div>
+          <p style={{ color: "rgba(167,139,250,0.6)", fontSize: 20, letterSpacing: "0.18em", fontWeight: 800, margin: "0 0 22px", textTransform: "uppercase" as const }}>
+            Featured Projects
+          </p>
+          <div style={{ display: "flex", flexDirection: "column" as const, gap: 20 }}>
+            {featured.map((p) => (
+              <div key={p.id} style={{
+                borderRadius: 20, border: "1.5px solid rgba(167,139,250,0.18)",
+                background: "rgba(167,139,250,0.06)",
+                padding: "24px 28px", display: "flex", flexDirection: "column" as const, gap: 12,
+              }}>
+                <p style={{ color: "white", fontWeight: 800, fontSize: 28, margin: 0, lineHeight: 1.25 }}>{p.title}</p>
+                <p style={{ color: "rgba(255,255,255,0.45)", fontSize: 20, margin: 0, lineHeight: 1.6 }}>
+                  {p.description.slice(0, 100)}…
+                </p>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 4 }}>
+                  <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 8 }}>
+                    {p.tech.slice(0, 3).map((t) => (
+                      <span key={t} style={{
+                        fontSize: 17, padding: "4px 14px", borderRadius: 999,
+                        background: "rgba(167,139,250,0.12)", border: "1px solid rgba(167,139,250,0.22)",
+                        color: "#c4b5fd", fontWeight: 600,
+                      }}>{t}</span>
+                    ))}
+                  </div>
+                  <div style={{ display: "flex", gap: 22 }}>
+                    {p.demo !== "#" && (
+                      <a href={p.demo} target="_blank" rel="noopener noreferrer"
+                        style={{ fontSize: 20, color: "#a78bfa", textDecoration: "none", fontWeight: 700 }}>Demo →</a>
+                    )}
+                    {p.github !== "#" && (
+                      <a href={p.github} target="_blank" rel="noopener noreferrer"
+                        style={{ fontSize: 20, color: "rgba(255,255,255,0.35)", textDecoration: "none", fontWeight: 600 }}>Code</a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+            <Link href="/projects" style={{
+              fontSize: 20, color: "rgba(167,139,250,0.55)", fontWeight: 700,
+              letterSpacing: "0.06em", textDecoration: "none", textAlign: "center" as const, marginTop: 6,
+            }}>
+              View all projects →
+            </Link>
+          </div>
+        </div>
+
+        {/* Tech stack + CTA */}
+        <div style={{ display: "flex", flexDirection: "column" as const, gap: 0 }}>
+          <p style={{ color: "rgba(96,165,250,0.6)", fontSize: 20, letterSpacing: "0.18em", fontWeight: 800, margin: "0 0 22px", textTransform: "uppercase" as const }}>
+            Tech Stack
+          </p>
+          <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 14 }}>
+            {skills.map((s) => (
+              <div key={s.name} style={{
+                display: "flex", alignItems: "center", gap: 10,
+                padding: "12px 20px", borderRadius: 14,
+                border: `1.5px solid ${s.color}28`,
+                background: `${s.color}0e`,
+              }}>
+                <span style={{ width: 12, height: 12, borderRadius: "50%", background: s.color, flexShrink: 0 }} />
+                <span style={{ color: "rgba(255,255,255,0.88)", fontSize: 20, fontWeight: 700 }}>{s.name}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* CTA buttons */}
+          <div style={{ marginTop: 36, display: "flex", gap: 16 }}>
+            <a href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep!`} target="_blank" rel="noopener noreferrer" style={{
+              flex: 1, textAlign: "center" as const,
+              padding: "18px 0", borderRadius: 16, fontSize: 22, fontWeight: 800,
+              background: "rgba(37,211,102,0.12)", border: "1.5px solid rgba(37,211,102,0.3)",
+              color: "#25D366", textDecoration: "none",
+            }}>WhatsApp</a>
+            <a href="mailto:kotoky10@gmail.com" style={{
+              flex: 1, textAlign: "center" as const,
+              padding: "18px 0", borderRadius: 16, fontSize: 22, fontWeight: 800,
+              background: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255,255,255,0.12)",
+              color: "rgba(255,255,255,0.55)", textDecoration: "none",
+            }}>Email</a>
+          </div>
+        </div>
+
       </div>
     </div>
   );
@@ -618,61 +704,76 @@ function RoomContent({ id }: { id: RoomId }) {
 
 // ── ZoomClient ─────────────────────────────────────────────────────────────────
 export default function ZoomClient() {
-  const sceneRef     = useRef<HTMLDivElement>(null);
-  const vigRef       = useRef<HTMLDivElement>(null);
-  const hallGroupRef = useRef<HTMLDivElement>(null);
-  const rafId        = useRef<number>(0);
-  const hallTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  // Camera state (refs for RAF loop)
-  const camX      = useRef(0);
-  const camZ      = useRef(0);
-  const fromX     = useRef(0);
-  const fromZ     = useRef(0);
-  const tgtX      = useRef(0);
-  const tgtZ      = useRef(0);
-  const tgtRoom   = useRef<RoomId>("hall");
-  const animStart = useRef(-ANIM_MS);
-
   // React state: drives which room box is mounted + UI labels
-  const [activeRoom,   setActiveRoom]   = useState<RoomId>("hall");
+  const [activeRoom,    setActiveRoom]    = useState<RoomId>("hall");
   // tgtRoomState = which RoomBox to render (null = none = we're in / going to hall)
-  const [tgtRoomState, setTgtRoomState] = useState<RoomId | null>(null);
+  const [tgtRoomState,  setTgtRoomState]  = useState<RoomId | null>(null);
+  const [camera,        setCamera]        = useState({ x: 0, z: 0 });
+  const [isTraveling,   setIsTraveling]   = useState(false);
+  const [contentReady,  setContentReady]  = useState(false);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const clearTimers = () => { timers.current.forEach(clearTimeout); timers.current = []; };
+
+  // Keep a ref so closures always see the latest activeRoom without re-creating callbacks
+  const activeRoomRef = useRef<RoomId>("hall");
+  activeRoomRef.current = activeRoom;
 
   const enterRoom = (id: RoomId) => {
-    if (hallTimeoutRef.current) clearTimeout(hallTimeoutRef.current);
-    const [x, z] = ROOM_POS[id];
-    fromX.current     = camX.current;
-    fromZ.current     = camZ.current;
-    tgtX.current      = x;
-    tgtZ.current      = z;
-    tgtRoom.current   = id;
-    animStart.current = performance.now();
-    setTgtRoomState(id);   // mount the room box immediately (appears small in distance)
+    clearTimers();
+    setContentReady(false);
+    setIsTraveling(true);
+
+    const doEnter = () => {
+      const [x, z] = ROOM_POS[id];
+      setActiveRoom(id);
+      setTgtRoomState(id);
+      requestAnimationFrame(() => setCamera({ x, z }));
+      timers.current.push(setTimeout(() => {
+        setIsTraveling(false);
+        setContentReady(true);
+      }, ANIM_MS));
+    };
+
+    if (activeRoomRef.current === "hall") {
+      // Already in hall — enter directly
+      doEnter();
+    } else {
+      // In a room — fly back to hall keeping room walls visible, then enter target
+      setActiveRoom("hall");
+      setCamera({ x: 0, z: 0 });          // start flying back; room box stays mounted
+      timers.current.push(setTimeout(() => {
+        setTgtRoomState(null);             // unmount old room only after camera arrives
+        // one RAF so React flushes the unmount before starting the next transition
+        requestAnimationFrame(() => {
+          timers.current.push(setTimeout(doEnter, 180));
+        });
+      }, ANIM_MS));
+    }
   };
 
   const goToHall = () => {
-    if (hallTimeoutRef.current) clearTimeout(hallTimeoutRef.current);
-    fromX.current     = camX.current;
-    fromZ.current     = camZ.current;
-    tgtX.current      = 0;
-    tgtZ.current      = 0;
-    tgtRoom.current   = "hall";
-    animStart.current = performance.now();
-    // Unmount room box after 90 % of travel — long enough to keep it visible
-    // during the fast-exit phase, hall appears (hallDist<1400) before this fires
-    hallTimeoutRef.current = setTimeout(
-      () => setTgtRoomState(null),
-      ANIM_MS * 0.9
-    );
+    clearTimers();
+    setContentReady(false);
+    setIsTraveling(true);
+    setActiveRoom("hall");
+    setCamera({ x: 0, z: 0 });
+    timers.current.push(setTimeout(() => {
+      setTgtRoomState(null);
+      setIsTraveling(false);
+    }, ANIM_MS));
   };
 
+  useEffect(() => {
+    return () => clearTimers();
+  }, []);
+
+  /*
   useEffect(() => {
     const animate = (now: number) => {
       // Time-based ease-in: slow start → fast finish
       const elapsed = now - animStart.current;
       const t       = Math.min(1, elapsed / ANIM_MS);
-      const easedT  = easeIn(t);
+      const easedT  = easeInOut(t);
 
       camX.current = fromX.current + (tgtX.current - fromX.current) * easedT;
       camZ.current = fromZ.current + (tgtZ.current - fromZ.current) * easedT;
@@ -686,11 +787,10 @@ export default function ZoomClient() {
       const dz = tgtZ.current - camZ.current;
       const travelDist = Math.sqrt(dx * dx + dz * dz);
 
-      // Update active room label when settled
-      setActiveRoom((prev) => {
-        if (travelDist < ARRIVE_DIST && prev !== tgtRoom.current) return tgtRoom.current;
-        return prev;
-      });
+      if (travelDist < ARRIVE_DIST && activeRoomRef.current !== tgtRoom.current) {
+        activeRoomRef.current = tgtRoom.current;
+        setActiveRoom(tgtRoom.current);
+      }
 
       // Vignette fades in while traveling, out when arrived
       if (vigRef.current) {
@@ -711,8 +811,13 @@ export default function ZoomClient() {
     };
 
     rafId.current = requestAnimationFrame((ts) => animate(ts));
-    return () => cancelAnimationFrame(rafId.current);
+    return () => {
+      cancelAnimationFrame(rafId.current);
+      if (hallTimeoutRef.current) clearTimeout(hallTimeoutRef.current);
+    };
   }, []);
+
+  */
 
   const inHall = activeRoom === "hall";
   const activeRoomMeta = ROOMS.find((r) => r.id === activeRoom);
@@ -729,17 +834,20 @@ export default function ZoomClient() {
         perspectiveOrigin: "50% 50%",
         zIndex: 1,
       }}>
-        <div ref={sceneRef} style={{
+        <div style={{
           position: "absolute", inset: 0,
           transformStyle: "preserve-3d",
-          transform: "translate3d(0,0,0)",
+          transform: `translate3d(${-camera.x}px, 0px, ${-camera.z}px)`,
+          transition: `transform ${ANIM_MS}ms cubic-bezier(0.65, 0, 0.35, 1)`,
+          willChange: "transform",
         }}>
           <StarField />
 
           {/* Hall group — display toggled by RAF; no opacity (preserve-3d safe) */}
-          <div ref={hallGroupRef} style={{
+          <div style={{
             position: "absolute", inset: 0,
             transformStyle: "preserve-3d",
+            pointerEvents: inHall ? "auto" : "none",
           }}>
             <FloorGrid />
             <HallHero />
@@ -753,16 +861,75 @@ export default function ZoomClient() {
 
           {/* Only the target room box is ever mounted — no opacity needed */}
           {tgtRoomState && (
-            <RoomBox id={tgtRoomState} color={ROOMS.find(r => r.id === tgtRoomState)!.color}>
+            <RoomBox id={tgtRoomState} color={ROOMS.find(r => r.id === tgtRoomState)!.color} contentReady={contentReady}>
               <RoomContent id={tgtRoomState} />
             </RoomBox>
           )}
         </div>
       </div>
 
-      <VignetteOverlay ref={vigRef} />
+      <div style={{
+        position: "fixed", inset: 0, zIndex: 10, pointerEvents: "none",
+        background: "radial-gradient(ellipse 55% 55% at 50% 50%, transparent 0%, rgba(0,0,0,0.95) 100%)",
+        opacity: isTraveling ? 0.42 : 0,
+        transition: `opacity ${Math.round(ANIM_MS * 0.45)}ms ease`,
+      }} />
 
       {/* ── Back to hall button ── */}
+      {inHall && !isTraveling && (
+        <div
+          aria-label="Room shortcuts"
+          style={{
+            position: "fixed",
+            inset: 0,
+            zIndex: 45,
+            pointerEvents: "none",
+          }}
+        >
+          {DOORS.map((door) => {
+            const room = ROOMS.find((r) => r.id === door.id)!;
+            // Screen positions derived from perspective projection:
+            // scale = PERSPECTIVE / (PERSPECTIVE + |z|), then screen_xy = world_xy * scale
+            const hotspotMap: Record<RoomId, { x: number; y: number; w: number; h: number }> = {
+              // scale = PERSPECTIVE / (PERSPECTIVE + |z|), screen_xy = world_xy * scale
+              projects:     { x:   0,  y: 37, w: 160, h: 210 }, // z=-700 → scale≈0.667
+              testimonials: { x: -292, y: 40, w: 160, h: 215 }, // z=-520 → scale≈0.729
+              about:        { x:  292, y: 40, w: 160, h: 215 },
+              skills:       { x:   0,  y:  0, w:   0, h:   0 },
+              services:     { x:   0,  y:  0, w:   0, h:   0 },
+              hall:         { x:   0,  y:  0, w:   0, h:   0 },
+              contact:      { x:   0,  y:  0, w:   0, h:   0 },
+            };
+            const hotspot = hotspotMap[door.id];
+
+            return (
+              <button
+                key={door.id}
+                type="button"
+                aria-label={`Enter ${room.label}`}
+                title={`Enter ${room.label}`}
+                onClick={() => enterRoom(door.id)}
+                style={{
+                  position: "absolute",
+                  left: `calc(50% + ${hotspot.x}px)`,
+                  top: `calc(50% + ${hotspot.y}px)`,
+                  width: hotspot.w,
+                  height: hotspot.h,
+                  // closer doors (less negative z) must sit on top when areas overlap
+                  zIndex: Math.round((2000 + door.z) / -100),
+                  transform: `translate(-50%, -50%) rotate(${door.ry * -0.18}deg)`,
+                  border: "none",
+                  borderRadius: 18,
+                  background: "transparent",
+                  cursor: "pointer",
+                  pointerEvents: "auto",
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
+
       <button
         onClick={goToHall}
         style={{
