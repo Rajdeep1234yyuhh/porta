@@ -26,14 +26,16 @@ const ROOM_POS: Record<string, [number, number]> = {
   skills:       [-2200, -3100],
   services:     [ 2200, -3100],
   contact:      [     0, -5000],
+  allprojects:  [     0, -5600], // deeper corridor behind the About Me room
 };
 
 type RoomId = keyof typeof ROOM_POS;
 
 const ROOMS: { id: RoomId; label: string; icon: string; color: string }[] = [
-  { id: "projects",     label: "About Me",   icon: "🏠",  color: "#a78bfa" },
-  { id: "testimonials", label: "Reviews",    icon: "⭐",  color: "#fbbf24" },
-  { id: "about",        label: "About Me",   icon: "👤",  color: "#34d399" },
+  { id: "projects",    label: "About Me",      icon: "🏠",  color: "#a78bfa" },
+  { id: "testimonials",label: "Reviews",       icon: "⭐",  color: "#fbbf24" },
+  { id: "about",       label: "About Me",      icon: "👤",  color: "#34d399" },
+  { id: "allprojects", label: "All Projects",  icon: "🗂️",  color: "#818cf8" },
 ];
 
 // Door portal positions in world space (visible from hall)
@@ -315,7 +317,7 @@ function StarRating({ rating }: { rating: number }) {
 }
 
 // ── Room content ───────────────────────────────────────────────────────────────
-function ContentProjects() {
+function ContentProjects({ onEnterRoom }: { onEnterRoom?: (id: RoomId) => void }) {
   const featured = allProjects.slice(0, 3);
   const skills = [
     { name: "Next.js",    color: "#ffffff" },
@@ -426,12 +428,17 @@ function ContentProjects() {
                 </div>
               </div>
             ))}
-            <Link href="/projects" style={{
-              fontSize: 20, color: "rgba(167,139,250,0.55)", fontWeight: 700,
-              letterSpacing: "0.06em", textDecoration: "none", textAlign: "center" as const, marginTop: 6,
-            }}>
+            <button
+              onClick={() => onEnterRoom?.("allprojects")}
+              style={{
+                fontSize: 20, color: "rgba(167,139,250,0.7)", fontWeight: 700,
+                letterSpacing: "0.06em", background: "none", border: "none",
+                cursor: "pointer", textAlign: "center" as const, marginTop: 6,
+                padding: "10px 0", width: "100%",
+              }}
+            >
               View all projects →
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -690,11 +697,62 @@ function ContentContact() {
   );
 }
 
-function RoomContent({ id }: { id: RoomId }) {
+function ContentAllProjects() {
+  return (
+    <div style={{ width: 2000, padding: "0 40px", boxSizing: "border-box" as const }}>
+      <div style={{ textAlign: "center", marginBottom: 44 }}>
+        <p style={{ color: "rgba(129,140,248,0.6)", fontSize: 20, letterSpacing: "0.18em", fontWeight: 800, margin: "0 0 12px", textTransform: "uppercase" as const }}>Portfolio</p>
+        <h2 style={{ color: "white", fontWeight: 900, fontSize: 56, margin: 0, letterSpacing: "-0.02em", lineHeight: 1 }}>
+          All{" "}
+          <span style={{ background: "linear-gradient(90deg,#818cf8,#a78bfa)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>
+            Projects
+          </span>
+        </h2>
+      </div>
+
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 24, maxHeight: 780, overflowY: "auto", paddingRight: 8 }}>
+        {allProjects.map((p) => (
+          <div key={p.id} style={{
+            borderRadius: 20, border: "1.5px solid rgba(129,140,248,0.18)",
+            background: "rgba(129,140,248,0.06)",
+            padding: "26px 28px", display: "flex", flexDirection: "column" as const, gap: 14,
+          }}>
+            <p style={{ color: "white", fontWeight: 800, fontSize: 26, margin: 0, lineHeight: 1.25 }}>{p.title}</p>
+            <p style={{ color: "rgba(255,255,255,0.42)", fontSize: 18, margin: 0, lineHeight: 1.65, flex: 1 }}>
+              {p.description.slice(0, 110)}…
+            </p>
+            <div style={{ display: "flex", flexWrap: "wrap" as const, gap: 8 }}>
+              {p.tech.slice(0, 3).map((t) => (
+                <span key={t} style={{
+                  fontSize: 15, padding: "4px 12px", borderRadius: 999,
+                  background: "rgba(129,140,248,0.12)", border: "1px solid rgba(129,140,248,0.22)",
+                  color: "#a5b4fc", fontWeight: 600,
+                }}>{t}</span>
+              ))}
+            </div>
+            <div style={{ display: "flex", gap: 22, marginTop: 4 }}>
+              {p.demo !== "#" && (
+                <a href={p.demo} target="_blank" rel="noopener noreferrer"
+                  style={{ fontSize: 18, color: "#818cf8", textDecoration: "none", fontWeight: 700 }}>Demo →</a>
+              )}
+              {p.github !== "#" && (
+                <a href={p.github} target="_blank" rel="noopener noreferrer"
+                  style={{ fontSize: 18, color: "rgba(255,255,255,0.32)", textDecoration: "none", fontWeight: 600 }}>Code</a>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function RoomContent({ id, onEnterRoom }: { id: RoomId; onEnterRoom?: (id: RoomId) => void }) {
   switch (id) {
-    case "projects":     return <ContentProjects />;
+    case "projects":     return <ContentProjects onEnterRoom={onEnterRoom} />;
     case "testimonials": return <ContentTestimonials />;
     case "about":        return <ContentAbout />;
+    case "allprojects":  return <ContentAllProjects />;
     case "skills":       return <ContentSkills />;
     case "services":     return <ContentServices />;
     case "contact":      return <ContentContact />;
@@ -862,7 +920,7 @@ export default function ZoomClient() {
           {/* All room boxes always exist in the world — walls/glow visible from hall */}
           {ROOMS.map((room) => (
             <RoomBox key={room.id} id={room.id} color={room.color} contentReady={tgtRoomState === room.id && contentReady}>
-              {tgtRoomState === room.id ? <RoomContent id={room.id} /> : null}
+              {tgtRoomState === room.id ? <RoomContent id={room.id} onEnterRoom={enterRoom} /> : null}
             </RoomBox>
           ))}
         </div>
