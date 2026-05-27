@@ -859,12 +859,12 @@ export default function ZoomClient() {
             })}
           </div>
 
-          {/* Only the target room box is ever mounted — no opacity needed */}
-          {tgtRoomState && (
-            <RoomBox id={tgtRoomState} color={ROOMS.find(r => r.id === tgtRoomState)!.color} contentReady={contentReady}>
-              <RoomContent id={tgtRoomState} />
+          {/* All room boxes always exist in the world — walls/glow visible from hall */}
+          {ROOMS.map((room) => (
+            <RoomBox key={room.id} id={room.id} color={room.color} contentReady={tgtRoomState === room.id && contentReady}>
+              {tgtRoomState === room.id ? <RoomContent id={room.id} /> : null}
             </RoomBox>
-          )}
+          ))}
         </div>
       </div>
 

@@ -412,7 +412,7 @@ export default function ProjectsClient() {
             No projects match your search.
           </p>
           <button
-            onClick={() => { setSearchTerm(""); setSelectedCategory("All"); }}
+            onClick={() => setSelectedCategory("All")}
             className="text-xs px-4 py-2 rounded-xl transition-all hover:scale-105"
             style={{
               background: isDarkMode ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)",
