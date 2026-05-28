@@ -94,7 +94,7 @@ function HallHero() {
     <div style={{
       position: "absolute", left: "50%", top: "50%",
       width: "min(90vw, 640px)",
-      transform: "translate(-50%, -50%) translate3d(0, -60px, 0)",
+      transform: "translate(-50%, -50%) translate3d(0, -150px, 0)",
       textAlign: "center", pointerEvents: "none",
     }}>
       <div style={{
@@ -121,9 +121,6 @@ function HallHero() {
       <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, marginTop: 16, letterSpacing: "0.12em", fontWeight: 600 }}>
         FULL-STACK DEVELOPER · AI/ML ENGINEER
       </p>
-      <p style={{ color: "rgba(255,255,255,0.18)", fontSize: 11, marginTop: 28, letterSpacing: "0.15em" }}>
-        ↓ ENTER A ROOM BELOW
-      </p>
     </div>
   );
 }
@@ -137,63 +134,113 @@ function DoorPortal({
   onEnter: (id: RoomId) => void;
 }) {
   const [hov, setHov] = useState(false);
+  const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
+  const [glare, setGlare] = useState({ x: 50, y: 50 });
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    const cx = (e.clientX - rect.left) / rect.width;
+    const cy = (e.clientY - rect.top) / rect.height;
+    setTilt({ rx: (cy - 0.5) * -26, ry: (cx - 0.5) * 26 });
+    setGlare({ x: cx * 100, y: cy * 100 });
+  };
+
+  const handleMouseLeave = () => {
+    setHov(false);
+    setTilt({ rx: 0, ry: 0 });
+    setGlare({ x: 50, y: 50 });
+  };
+
   return (
-    <div
-      onClick={() => onEnter(id)}
-      onMouseEnter={() => setHov(true)}
-      onMouseLeave={() => setHov(false)}
-      style={{
-        position: "absolute", left: "50%", top: "50%",
-        width: 190, height: 270,
-        transform: `translate(-50%, -50%) translate3d(${x}px, 55px, ${z}px) rotateY(${ry}deg)`,
-        cursor: "pointer",
-      }}
-    >
-      {/* outer glow */}
-      <div style={{
-        position: "absolute", inset: -8,
-        borderRadius: 18,
-        background: `radial-gradient(ellipse at 50% 100%, ${room.color}30 0%, transparent 70%)`,
-        opacity: hov ? 1 : 0.5,
-        transition: "opacity 0.2s",
-        pointerEvents: "none",
-      }} />
-      <div style={{
-        width: "100%", height: "100%", borderRadius: 10,
-        border: `1.5px solid ${room.color}${hov ? "60" : "35"}`,
-        background: `linear-gradient(165deg, ${room.color}18 0%, rgba(5,5,12,0.92) 55%)`,
-        boxShadow: hov
-          ? `0 0 60px ${room.color}35, inset 0 0 40px ${room.color}12`
-          : `0 0 30px ${room.color}18, inset 0 0 20px ${room.color}06`,
-        display: "flex", flexDirection: "column",
-        alignItems: "center", justifyContent: "center", gap: 12,
-        transition: "box-shadow 0.25s, border-color 0.25s",
-        backdropFilter: "blur(6px)",
-        position: "relative", overflow: "hidden",
-      }}>
-        {/* shimmer line at top */}
+    // Outer div: world-space position only
+    <div style={{
+      position: "absolute", left: "50%", top: "50%",
+      width: 190, height: 270,
+      transform: `translate(-50%, -50%) translate3d(${x}px, 130px, ${z}px) rotateY(${ry}deg)`,
+    }}>
+      {/* Inner div: tilt + lift on hover */}
+      <div
+        ref={cardRef}
+        onClick={() => onEnter(id)}
+        onMouseEnter={() => setHov(true)}
+        onMouseLeave={handleMouseLeave}
+        onMouseMove={handleMouseMove}
+        style={{
+          width: "100%", height: "100%",
+          cursor: "pointer",
+          transform: hov
+            ? `perspective(600px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateZ(55px) scale(1.13)`
+            : "perspective(600px) rotateX(0deg) rotateY(0deg) translateZ(0px) scale(1)",
+          transition: hov
+            ? "transform 0.07s ease-out"
+            : "transform 0.55s cubic-bezier(0.23, 1, 0.32, 1)",
+          position: "relative",
+        }}
+      >
+        {/* expanding glow shadow beneath */}
         <div style={{
-          position: "absolute", top: 0, left: 0, right: 0, height: 1,
-          background: `linear-gradient(90deg, transparent, ${room.color}60, transparent)`,
+          position: "absolute", inset: hov ? -20 : -8,
+          borderRadius: 22,
+          background: `radial-gradient(ellipse at 50% 100%, ${room.color}${hov ? "55" : "28"} 0%, transparent 70%)`,
+          filter: hov ? "blur(12px)" : "blur(4px)",
+          transition: "all 0.3s ease",
+          pointerEvents: "none",
         }} />
+
         <div style={{
-          width: 60, height: 60, borderRadius: "50%",
-          background: `${room.color}14`,
-          border: `1.5px solid ${room.color}40`,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          fontSize: 26,
-          transform: hov ? "scale(1.1)" : "scale(1)",
-          transition: "transform 0.2s",
+          width: "100%", height: "100%", borderRadius: 10,
+          border: `1.5px solid ${room.color}${hov ? "90" : "35"}`,
+          background: hov
+            ? `linear-gradient(165deg, ${room.color}28 0%, rgba(10,10,22,0.95) 60%)`
+            : `linear-gradient(165deg, ${room.color}18 0%, rgba(5,5,12,0.92) 55%)`,
+          boxShadow: hov
+            ? `0 50px 90px rgba(0,0,0,0.75), 0 0 70px ${room.color}45, inset 0 1px 0 rgba(255,255,255,0.12)`
+            : `0 8px 32px rgba(0,0,0,0.45), 0 0 28px ${room.color}16`,
+          display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center", gap: 12,
+          transition: "box-shadow 0.3s, border-color 0.25s, background 0.25s",
+          backdropFilter: "blur(8px)",
+          position: "relative", overflow: "hidden",
         }}>
-          {room.icon}
-        </div>
-        <div style={{ textAlign: "center" }}>
-          <p style={{ color: "white", fontWeight: 700, fontSize: 13, margin: 0, letterSpacing: "0.02em" }}>
-            {room.label}
-          </p>
-          <p style={{ color: room.color, fontSize: 9, margin: "4px 0 0", opacity: 0.85, fontWeight: 700, letterSpacing: "0.1em" }}>
-            {hov ? "CLICK TO ENTER" : "· ROOM ·"}
-          </p>
+          {/* shimmer top edge */}
+          <div style={{
+            position: "absolute", top: 0, left: 0, right: 0, height: 1,
+            background: `linear-gradient(90deg, transparent, ${room.color}${hov ? "90" : "55"}, transparent)`,
+          }} />
+
+          {/* glare that follows the cursor */}
+          <div style={{
+            position: "absolute", inset: 0, borderRadius: 10,
+            background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.17) 0%, transparent 58%)`,
+            opacity: hov ? 1 : 0,
+            transition: hov ? "opacity 0.1s" : "opacity 0.35s",
+            pointerEvents: "none",
+            mixBlendMode: "screen" as const,
+          }} />
+
+          <div style={{
+            width: 60, height: 60, borderRadius: "50%",
+            background: `${room.color}${hov ? "22" : "14"}`,
+            border: `1.5px solid ${room.color}${hov ? "65" : "40"}`,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            fontSize: 26,
+            transform: hov ? "scale(1.18)" : "scale(1)",
+            transition: "transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1)",
+            position: "relative", zIndex: 1,
+          }}>
+            {room.icon}
+          </div>
+
+          <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
+            <p style={{ color: "white", fontWeight: 700, fontSize: 13, margin: 0, letterSpacing: "0.02em" }}>
+              {room.label}
+            </p>
+            <p style={{ color: room.color, fontSize: 9, margin: "4px 0 0", opacity: hov ? 1 : 0.7, fontWeight: 700, letterSpacing: "0.1em", transition: "opacity 0.2s" }}>
+              {hov ? "CLICK TO ENTER" : "· ROOM ·"}
+            </p>
+          </div>
         </div>
       </div>
     </div>
