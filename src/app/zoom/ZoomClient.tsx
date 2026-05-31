@@ -35,6 +35,7 @@ const ROOMS: { id: RoomId; label: string; icon: string; color: string }[] = [
   { id: "projects",    label: "About Me",      icon: "🏠",  color: "#a78bfa" },
   { id: "testimonials",label: "Reviews",       icon: "⭐",  color: "#fbbf24" },
   { id: "about",       label: "About Me",      icon: "👤",  color: "#34d399" },
+  { id: "contact",     label: "Contact",       icon: "✉️",  color: "#818cf8" },
   { id: "allprojects", label: "All Projects",  icon: "🗂️",  color: "#818cf8" },
 ];
 
@@ -42,7 +43,7 @@ const ROOMS: { id: RoomId; label: string; icon: string; color: string }[] = [
 const DOORS: { id: RoomId; x: number; z: number; ry: number }[] = [
   { id: "projects",     x:    0, z:  -700, ry:   0 },
   { id: "testimonials", x: -400, z:  -520, ry:  30 },
-  { id: "about",        x:  400, z:  -520, ry: -30 },
+  { id: "contact",      x:  400, z:  -520, ry: -30 },
 ];
 
 // ── Stars ──────────────────────────────────────────────────────────────────────
@@ -125,122 +126,79 @@ function HallHero() {
   );
 }
 
-// ── Door portal ────────────────────────────────────────────────────────────────
+// ── Door portal — purely visual, no pointer events (hotspots handle input) ────
 function DoorPortal({
-  id, x, z, ry, room, onEnter,
+  x, z, ry, room, hov, tilt, glare,
 }: {
-  id: RoomId; x: number; z: number; ry: number;
+  x: number; z: number; ry: number;
   room: typeof ROOMS[0];
-  onEnter: (id: RoomId) => void;
+  hov: boolean;
+  tilt: { rx: number; ry: number };
+  glare: { x: number; y: number };
 }) {
-  const [hov, setHov] = useState(false);
-  const [tilt, setTilt] = useState({ rx: 0, ry: 0 });
-  const [glare, setGlare] = useState({ x: 50, y: 50 });
-  const cardRef = useRef<HTMLDivElement>(null);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!cardRef.current) return;
-    const rect = cardRef.current.getBoundingClientRect();
-    const cx = (e.clientX - rect.left) / rect.width;
-    const cy = (e.clientY - rect.top) / rect.height;
-    setTilt({ rx: (cy - 0.5) * -26, ry: (cx - 0.5) * 26 });
-    setGlare({ x: cx * 100, y: cy * 100 });
-  };
-
-  const handleMouseLeave = () => {
-    setHov(false);
-    setTilt({ rx: 0, ry: 0 });
-    setGlare({ x: 50, y: 50 });
-  };
+  const base = `translate(-50%,-50%) translate3d(${x}px,130px,${z}px) rotateY(${ry}deg)`;
+  const hover = `${base} rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateZ(280px) scale(1.06)`;
 
   return (
-    // Outer div: world-space position only
     <div style={{
       position: "absolute", left: "50%", top: "50%",
       width: 190, height: 270,
-      transform: `translate(-50%, -50%) translate3d(${x}px, 130px, ${z}px) rotateY(${ry}deg)`,
+      pointerEvents: "none",
+      transform: hov ? hover : base,
+      transition: hov ? "transform 0.08s ease-out" : "transform 0.55s cubic-bezier(0.23,1,0.32,1)",
     }}>
-      {/* Inner div: tilt + lift on hover */}
-      <div
-        ref={cardRef}
-        onClick={() => onEnter(id)}
-        onMouseEnter={() => setHov(true)}
-        onMouseLeave={handleMouseLeave}
-        onMouseMove={handleMouseMove}
-        style={{
-          width: "100%", height: "100%",
-          cursor: "pointer",
-          transform: hov
-            ? `perspective(600px) rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateZ(55px) scale(1.13)`
-            : "perspective(600px) rotateX(0deg) rotateY(0deg) translateZ(0px) scale(1)",
-          transition: hov
-            ? "transform 0.07s ease-out"
-            : "transform 0.55s cubic-bezier(0.23, 1, 0.32, 1)",
-          position: "relative",
-        }}
-      >
-        {/* expanding glow shadow beneath */}
+      {/* glow */}
+      <div style={{
+        position: "absolute", inset: hov ? -20 : -8, borderRadius: 22,
+        background: `radial-gradient(ellipse at 50% 100%, ${room.color}${hov ? "55" : "28"} 0%, transparent 70%)`,
+        filter: `blur(${hov ? 12 : 4}px)`,
+        transition: "all 0.3s ease",
+      }} />
+      <div style={{
+        width: "100%", height: "100%", borderRadius: 10,
+        border: `1.5px solid ${room.color}${hov ? "90" : "35"}`,
+        background: hov
+          ? `linear-gradient(165deg,${room.color}28 0%,rgba(10,10,22,.95) 60%)`
+          : `linear-gradient(165deg,${room.color}18 0%,rgba(5,5,12,.92) 55%)`,
+        boxShadow: hov
+          ? `0 50px 90px rgba(0,0,0,.75),0 0 70px ${room.color}45,inset 0 1px 0 rgba(255,255,255,.12)`
+          : `0 8px 32px rgba(0,0,0,.45),0 0 28px ${room.color}16`,
+        display: "flex", flexDirection: "column",
+        alignItems: "center", justifyContent: "center", gap: 12,
+        transition: "all 0.3s ease",
+        backdropFilter: "blur(8px)",
+        position: "relative", overflow: "hidden",
+      }}>
         <div style={{
-          position: "absolute", inset: hov ? -20 : -8,
-          borderRadius: 22,
-          background: `radial-gradient(ellipse at 50% 100%, ${room.color}${hov ? "55" : "28"} 0%, transparent 70%)`,
-          filter: hov ? "blur(12px)" : "blur(4px)",
-          transition: "all 0.3s ease",
-          pointerEvents: "none",
+          position: "absolute", top: 0, left: 0, right: 0, height: 1,
+          background: `linear-gradient(90deg,transparent,${room.color}${hov ? "90" : "55"},transparent)`,
         }} />
-
+        {/* cursor glare */}
         <div style={{
-          width: "100%", height: "100%", borderRadius: 10,
-          border: `1.5px solid ${room.color}${hov ? "90" : "35"}`,
-          background: hov
-            ? `linear-gradient(165deg, ${room.color}28 0%, rgba(10,10,22,0.95) 60%)`
-            : `linear-gradient(165deg, ${room.color}18 0%, rgba(5,5,12,0.92) 55%)`,
-          boxShadow: hov
-            ? `0 50px 90px rgba(0,0,0,0.75), 0 0 70px ${room.color}45, inset 0 1px 0 rgba(255,255,255,0.12)`
-            : `0 8px 32px rgba(0,0,0,0.45), 0 0 28px ${room.color}16`,
-          display: "flex", flexDirection: "column",
-          alignItems: "center", justifyContent: "center", gap: 12,
-          transition: "box-shadow 0.3s, border-color 0.25s, background 0.25s",
-          backdropFilter: "blur(8px)",
-          position: "relative", overflow: "hidden",
+          position: "absolute", inset: 0, borderRadius: 10,
+          background: `radial-gradient(circle at ${glare.x}% ${glare.y}%,rgba(255,255,255,.18) 0%,transparent 58%)`,
+          opacity: hov ? 1 : 0, transition: hov ? "opacity .1s" : "opacity .35s",
+          mixBlendMode: "screen" as const,
+        }} />
+        <div style={{
+          width: 60, height: 60, borderRadius: "50%",
+          background: `${room.color}${hov ? "22" : "14"}`,
+          border: `1.5px solid ${room.color}${hov ? "65" : "40"}`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          fontSize: 26,
+          transform: hov ? "scale(1.18)" : "scale(1)",
+          transition: "transform 0.28s cubic-bezier(0.34,1.56,0.64,1)",
+          position: "relative", zIndex: 1,
         }}>
-          {/* shimmer top edge */}
-          <div style={{
-            position: "absolute", top: 0, left: 0, right: 0, height: 1,
-            background: `linear-gradient(90deg, transparent, ${room.color}${hov ? "90" : "55"}, transparent)`,
-          }} />
-
-          {/* glare that follows the cursor */}
-          <div style={{
-            position: "absolute", inset: 0, borderRadius: 10,
-            background: `radial-gradient(circle at ${glare.x}% ${glare.y}%, rgba(255,255,255,0.17) 0%, transparent 58%)`,
-            opacity: hov ? 1 : 0,
-            transition: hov ? "opacity 0.1s" : "opacity 0.35s",
-            pointerEvents: "none",
-            mixBlendMode: "screen" as const,
-          }} />
-
-          <div style={{
-            width: 60, height: 60, borderRadius: "50%",
-            background: `${room.color}${hov ? "22" : "14"}`,
-            border: `1.5px solid ${room.color}${hov ? "65" : "40"}`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            fontSize: 26,
-            transform: hov ? "scale(1.18)" : "scale(1)",
-            transition: "transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1)",
-            position: "relative", zIndex: 1,
-          }}>
-            {room.icon}
-          </div>
-
-          <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
-            <p style={{ color: "white", fontWeight: 700, fontSize: 13, margin: 0, letterSpacing: "0.02em" }}>
-              {room.label}
-            </p>
-            <p style={{ color: room.color, fontSize: 9, margin: "4px 0 0", opacity: hov ? 1 : 0.7, fontWeight: 700, letterSpacing: "0.1em", transition: "opacity 0.2s" }}>
-              {hov ? "CLICK TO ENTER" : "· ROOM ·"}
-            </p>
-          </div>
+          {room.icon}
+        </div>
+        <div style={{ textAlign: "center", position: "relative", zIndex: 1 }}>
+          <p style={{ color: "white", fontWeight: 700, fontSize: 13, margin: 0, letterSpacing: "0.02em" }}>
+            {room.label}
+          </p>
+          <p style={{ color: room.color, fontSize: 9, margin: "4px 0 0", opacity: hov ? 1 : 0.7, fontWeight: 700, letterSpacing: "0.1em", transition: "opacity 0.2s" }}>
+            {hov ? "CLICK TO ENTER" : "· ROOM ·"}
+          </p>
         </div>
       </div>
     </div>
@@ -251,7 +209,7 @@ function DoorPortal({
 // IMPORTANT: no opacity on the preserve-3d parent — opacity creates a stacking
 // context that flattens all child 3D transforms. Visibility is handled by React
 // conditional rendering instead (only the target room box is ever mounted).
-function RoomBox({ id, color, contentReady, children }: { id: RoomId; color: string; contentReady: boolean; children: React.ReactNode }) {
+function RoomBox({ id, color, contentReady, active, children }: { id: RoomId; color: string; contentReady: boolean; active: boolean; children: React.ReactNode }) {
   const [wx, wz] = ROOM_POS[id];
   const boxZ = wz - ROOM_D / 2;
 
@@ -279,6 +237,7 @@ function RoomBox({ id, color, contentReady, children }: { id: RoomId; color: str
       width: 0, height: 0,
       transform: `translate(-50%,-50%) translate3d(${wx}px,0px,${boxZ}px)`,
       transformStyle: "preserve-3d",
+      pointerEvents: active ? "auto" : "none",
     }}>
       {/* ── back wall (content lives here) ── */}
       <div style={{
@@ -816,6 +775,9 @@ export default function ZoomClient() {
   const [camera,        setCamera]        = useState({ x: 0, z: 0 });
   const [isTraveling,   setIsTraveling]   = useState(false);
   const [contentReady,  setContentReady]  = useState(false);
+  const [hoveredDoor,   setHoveredDoor]   = useState<RoomId | null>(null);
+  const [doorTilt,      setDoorTilt]      = useState({ rx: 0, ry: 0 });
+  const [doorGlare,     setDoorGlare]     = useState({ x: 50, y: 50 });
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const clearTimers = () => { timers.current.forEach(clearTimeout); timers.current = []; };
 
@@ -948,25 +910,33 @@ export default function ZoomClient() {
         }}>
           <StarField />
 
-          {/* Hall group — display toggled by RAF; no opacity (preserve-3d safe) */}
+          {/* Hall group */}
           <div style={{
             position: "absolute", inset: 0,
             transformStyle: "preserve-3d",
-            pointerEvents: inHall ? "auto" : "none",
+            pointerEvents: "none",
           }}>
             <FloorGrid />
             <HallHero />
             {DOORS.map((door) => {
               const room = ROOMS.find((r) => r.id === door.id)!;
+              const hov = hoveredDoor === door.id;
               return (
-                <DoorPortal key={door.id} {...door} room={room} onEnter={enterRoom} />
+                <DoorPortal
+                  key={door.id}
+                  x={door.x} z={door.z} ry={door.ry}
+                  room={room}
+                  hov={hov}
+                  tilt={hov ? doorTilt : { rx: 0, ry: 0 }}
+                  glare={hov ? doorGlare : { x: 50, y: 50 }}
+                />
               );
             })}
           </div>
 
           {/* All room boxes always exist in the world — walls/glow visible from hall */}
           {ROOMS.map((room) => (
-            <RoomBox key={room.id} id={room.id} color={room.color} contentReady={tgtRoomState === room.id && contentReady}>
+            <RoomBox key={room.id} id={room.id} color={room.color} contentReady={tgtRoomState === room.id && contentReady} active={tgtRoomState === room.id}>
               {tgtRoomState === room.id ? <RoomContent id={room.id} onEnterRoom={enterRoom} /> : null}
             </RoomBox>
           ))}
@@ -980,54 +950,47 @@ export default function ZoomClient() {
         transition: `opacity ${Math.round(ANIM_MS * 0.45)}ms ease`,
       }} />
 
-      {/* ── Back to hall button ── */}
+      {/* ── Card hotspots: 2D overlay that owns all click + hover input ── */}
       {inHall && !isTraveling && (
-        <div
-          aria-label="Room shortcuts"
-          style={{
-            position: "fixed",
-            inset: 0,
-            zIndex: 45,
-            pointerEvents: "none",
-          }}
-        >
+        <div style={{ position: "fixed", inset: 0, zIndex: 20, pointerEvents: "none" }}>
           {DOORS.map((door) => {
-            const room = ROOMS.find((r) => r.id === door.id)!;
-            // Screen positions derived from perspective projection:
-            // scale = PERSPECTIVE / (PERSPECTIVE + |z|), then screen_xy = world_xy * scale
-            const hotspotMap: Record<RoomId, { x: number; y: number; w: number; h: number }> = {
-              // scale = PERSPECTIVE / (PERSPECTIVE + |z|), screen_xy = world_xy * scale
-              projects:     { x:   0,  y: 37, w: 160, h: 210 }, // z=-700 → scale≈0.667
-              testimonials: { x: -292, y: 40, w: 160, h: 215 }, // z=-520 → scale≈0.729
-              about:        { x:  292, y: 40, w: 160, h: 215 },
-              skills:       { x:   0,  y:  0, w:   0, h:   0 },
-              services:     { x:   0,  y:  0, w:   0, h:   0 },
-              hall:         { x:   0,  y:  0, w:   0, h:   0 },
-              contact:      { x:   0,  y:  0, w:   0, h:   0 },
-            };
-            const hotspot = hotspotMap[door.id];
-
+            // Perspective projection: scale = P/(P+|z|), screen offset = world * scale
+            // cards at y=130 world-space; card size 190×270 world-space
+            const sc = PERSPECTIVE / (PERSPECTIVE + Math.abs(door.z));
+            const sx = door.x * sc;
+            const sy = 130 * sc;
+            const sw = 190 * sc + 40; // generous hit area
+            const sh = 270 * sc + 40;
             return (
               <button
                 key={door.id}
                 type="button"
-                aria-label={`Enter ${room.label}`}
-                title={`Enter ${room.label}`}
+                aria-label={`Enter ${door.id}`}
                 onClick={() => enterRoom(door.id)}
+                onMouseEnter={() => setHoveredDoor(door.id)}
+                onMouseLeave={() => {
+                  setHoveredDoor(null);
+                  setDoorTilt({ rx: 0, ry: 0 });
+                  setDoorGlare({ x: 50, y: 50 });
+                }}
+                onMouseMove={(e) => {
+                  const r = e.currentTarget.getBoundingClientRect();
+                  const cx = (e.clientX - r.left) / r.width;
+                  const cy = (e.clientY - r.top) / r.height;
+                  setDoorTilt({ rx: (cy - 0.5) * -22, ry: (cx - 0.5) * 22 });
+                  setDoorGlare({ x: cx * 100, y: cy * 100 });
+                }}
                 style={{
                   position: "absolute",
-                  left: `calc(50% + ${hotspot.x}px)`,
-                  top: `calc(50% + ${hotspot.y}px)`,
-                  width: hotspot.w,
-                  height: hotspot.h,
-                  // closer doors (less negative z) must sit on top when areas overlap
-                  zIndex: Math.round((2000 + door.z) / -100),
-                  transform: `translate(-50%, -50%) rotate(${door.ry * -0.18}deg)`,
-                  border: "none",
-                  borderRadius: 18,
+                  left: `calc(50% + ${sx}px)`,
+                  top:  `calc(50% + ${sy}px)`,
+                  width: sw, height: sh,
+                  transform: "translate(-50%,-50%)",
                   background: "transparent",
+                  border: "none",
                   cursor: "pointer",
                   pointerEvents: "auto",
+                  borderRadius: 14,
                 }}
               />
             );
