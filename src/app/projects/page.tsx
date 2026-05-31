@@ -1,5 +1,10 @@
+import { Suspense } from "react";
 import ProjectsClient from "../components/ProjectsClient";
 
 export default function ProjectShowcase() {
-  return <ProjectsClient />;
+  return (
+    <Suspense>
+      <ProjectsClient />
+    </Suspense>
+  );
 }

@@ -1047,8 +1047,9 @@ export default function ZoomClient() {
             const sc = PERSPECTIVE / (PERSPECTIVE + Math.abs(door.z));
             const sx = door.x * sc;
             const sy = 130 * sc;
-            const sw = 190 * sc + 40; // generous hit area
-            const sh = 270 * sc + 40;
+            // Rotated cards appear narrower — cos(ry) accounts for that
+            const sw = 190 * Math.cos((door.ry * Math.PI) / 180) * sc;
+            const sh = 270 * sc;
             return (
               <button
                 key={door.id}
