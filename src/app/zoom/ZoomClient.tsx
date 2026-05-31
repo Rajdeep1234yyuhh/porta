@@ -88,9 +88,47 @@ function FloorGrid() {
   );
 }
 
-// ── Vignette ───────────────────────────────────────────────────────────────────
-// ── Hall hero (lives at world origin) ─────────────────────────────────────────
+// ── Hall hero — letters repel the cursor ──────────────────────────────────────
 function HallHero() {
+  const [mouse, setMouse] = useState({ x: -9999, y: -9999 });
+  const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
+
+  useEffect(() => {
+    const h = (e: MouseEvent) => setMouse({ x: e.clientX, y: e.clientY });
+    window.addEventListener("mousemove", h);
+    return () => window.removeEventListener("mousemove", h);
+  }, []);
+
+  const repel = (idx: number): { x: number; y: number } => {
+    const el = letterRefs.current[idx];
+    if (!el) return { x: 0, y: 0 };
+    const r = el.getBoundingClientRect();
+    const cx = r.left + r.width / 2;
+    const cy = r.top  + r.height / 2;
+    const dx = mouse.x - cx;
+    const dy = mouse.y - cy;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const radius = 90;
+    if (dist > radius || dist === 0) return { x: 0, y: 0 };
+    const force = (1 - dist / radius) * 16;
+    return { x: -(dx / dist) * force, y: -(dy / dist) * force };
+  };
+
+  const line1 = "RAJDEEP".split("");
+  const line2 = "KOTOKY".split("");
+
+  const letterStyle = (idx: number): React.CSSProperties => {
+    const { x, y } = repel(idx);
+    const idle = x === 0 && y === 0;
+    return {
+      display: "inline-block",
+      transform: `translate(${x}px, ${y}px)`,
+      transition: idle
+        ? "transform 0.5s cubic-bezier(0.23,1,0.32,1)"
+        : "transform 0.05s linear",
+    };
+  };
+
   return (
     <div style={{
       position: "absolute", left: "50%", top: "50%",
@@ -113,11 +151,40 @@ function HallHero() {
         fontSize: "clamp(46px, 8vw, 96px)", fontWeight: 900,
         color: "white", lineHeight: 1, letterSpacing: "-0.03em", margin: 0,
       }}>
-        RAJDEEP<br />
-        <span style={{
-          background: "linear-gradient(90deg, #a78bfa 0%, #818cf8 50%, #60a5fa 100%)",
-          WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-        }}>KOTOKY</span>
+        {/* RAJDEEP — white, per-letter */}
+        {line1.map((ch, i) => (
+          <span key={i} ref={el => { letterRefs.current[i] = el; }} style={letterStyle(i)}>
+            {ch}
+          </span>
+        ))}
+        <br />
+        {/* KOTOKY — gradient via individual letter colours */}
+        {line2.map((ch, i) => {
+          const idx = line1.length + i;
+          const { x, y } = repel(idx);
+          const idle = x === 0 && y === 0;
+          // interpolate #a78bfa → #60a5fa across 6 letters
+          const t = i / (line2.length - 1);
+          const r2 = Math.round(0xa7 + (0x60 - 0xa7) * t).toString(16).padStart(2, "0");
+          const g2 = Math.round(0x8b + (0xa5 - 0x8b) * t).toString(16).padStart(2, "0");
+          const b2 = Math.round(0xfa + (0xfa - 0xfa) * t).toString(16).padStart(2, "0");
+          return (
+            <span
+              key={i}
+              ref={el => { letterRefs.current[idx] = el; }}
+              style={{
+                display: "inline-block",
+                color: `#${r2}${g2}${b2}`,
+                transform: `translate(${x}px, ${y}px)`,
+                transition: idle
+                  ? "transform 0.5s cubic-bezier(0.23,1,0.32,1)"
+                  : "transform 0.05s linear",
+              }}
+            >
+              {ch}
+            </span>
+          );
+        })}
       </h1>
       <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, marginTop: 16, letterSpacing: "0.12em", fontWeight: 600 }}>
         FULL-STACK DEVELOPER · AI/ML ENGINEER
