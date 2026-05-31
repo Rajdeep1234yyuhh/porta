@@ -1,8 +1,11 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Text3D, Center } from "@react-three/drei";
+import * as THREE from "three";
 import { allProjects } from "../data/projects";
 import { testimonials } from "../data/testimonials";
 
@@ -88,105 +91,123 @@ function FloorGrid() {
   );
 }
 
-// ── Hall hero — letters repel the cursor ──────────────────────────────────────
-function HallHero() {
-  const [mouse, setMouse] = useState({ x: -9999, y: -9999 });
-  const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
+// ── 3-D letter mesh (one per character, animated in useFrame) ─────────────────
+const STEP = 0.70; // world-units between letter centres
 
-  useEffect(() => {
-    const h = (e: MouseEvent) => setMouse({ x: e.clientX, y: e.clientY });
-    window.addEventListener("mousemove", h);
-    return () => window.removeEventListener("mousemove", h);
-  }, []);
-
-  const repel = (idx: number): { x: number; y: number } => {
-    const el = letterRefs.current[idx];
-    if (!el) return { x: 0, y: 0 };
-    const r = el.getBoundingClientRect();
-    const cx = r.left + r.width / 2;
-    const cy = r.top  + r.height / 2;
-    const dx = mouse.x - cx;
-    const dy = mouse.y - cy;
-    const dist = Math.sqrt(dx * dx + dy * dy);
-    const radius = 90;
-    if (dist > radius || dist === 0) return { x: 0, y: 0 };
-    const force = (1 - dist / radius) * 16;
-    return { x: -(dx / dist) * force, y: -(dy / dist) * force };
-  };
-
-  const line1 = "RAJDEEP".split("");
-  const line2 = "KOTOKY".split("");
-
-  const letterStyle = (idx: number): React.CSSProperties => {
-    const { x, y } = repel(idx);
-    const idle = x === 0 && y === 0;
+const LETTER_DATA: { ch: string; x: number; y: number; color: string }[] = [
+  ...("RAJDEEP".split("").map((ch, i, a) => ({
+    ch, color: "#ffffff",
+    x: -((a.length - 1) * STEP) / 2 + i * STEP,
+    y: 0.44,
+  }))),
+  ...("KOTOKY".split("").map((ch, i, a) => {
+    const t  = i / (a.length - 1);
+    const rc = Math.round(0xa7 + (0x60 - 0xa7) * t).toString(16).padStart(2, "0");
+    const gc = Math.round(0x8b + (0xa5 - 0x8b) * t).toString(16).padStart(2, "0");
     return {
-      display: "inline-block",
-      transform: `translate(${x}px, ${y}px)`,
-      transition: idle
-        ? "transform 0.5s cubic-bezier(0.23,1,0.32,1)"
-        : "transform 0.05s linear",
+      ch, color: `#${rc}${gc}fa`,
+      x: -((a.length - 1) * STEP) / 2 + i * STEP,
+      y: -0.44,
     };
-  };
+  })),
+];
 
+function LetterMesh({ ch, x, y, color }: { ch: string; x: number; y: number; color: string }) {
+  const ref = useRef<THREE.Group>(null);
+
+  useFrame((state) => {
+    const g = ref.current;
+    if (!g) return;
+    const { pointer } = state;
+
+    // Project current world pos → NDC to measure distance from mouse
+    const wp = new THREE.Vector3(g.position.x, g.position.y, g.position.z).project(state.camera);
+    const dx = pointer.x - wp.x;
+    const dy = pointer.y - wp.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    const R = 0.38;
+
+    let tpx = x, tpy = y, tpz = 0, trx = 0, try_ = 0;
+    if (dist < R && dist > 0.001) {
+      const t  = (1 - dist / R) ** 1.4;
+      const nx = dx / dist, ny = dy / dist;
+      tpx  = x - nx * t * 0.4;
+      tpy  = y - ny * t * 0.28;
+      tpz  = t * 1.2;           // surge toward camera
+      try_ = -nx * t * 1.4;     // flip on Y axis (most dramatic 3-D cue)
+      trx  =  ny * t * 0.9;
+    }
+
+    const f = 0.13;
+    g.position.x += (tpx - g.position.x) * f;
+    g.position.y += (tpy - g.position.y) * f;
+    g.position.z += (tpz - g.position.z) * f;
+    g.rotation.x += (trx - g.rotation.x) * f;
+    g.rotation.y += (try_ - g.rotation.y) * f;
+  });
+
+  return (
+    <group ref={ref} position={[x, y, 0]}>
+      <Center>
+        <Text3D
+          font="/helvetiker_bold.typeface.json"
+          size={0.82}
+          height={0.28}
+          curveSegments={8}
+          bevelEnabled
+          bevelThickness={0.018}
+          bevelSize={0.014}
+          bevelSegments={5}
+        >
+          {ch}
+          <meshStandardMaterial color={color} metalness={0.55} roughness={0.2} />
+        </Text3D>
+      </Center>
+    </group>
+  );
+}
+
+// ── Hall hero ─────────────────────────────────────────────────────────────────
+function HallHero() {
   return (
     <div style={{
       position: "absolute", left: "50%", top: "50%",
-      width: "min(90vw, 640px)",
+      width: "min(90vw, 700px)",
       transform: "translate(-50%, -50%) translate3d(0, -150px, 0)",
       textAlign: "center", pointerEvents: "none",
     }}>
+      {/* Badge */}
       <div style={{
         display: "inline-flex", alignItems: "center", gap: 8,
         padding: "5px 14px", borderRadius: 999,
         border: "1px solid rgba(167,139,250,0.3)",
         background: "rgba(167,139,250,0.08)",
         fontSize: 11, color: "rgba(167,139,250,0.9)", fontWeight: 700,
-        letterSpacing: "0.08em", marginBottom: 24,
+        letterSpacing: "0.08em", marginBottom: 16,
       }}>
         <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#4ade80", display: "inline-block" }} />
         AVAILABLE FOR WORK
       </div>
-      <h1 style={{
-        fontSize: "clamp(46px, 8vw, 96px)", fontWeight: 900,
-        color: "white", lineHeight: 1, letterSpacing: "-0.03em", margin: 0,
-      }}>
-        {/* RAJDEEP — white, per-letter */}
-        {line1.map((ch, i) => (
-          <span key={i} ref={el => { letterRefs.current[i] = el; }} style={letterStyle(i)}>
-            {ch}
-          </span>
-        ))}
-        <br />
-        {/* KOTOKY — gradient via individual letter colours */}
-        {line2.map((ch, i) => {
-          const idx = line1.length + i;
-          const { x, y } = repel(idx);
-          const idle = x === 0 && y === 0;
-          // interpolate #a78bfa → #60a5fa across 6 letters
-          const t = i / (line2.length - 1);
-          const r2 = Math.round(0xa7 + (0x60 - 0xa7) * t).toString(16).padStart(2, "0");
-          const g2 = Math.round(0x8b + (0xa5 - 0x8b) * t).toString(16).padStart(2, "0");
-          const b2 = Math.round(0xfa + (0xfa - 0xfa) * t).toString(16).padStart(2, "0");
-          return (
-            <span
-              key={i}
-              ref={el => { letterRefs.current[idx] = el; }}
-              style={{
-                display: "inline-block",
-                color: `#${r2}${g2}${b2}`,
-                transform: `translate(${x}px, ${y}px)`,
-                transition: idle
-                  ? "transform 0.5s cubic-bezier(0.23,1,0.32,1)"
-                  : "transform 0.05s linear",
-              }}
-            >
-              {ch}
-            </span>
-          );
-        })}
-      </h1>
-      <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, marginTop: 16, letterSpacing: "0.12em", fontWeight: 600 }}>
+
+      {/* Real 3-D extruded letters via React Three Fiber */}
+      <div style={{ width: "100%", height: 210, pointerEvents: "auto" }}>
+        <Canvas
+          orthographic
+          camera={{ zoom: 100, position: [0, 0, 5], near: 0.1, far: 100 }}
+          gl={{ alpha: true, antialias: true }}
+          style={{ background: "transparent" }}
+        >
+          <ambientLight intensity={0.55} />
+          <directionalLight position={[2, 4, 5]} intensity={1.4} castShadow={false} />
+          <pointLight position={[-4, -2, 3]} color="#a78bfa" intensity={5} />
+          <pointLight position={[4,  3, 3]} color="#60a5fa" intensity={3} />
+          <Suspense fallback={null}>
+            {LETTER_DATA.map((l, i) => <LetterMesh key={i} {...l} />)}
+          </Suspense>
+        </Canvas>
+      </div>
+
+      <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 13, marginTop: 4, letterSpacing: "0.12em", fontWeight: 600 }}>
         FULL-STACK DEVELOPER · AI/ML ENGINEER
       </p>
     </div>
