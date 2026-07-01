@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Text3D, Center } from "@react-three/drei";
+import { Text3D, Center, Text, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { allProjects } from "../data/projects";
 import { testimonials } from "../data/testimonials";
@@ -216,19 +216,20 @@ function HallHero() {
 
 // ── Door portal — purely visual, no pointer events (hotspots handle input) ────
 function DoorPortal({
-  x, z, ry, room, hov, tilt, glare,
+  x, z, ry, room, hov, tilt, glare, domRef,
 }: {
   x: number; z: number; ry: number;
   room: typeof ROOMS[0];
   hov: boolean;
   tilt: { rx: number; ry: number };
   glare: { x: number; y: number };
+  domRef?: (el: HTMLDivElement | null) => void;
 }) {
   const base = `translate(-50%,-50%) translate3d(${x}px,130px,${z}px) rotateY(${ry}deg)`;
   const hover = `${base} rotateX(${tilt.rx}deg) rotateY(${tilt.ry}deg) translateZ(280px) scale(1.06)`;
 
   return (
-    <div style={{
+    <div ref={domRef} style={{
       position: "absolute", left: "50%", top: "50%",
       width: 190, height: 270,
       pointerEvents: "none",
@@ -351,10 +352,11 @@ function RoomBox({ id, color, contentReady, active, children }: { id: RoomId; co
         <div style={{
           position: "relative", zIndex: 1, width: "100%", height: "100%",
           display: "flex", alignItems: "center", justifyContent: "center",
-          padding: 40, boxSizing: "border-box", overflowY: "auto",
+          overflow: "hidden",
           opacity: contentReady ? 1 : 0,
           transform: contentReady ? "translateY(0)" : "translateY(24px)",
           transition: "opacity 0.55s ease, transform 0.55s ease",
+          WebkitFontSmoothing: "antialiased" as const,
         }}>
           {children}
         </div>
@@ -427,7 +429,7 @@ function ContentProjects({ onEnterRoom }: { onEnterRoom?: (id: RoomId) => void }
   ];
 
   return (
-    <div style={{ width: 2000, padding: "0 40px", boxSizing: "border-box" as const }}>
+    <div style={{ width: "100%" }}>
 
       {/* ── Hero bio row ── */}
       <div style={{
@@ -579,7 +581,7 @@ function ContentProjects({ onEnterRoom }: { onEnterRoom?: (id: RoomId) => void }
 
 function ContentTestimonials() {
   return (
-    <div style={{ width: "min(92vw, 940px)", maxHeight: "82dvh", overflowY: "auto", padding: "0 4px" }}>
+    <div style={{ width: "100%" }}>
       <div style={{ textAlign: "center", marginBottom: 28 }}>
         <p style={{ color: "rgba(251,191,36,0.6)", fontSize: 10, letterSpacing: "0.15em", fontWeight: 700, marginBottom: 8 }}>CLIENT FEEDBACK</p>
         <h2 style={{ color: "white", fontWeight: 900, fontSize: "clamp(26px,4vw,44px)", margin: 0, letterSpacing: "-0.02em" }}>
@@ -618,62 +620,229 @@ function ContentTestimonials() {
   );
 }
 
+// ── About Me — pure Three.js/WebGL (crisp at any CSS 3D scale) ────────────────
+// WebGL renders at device DPR → no blurriness regardless of CSS perspective.
+// zoom=50: 1 world unit = 50 CSS px. Canvas is ROOM_W×ROOM_H = 2200×1400 px
+// → world space: x ∈ [-22,22], y ∈ [-14,14]
+
+const ABOUT_STATS = [
+  { v: "25+", l: "CLIENTS",  x: -15 },
+  { v: "18",  l: "SHOPIFY",  x:  -5 },
+  { v: "5+",  l: "YRS EXP",  x:   5 },
+  { v: "4+",  l: "PROJECTS", x:  15 },
+];
+
+const ABOUT_CHIPS = [
+  { n: "Next.js",    c: "#ffffff", x: -16.5 },
+  { n: "React",      c: "#61DAFB", x: -10.5 },
+  { n: "TypeScript", c: "#3178C6", x:  -3.5 },
+  { n: "Shopify",    c: "#96BF48", x:   3.5 },
+  { n: "AI / ML",    c: "#a78bfa", x:   10  },
+];
+
+// Animated floating name
+function AboutName() {
+  const ref = useRef<THREE.Group>(null);
+  useFrame(({ clock }) => {
+    if (ref.current) ref.current.position.y = 10.2 + Math.sin(clock.elapsedTime * 0.55) * 0.14;
+  });
+  return (
+    <group ref={ref}>
+      <Center>
+        <Text3D
+          font="/helvetiker_bold.typeface.json"
+          size={1.55} height={0.30}
+          curveSegments={8}
+          bevelEnabled bevelThickness={0.024} bevelSize={0.016} bevelSegments={5}
+        >
+          RAJDEEP KOTOKY
+          <meshStandardMaterial color="white" metalness={0.45} roughness={0.2} />
+        </Text3D>
+      </Center>
+    </group>
+  );
+}
+
+// Avatar circle + green ring + available dot
+function AboutAvatar() {
+  const texture = useTexture("/DP.jpg");
+  const glowRef = useRef<THREE.Mesh>(null);
+  useFrame(({ clock }) => {
+    if (glowRef.current) {
+      (glowRef.current.material as THREE.MeshBasicMaterial).opacity =
+        0.12 + Math.sin(clock.elapsedTime * 1.8) * 0.08;
+    }
+  });
+  return (
+    <group position={[-16, 4.5, 0]}>
+      {/* Outer animated glow */}
+      <mesh ref={glowRef} position={[0, 0, -0.15]}>
+        <ringGeometry args={[4.2, 5.6, 64]} />
+        <meshBasicMaterial color="#34d399" transparent opacity={0.15} />
+      </mesh>
+      {/* Green border */}
+      <mesh position={[0, 0, -0.08]}>
+        <ringGeometry args={[3.85, 4.2, 64]} />
+        <meshBasicMaterial color="#34d399" transparent opacity={0.7} />
+      </mesh>
+      {/* Photo */}
+      <mesh>
+        <circleGeometry args={[3.85, 64]} />
+        <meshBasicMaterial map={texture} />
+      </mesh>
+      {/* Available dot */}
+      <mesh position={[2.9, -2.9, 0.1]}>
+        <circleGeometry args={[0.5, 32]} />
+        <meshBasicMaterial color="#4ade80" />
+      </mesh>
+      <mesh position={[2.9, -2.9, 0.05]}>
+        <circleGeometry args={[0.8, 32]} />
+        <meshBasicMaterial color="#4ade80" transparent opacity={0.25} />
+      </mesh>
+    </group>
+  );
+}
+
+function AboutScene() {
+  return (
+    <>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[6, 12, 8]} intensity={1.1} />
+      <pointLight position={[-12, 6, 8]}  color="#34d399" intensity={10} />
+      <pointLight position={[ 14, -4, 8]} color="#10b981" intensity={5}  />
+
+      {/* Avatar */}
+      <AboutAvatar />
+
+      {/* Available badge */}
+      <Text
+        position={[-16, -1.2, 0]}
+        fontSize={0.5} color="#4ade80"
+        anchorX="center" anchorY="middle"
+        letterSpacing={0.12}
+      >
+        ● AVAILABLE FOR WORK
+      </Text>
+
+      {/* Name (animated, extruded 3-D) */}
+      <AboutName />
+
+      {/* Role */}
+      <Text
+        position={[2, 7.5, 0]}
+        fontSize={0.70} color="#34d399"
+        anchorX="center" anchorY="middle"
+        letterSpacing={0.03}
+      >
+        Full-Stack Dev  ·  AI/ML Engineer  ·  Shopify Expert
+      </Text>
+
+      {/* Bio */}
+      <Text
+        position={[-5.5, 5.8, 0]}
+        fontSize={0.60} color="#8899aa"
+        anchorX="left" anchorY="top"
+        maxWidth={23} lineHeight={1.75}
+      >
+        {`Based in Assam, India — 5+ years building fast\nweb apps, Shopify stores, and AI-powered\nproducts for 25+ clients worldwide.`}
+      </Text>
+
+      {/* Stats */}
+      {ABOUT_STATS.map(s => (
+        <group key={s.l} position={[s.x, -3.8, 0]}>
+          {/* Border frame */}
+          <mesh position={[0, 0, -0.07]}>
+            <planeGeometry args={[9.6, 5.8]} />
+            <meshBasicMaterial color="#34d399" transparent opacity={0.22} />
+          </mesh>
+          {/* Card */}
+          <mesh>
+            <planeGeometry args={[9.2, 5.4]} />
+            <meshBasicMaterial color="#030d08" transparent opacity={0.92} />
+          </mesh>
+          {/* Value */}
+          <Text position={[0, 0.95, 0.1]} fontSize={1.72} color="#34d399" anchorX="center" anchorY="middle">
+            {s.v}
+          </Text>
+          {/* Label */}
+          <Text position={[0, -1.05, 0.1]} fontSize={0.50} color="#556677" anchorX="center" anchorY="middle" letterSpacing={0.1}>
+            {s.l}
+          </Text>
+        </group>
+      ))}
+
+      {/* Stack chips */}
+      {ABOUT_CHIPS.map(s => (
+        <group key={s.n} position={[s.x, -9.6, 0]}>
+          <mesh position={[0, 0, -0.05]}>
+            <planeGeometry args={[5.6, 2.2]} />
+            <meshBasicMaterial color={s.c} transparent opacity={0.16} />
+          </mesh>
+          <mesh>
+            <planeGeometry args={[5.2, 1.8]} />
+            <meshBasicMaterial color="#0a0a14" transparent opacity={0.85} />
+          </mesh>
+          <Text position={[0, 0, 0.1]} fontSize={0.54} color={s.c} anchorX="center" anchorY="middle">
+            {s.n}
+          </Text>
+        </group>
+      ))}
+
+      {/* WhatsApp CTA */}
+      <group position={[18.5, -9.3, 0]}>
+        <mesh position={[0, 0, -0.06]}>
+          <planeGeometry args={[7.6, 2.8]} />
+          <meshBasicMaterial color="#25D366" transparent opacity={0.28} />
+        </mesh>
+        <mesh
+          onClick={() => window.open(`https://wa.me/${PHONE}`, "_blank")}
+          onPointerOver={() => { document.body.style.cursor = "pointer"; }}
+          onPointerOut={() => { document.body.style.cursor = "default"; }}
+        >
+          <planeGeometry args={[7.2, 2.4]} />
+          <meshBasicMaterial color="#0d2016" transparent opacity={0.95} />
+        </mesh>
+        <Text position={[0, 0, 0.1]} fontSize={0.72} color="#25D366" anchorX="center" anchorY="middle">
+          WhatsApp
+        </Text>
+      </group>
+
+      {/* Email CTA */}
+      <group position={[18.5, -12.2, 0]}>
+        <mesh position={[0, 0, -0.06]}>
+          <planeGeometry args={[7.6, 2.8]} />
+          <meshBasicMaterial color="#ffffff" transparent opacity={0.1} />
+        </mesh>
+        <mesh
+          onClick={() => window.open("mailto:kotoky10@gmail.com")}
+          onPointerOver={() => { document.body.style.cursor = "pointer"; }}
+          onPointerOut={() => { document.body.style.cursor = "default"; }}
+        >
+          <planeGeometry args={[7.2, 2.4]} />
+          <meshBasicMaterial color="#0e0e1a" transparent opacity={0.95} />
+        </mesh>
+        <Text position={[0, 0, 0.1]} fontSize={0.72} color="#aaaacc" anchorX="center" anchorY="middle">
+          Email
+        </Text>
+      </group>
+    </>
+  );
+}
+
 function ContentAbout() {
   return (
-    <div style={{ width: "min(92vw, 800px)", maxHeight: "82dvh", overflowY: "auto" }}>
-      <div style={{ display: "grid", gridTemplateColumns: "auto 1fr", gap: 40, alignItems: "center" }}>
-        <div style={{ display: "flex", flexDirection: "column" as const, alignItems: "center", gap: 16 }}>
-          <div style={{
-            width: 120, height: 120, borderRadius: 20,
-            overflow: "hidden", border: "2px solid rgba(52,211,153,0.3)",
-          }}>
-            <Image src="/DP.jpg" alt="Rajdeep" width={120} height={120} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-          </div>
-          <div style={{ display: "flex", gap: 8 }}>
-            <a href={`https://wa.me/${PHONE}`} target="_blank" rel="noopener noreferrer" style={{
-              padding: "8px 14px", borderRadius: 10, fontSize: 12, fontWeight: 700,
-              background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)",
-              color: "#25D366", textDecoration: "none",
-            }}>WhatsApp</a>
-            <a href="mailto:kotoky10@gmail.com" style={{
-              padding: "8px 14px", borderRadius: 10, fontSize: 12, fontWeight: 700,
-              background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
-              color: "rgba(255,255,255,0.6)", textDecoration: "none",
-            }}>Email</a>
-          </div>
-        </div>
-        <div style={{ display: "flex", flexDirection: "column" as const, gap: 16 }}>
-          <div>
-            <h2 style={{ color: "white", fontWeight: 900, fontSize: "clamp(24px,3.5vw,40px)", margin: 0 }}>Rajdeep Kotoky</h2>
-            <p style={{ color: "#34d399", fontSize: 13, margin: "4px 0 0", fontWeight: 600 }}>Full-Stack Dev & AI/ML Engineer</p>
-          </div>
-          <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 13, lineHeight: 1.8, margin: 0 }}>
-            Based in Assam, India. I build fast, modern web apps and Shopify stores.
-            5+ years of experience, 25+ happy clients worldwide. Specialized in
-            Next.js, React, TypeScript, and AI/ML integrations.
-          </p>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
-            {[
-              { v: "4+",  l: "Projects" },
-              { v: "18",  l: "Shopify" },
-              { v: "25+", l: "Clients" },
-              { v: "5+",  l: "Yrs Exp" },
-            ].map((s) => (
-              <div key={s.l} style={{
-                borderRadius: 10, border: "1px solid rgba(52,211,153,0.15)",
-                background: "rgba(52,211,153,0.05)", padding: "10px 8px", textAlign: "center",
-              }}>
-                <p style={{
-                  fontWeight: 900, fontSize: 20, margin: 0,
-                  background: "linear-gradient(135deg,#34d399,#10b981)",
-                  WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
-                }}>{s.v}</p>
-                <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 10, margin: "2px 0 0", fontWeight: 600 }}>{s.l}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
+    <div style={{ width: "100%", height: "100%" }}>
+      <Canvas
+        orthographic
+        camera={{ zoom: 50, position: [0, 0, 10], near: 0.1, far: 100 }}
+        gl={{ alpha: true, antialias: true }}
+        dpr={[1, 2]}
+        style={{ background: "transparent" }}
+      >
+        <Suspense fallback={null}>
+          <AboutScene />
+        </Suspense>
+      </Canvas>
     </div>
   );
 }
@@ -691,7 +860,7 @@ function ContentSkills() {
     { name: "AI / ML",    color: "#a78bfa", desc: "LLMs, embeddings, agents" },
   ];
   return (
-    <div style={{ width: "min(92vw, 780px)" }}>
+    <div style={{ width: "100%" }}>
       <div style={{ textAlign: "center", marginBottom: 28 }}>
         <p style={{ color: "rgba(96,165,250,0.6)", fontSize: 10, letterSpacing: "0.15em", fontWeight: 700, marginBottom: 8 }}>TECH STACK</p>
         <h2 style={{ color: "white", fontWeight: 900, fontSize: "clamp(26px,4vw,44px)", margin: 0, letterSpacing: "-0.02em" }}>Skills</h2>
@@ -717,7 +886,7 @@ function ContentSkills() {
 
 function ContentServices() {
   return (
-    <div style={{ width: "min(92vw, 760px)", textAlign: "center" }}>
+    <div style={{ width: "100%", textAlign: "center" }}>
       <p style={{ color: "rgba(244,114,182,0.6)", fontSize: 10, letterSpacing: "0.15em", fontWeight: 700, marginBottom: 8 }}>FAST HELP</p>
       <h2 style={{ color: "white", fontWeight: 900, fontSize: "clamp(26px,5vw,52px)", margin: "0 0 8px", letterSpacing: "-0.02em" }}>
         Got a bug?{" "}
@@ -763,7 +932,7 @@ function ContentServices() {
 
 function ContentContact() {
   return (
-    <div style={{ width: "min(92vw, 560px)", textAlign: "center" }}>
+    <div style={{ width: "100%", maxWidth: 560, margin: "0 auto", textAlign: "center" }}>
       <p style={{ color: "rgba(129,140,248,0.6)", fontSize: 10, letterSpacing: "0.15em", fontWeight: 700, marginBottom: 8 }}>READY TO START?</p>
       <h2 style={{ color: "white", fontWeight: 900, fontSize: "clamp(32px,5.5vw,68px)", margin: "0 0 12px", lineHeight: 1.05, letterSpacing: "-0.03em" }}>
         Let&apos;s build{" "}
@@ -793,7 +962,7 @@ function ContentContact() {
 
 function ContentAllProjects() {
   return (
-    <div style={{ width: 2000, padding: "0 40px", boxSizing: "border-box" as const }}>
+    <div style={{ width: "100%" }}>
       <div style={{ textAlign: "center", marginBottom: 44 }}>
         <p style={{ color: "rgba(129,140,248,0.6)", fontSize: 20, letterSpacing: "0.18em", fontWeight: 800, margin: "0 0 12px", textTransform: "uppercase" as const }}>Portfolio</p>
         <h2 style={{ color: "white", fontWeight: 900, fontSize: 56, margin: 0, letterSpacing: "-0.02em", lineHeight: 1 }}>
@@ -866,6 +1035,7 @@ export default function ZoomClient() {
   const [hoveredDoor,   setHoveredDoor]   = useState<RoomId | null>(null);
   const [doorTilt,      setDoorTilt]      = useState({ rx: 0, ry: 0 });
   const [doorGlare,     setDoorGlare]     = useState({ x: 50, y: 50 });
+  const doorRefs = useRef<Partial<Record<RoomId, HTMLDivElement | null>>>({});
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
   const clearTimers = () => { timers.current.forEach(clearTimeout); timers.current = []; };
 
@@ -921,6 +1091,46 @@ export default function ZoomClient() {
   useEffect(() => {
     return () => clearTimers();
   }, []);
+
+  // Once hover starts, track the door card's real (post-transform, enlarged)
+  // screen rect so the hover effect only ends when the cursor truly leaves
+  // the card as rendered — not the smaller resting-size hotspot that started it.
+  useEffect(() => {
+    if (!hoveredDoor) return;
+
+    const handleMove = (e: MouseEvent) => {
+      const el = doorRefs.current[hoveredDoor];
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const inside = e.clientX >= r.left && e.clientX <= r.right
+        && e.clientY >= r.top && e.clientY <= r.bottom;
+
+      if (!inside) {
+        setHoveredDoor(null);
+        setDoorTilt({ rx: 0, ry: 0 });
+        setDoorGlare({ x: 50, y: 50 });
+        return;
+      }
+
+      const cx = (e.clientX - r.left) / r.width;
+      const cy = (e.clientY - r.top) / r.height;
+      setDoorTilt({ rx: (cy - 0.5) * -22, ry: (cx - 0.5) * 22 });
+      setDoorGlare({ x: cx * 100, y: cy * 100 });
+    };
+
+    const clearHover = () => {
+      setHoveredDoor(null);
+      setDoorTilt({ rx: 0, ry: 0 });
+      setDoorGlare({ x: 50, y: 50 });
+    };
+
+    window.addEventListener("mousemove", handleMove);
+    document.addEventListener("mouseleave", clearHover);
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      document.removeEventListener("mouseleave", clearHover);
+    };
+  }, [hoveredDoor]);
 
   /*
   useEffect(() => {
@@ -1017,12 +1227,13 @@ export default function ZoomClient() {
                   hov={hov}
                   tilt={hov ? doorTilt : { rx: 0, ry: 0 }}
                   glare={hov ? doorGlare : { x: 50, y: 50 }}
+                  domRef={(el) => { doorRefs.current[door.id] = el; }}
                 />
               );
             })}
           </div>
 
-          {/* All room boxes always exist in the world — walls/glow visible from hall */}
+          {/* Room boxes — walls + content (zoom:2 wrapper keeps text crisp at 0.5× perspective) */}
           {ROOMS.map((room) => (
             <RoomBox key={room.id} id={room.id} color={room.color} contentReady={tgtRoomState === room.id && contentReady} active={tgtRoomState === room.id}>
               {tgtRoomState === room.id ? <RoomContent id={room.id} onEnterRoom={enterRoom} /> : null}
@@ -1056,13 +1267,11 @@ export default function ZoomClient() {
                 type="button"
                 aria-label={`Enter ${door.id}`}
                 onClick={() => enterRoom(door.id)}
-                onMouseEnter={() => setHoveredDoor(door.id)}
-                onMouseLeave={() => {
-                  setHoveredDoor(null);
-                  setDoorTilt({ rx: 0, ry: 0 });
-                  setDoorGlare({ x: 50, y: 50 });
-                }}
-                onMouseMove={(e) => {
+                onMouseEnter={(e) => {
+                  // Starts the hover effect; once active, a window-level
+                  // mousemove tracker (keyed off the real enlarged card rect)
+                  // takes over tilt/glare updates and decides when it ends.
+                  setHoveredDoor(door.id);
                   const r = e.currentTarget.getBoundingClientRect();
                   const cx = (e.clientX - r.left) / r.width;
                   const cy = (e.clientY - r.top) / r.height;
