@@ -158,6 +158,7 @@ const Navbar = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => { playClick(); setQuickOpen(false); }}
+              onMouseEnter={playHover}
               className="floating-action-option"
               style={{ color: "#25D366" }}
               aria-label="WhatsApp"
@@ -169,6 +170,7 @@ const Navbar = ({
             <a
               href={`tel:+${PHONE}`}
               onClick={() => { playClick(); setQuickOpen(false); }}
+              onMouseEnter={playHover}
               className="floating-action-option"
               style={{ color: "#60a5fa" }}
               aria-label="Call me"
@@ -180,6 +182,7 @@ const Navbar = ({
             <button
               type="button"
               onClick={() => { playClick(); scrollToSection("contact"); setQuickOpen(false); }}
+              onMouseEnter={playHover}
               className="floating-action-option"
               style={{ color: "#c084fc" }}
               aria-label="Message"
@@ -191,6 +194,7 @@ const Navbar = ({
             <button
               type="button"
               onClick={() => { playClick(); handleQuickDetails(); }}
+              onMouseEnter={playHover}
               className="floating-action-option"
               style={{ color: "#34d399" }}
               aria-label="Quick fix details"
@@ -403,6 +407,7 @@ const Navbar = ({
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => { playClick(); setQuickOpen(false); }}
+              onMouseEnter={playHover}
               className="floating-action-option"
               style={{ color: "#25D366" }}
               aria-label="WhatsApp"
@@ -414,6 +419,7 @@ const Navbar = ({
             <a
               href={`tel:+${PHONE}`}
               onClick={() => { playClick(); setQuickOpen(false); }}
+              onMouseEnter={playHover}
               className="floating-action-option"
               style={{ color: "#60a5fa" }}
               aria-label="Call me"
@@ -425,6 +431,7 @@ const Navbar = ({
             <button
               type="button"
               onClick={() => { playClick(); scrollToSection("contact"); setQuickOpen(false); }}
+              onMouseEnter={playHover}
               className="floating-action-option"
               style={{ color: "#c084fc" }}
               aria-label="Message"
@@ -436,6 +443,7 @@ const Navbar = ({
             <button
               type="button"
               onClick={() => { playClick(); handleQuickDetails(); }}
+              onMouseEnter={playHover}
               className="floating-action-option"
               style={{ color: "#34d399" }}
               aria-label="Quick fix details"

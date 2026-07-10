@@ -399,19 +399,6 @@ function RoomBox({ id, color, contentReady, active, children }: { id: RoomId; co
   );
 }
 
-// ── Star rating ────────────────────────────────────────────────────────────────
-function StarRating({ rating }: { rating: number }) {
-  return (
-    <div style={{ display: "flex", gap: 3 }}>
-      {Array.from({ length: 5 }).map((_, i) => (
-        <svg key={i} width="12" height="12" fill={i < rating ? "#FBBC05" : "rgba(255,255,255,0.12)"} viewBox="0 0 20 20">
-          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-        </svg>
-      ))}
-    </div>
-  );
-}
-
 // ── Room content ───────────────────────────────────────────────────────────────
 function ContentProjects({ onEnterRoom }: { onEnterRoom?: (id: RoomId) => void }) {
   const featured = allProjects.slice(0, 3);
@@ -579,43 +566,164 @@ function ContentProjects({ onEnterRoom }: { onEnterRoom?: (id: RoomId) => void }
   );
 }
 
+// ── Reviews — pure Three.js/WebGL (crisp at any CSS 3D scale, see About) ──────
+// Same zoom=50 convention: x ∈ [-22,22], y ∈ [-14,14]
+function TestimonialCard3D({ t, x, y, w, h }: { t: (typeof testimonials)[number]; x: number; y: number; w: number; h: number }) {
+  const padX = -w / 2 + 0.75;
+  const stars = "★★★★★".slice(0, t.rating);
+  return (
+    <group position={[x, y, 0]}>
+      <mesh position={[0, 0, -0.07]}>
+        <planeGeometry args={[w + 0.25, h + 0.25]} />
+        <meshBasicMaterial color="#fbbf24" transparent opacity={0.18} />
+      </mesh>
+      <mesh>
+        <planeGeometry args={[w, h]} />
+        <meshBasicMaterial color="#120d02" transparent opacity={0.94} />
+      </mesh>
+
+      {/* Avatar */}
+      <mesh position={[padX + 0.65, h / 2 - 1.25, 0.05]}>
+        <circleGeometry args={[0.65, 32]} />
+        <meshBasicMaterial color={t.avatarColor} />
+      </mesh>
+      <Text position={[padX + 0.65, h / 2 - 1.25, 0.1]} fontSize={0.5} color="white" anchorX="center" anchorY="middle">
+        {t.initial}
+      </Text>
+
+      {/* Name / role */}
+      <Text position={[padX + 1.65, h / 2 - 1.0, 0.1]} fontSize={0.46} color="white" anchorX="left" anchorY="middle">
+        {t.name}
+      </Text>
+      <Text position={[padX + 1.65, h / 2 - 1.6, 0.1]} fontSize={0.34} color="#8899aa" anchorX="left" anchorY="middle">
+        {t.role}
+      </Text>
+
+      {/* Stars */}
+      <Text position={[padX, h / 2 - 2.4, 0.1]} fontSize={0.44} color="#fbbf24" anchorX="left" anchorY="middle" letterSpacing={0.05}>
+        {stars}
+      </Text>
+
+      {/* Quote */}
+      {t.text && (
+        <Text
+          position={[padX, h / 2 - 3.05, 0.1]}
+          fontSize={0.38} color="#c7ccd4"
+          anchorX="left" anchorY="top"
+          maxWidth={w - 1.5} lineHeight={1.5}
+        >
+          {`"${t.text}"`}
+        </Text>
+      )}
+    </group>
+  );
+}
+
+function CarouselArrow({ x, y, dir, onClick }: { x: number; y: number; dir: -1 | 1; onClick: () => void }) {
+  return (
+    <group
+      // z=0.5 keeps the arrow drawn in front of whatever carousel card is
+      // currently peeking underneath it at this x position while scrolling.
+      position={[x, y, 0.5]}
+      onClick={onClick}
+      onPointerOver={() => { document.body.style.cursor = "pointer"; }}
+      onPointerOut={() => { document.body.style.cursor = "default"; }}
+    >
+      <mesh>
+        <circleGeometry args={[1, 32]} />
+        <meshBasicMaterial color="#151109" opacity={1} />
+      </mesh>
+      <mesh position={[0, 0, -0.02]}>
+        <ringGeometry args={[1, 1.12, 32]} />
+        <meshBasicMaterial color="#fbbf24" transparent opacity={0.55} />
+      </mesh>
+      <Text position={[0, 0.02, 0.05]} fontSize={0.8} color="#fbbf24" anchorX="center" anchorY="middle">
+        {dir < 0 ? "‹" : "›"}
+      </Text>
+    </group>
+  );
+}
+
+const TESTIMONIALS_STEP = 9;
+const TESTIMONIALS_CARDS_PER_VIEW = 3;
+
+function TestimonialsCarousel({ rest }: { rest: typeof testimonials }) {
+  // Looping carousel: `step` is unbounded (not clamped/modulo'd) so prev/next
+  // never disables. Three copies of the list are rendered back-to-back —
+  // stepping past either end always has a card already in place, so the
+  // slide never has to jump back to the start.
+  const count = rest.length;
+  const [step, setStep] = useState(0);
+  const baseOffset = -((TESTIMONIALS_CARDS_PER_VIEW - 1) * TESTIMONIALS_STEP) / 2;
+  const targetX = useRef(baseOffset);
+  const groupRef = useRef<THREE.Group>(null);
+
+  useEffect(() => {
+    targetX.current = baseOffset - step * TESTIMONIALS_STEP;
+  }, [step, baseOffset]);
+
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.position.x += (targetX.current - groupRef.current.position.x) * 0.15;
+    }
+  });
+
+  const loop = [...rest, ...rest, ...rest];
+
+  return (
+    <group position={[0, -6, 0]}>
+      <group ref={groupRef}>
+        {loop.map((t, i) => (
+          <TestimonialCard3D key={`${t.id}-${i}`} t={t} x={(i - count) * TESTIMONIALS_STEP} y={0} w={8.2} h={7.4} />
+        ))}
+      </group>
+      <CarouselArrow x={-19.5} y={0} dir={-1} onClick={() => setStep((v) => v - 1)} />
+      <CarouselArrow x={19.5} y={0} dir={1} onClick={() => setStep((v) => v + 1)} />
+    </group>
+  );
+}
+
+function TestimonialsScene() {
+  const featured = testimonials.slice(0, 3);
+  const rest = testimonials.slice(3);
+
+  return (
+    <>
+      <Text position={[0, 12.2, 0]} fontSize={0.5} color="rgba(251,191,36,0.75)" anchorX="center" anchorY="middle" letterSpacing={0.15}>
+        CLIENT FEEDBACK
+      </Text>
+      <Text position={[0, 10.6, 0]} fontSize={1.9} color="white" anchorX="center" anchorY="middle">
+        Real Reviews
+      </Text>
+
+      {featured.map((t, i) => (
+        <TestimonialCard3D key={t.id} t={t} x={(i - 1) * 11} y={3.2} w={10.2} h={8.2} />
+      ))}
+
+      {rest.length > 0 && <TestimonialsCarousel rest={rest} />}
+    </>
+  );
+}
+
 function ContentTestimonials() {
   return (
-    <div style={{ width: "100%" }}>
-      <div style={{ textAlign: "center", marginBottom: 28 }}>
-        <p style={{ color: "rgba(251,191,36,0.6)", fontSize: 10, letterSpacing: "0.15em", fontWeight: 700, marginBottom: 8 }}>CLIENT FEEDBACK</p>
-        <h2 style={{ color: "white", fontWeight: 900, fontSize: "clamp(26px,4vw,44px)", margin: 0, letterSpacing: "-0.02em" }}>
-          Real Reviews
-        </h2>
-      </div>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
-        {testimonials.slice(0, 6).map((t) => (
-          <div key={t.id} style={{
-            borderRadius: 16, border: "1px solid rgba(251,191,36,0.15)",
-            background: "rgba(251,191,36,0.04)",
-            padding: 18, display: "flex", flexDirection: "column", gap: 10,
-          }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{
-                width: 38, height: 38, borderRadius: "50%",
-                background: t.avatarColor, display: "flex",
-                alignItems: "center", justifyContent: "center",
-                color: "white", fontWeight: 700, fontSize: 14, flexShrink: 0,
-              }}>{t.initial}</div>
-              <div>
-                <p style={{ color: "white", fontSize: 13, fontWeight: 700, margin: 0 }}>{t.name}</p>
-                <p style={{ color: "rgba(255,255,255,0.4)", fontSize: 11, margin: 0 }}>{t.role}</p>
-              </div>
-            </div>
-            <StarRating rating={t.rating} />
-            {t.text && (
-              <p style={{ color: "rgba(255,255,255,0.55)", fontSize: 12, margin: 0, lineHeight: 1.7 }}>
-                &ldquo;{t.text}&rdquo;
-              </p>
-            )}
-          </div>
-        ))}
-      </div>
+    <div style={{ width: "100%", height: "100%" }}>
+      <Canvas
+        orthographic
+        camera={{ zoom: 50, position: [0, 0, 10], near: 0.1, far: 100 }}
+        gl={{ alpha: true, antialias: true }}
+        dpr={[1, 2]}
+        // getBoundingClientRect() (react-use-measure's default) reports the
+        // *projected* size of this container after the room's CSS 3D
+        // perspective transform, not its real 2200×1400 layout box — offsetSize
+        // switches measurement to offsetWidth/offsetHeight, which ignore transforms.
+        resize={{ scroll: false, debounce: 0, offsetSize: true }}
+        style={{ background: "transparent" }}
+      >
+        <Suspense fallback={null}>
+          <TestimonialsScene />
+        </Suspense>
+      </Canvas>
     </div>
   );
 }
@@ -837,6 +945,10 @@ function ContentAbout() {
         camera={{ zoom: 50, position: [0, 0, 10], near: 0.1, far: 100 }}
         gl={{ alpha: true, antialias: true }}
         dpr={[1, 2]}
+        // see ContentTestimonials — avoids getBoundingClientRect() picking up
+        // the room's CSS 3D perspective-projected (scaled) size instead of
+        // the real layout box.
+        resize={{ scroll: false, debounce: 0, offsetSize: true }}
         style={{ background: "transparent" }}
       >
         <Suspense fallback={null}>
