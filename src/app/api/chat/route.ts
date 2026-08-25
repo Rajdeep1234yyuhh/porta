@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { searchKnowledge } from "./knowledge";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -61,6 +62,14 @@ Example:
 export async function POST(req: NextRequest) {
   try {
     const { messages } = await req.json();
+    const chatMessages = Array.isArray(messages) ? messages : [];
+    const lastUserMessage = [...chatMessages]
+      .reverse()
+      .find(
+        (message): message is { role: string; content: string } =>
+          message?.role === "user" && typeof message.content === "string",
+      )?.content ?? "";
+    const knowledgeContext = await searchKnowledge(lastUserMessage);
     const groqApiKey = process.env.GROQ_API_KEY?.trim();
 
     if (!groqApiKey) {
@@ -93,7 +102,15 @@ export async function POST(req: NextRequest) {
         },
         body: JSON.stringify({
           model: "llama-3.3-70b-versatile",
-          messages: [{ role: "system", content: SYSTEM_PROMPT }, ...messages],
+          messages: [
+            {
+              role: "system",
+              content: knowledgeContext
+                ? `${SYSTEM_PROMPT}\n\n## Relevant knowledge base sources\nUse the following sources to answer the visitor accurately.\n\n${knowledgeContext}`
+                : SYSTEM_PROMPT,
+            },
+            ...chatMessages,
+          ],
           max_tokens: 300,
           temperature: 0.7,
         }),
