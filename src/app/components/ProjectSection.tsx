@@ -3,7 +3,7 @@
 
 import {
   ExternalLink, GitBranch, ArrowRight, MoreHorizontal,
-  ChevronLeft, ChevronRight, X, Calendar, Play, Pause, BookOpen,
+  ChevronLeft, ChevronRight, X, Calendar, Play, Pause, BookOpen, FlaskConical,
 } from "lucide-react";
 import Image from "next/image";
 import { useState, useEffect, useCallback, useRef } from "react";
@@ -285,7 +285,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
   const router = useRouter();
   const [activeTab,      setActiveTab]      = useState<"tech" | "shopify">("tech");
   const [showAll,        setShowAll]        = useState(false);
-  const [allFilter,      setAllFilter]      = useState<"tech" | "shopify">("tech");
+  const [allFilter,      setAllFilter]      = useState<"tech" | "shopify" | "research">("tech");
   const [activeProject,  setActiveProject]  = useState<Project | null>(null);
   const [contentVisible, setContentVisible] = useState(false);
   const [isClosing,      setIsClosing]      = useState(false);
@@ -359,9 +359,10 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
     timers.current.push(setTimeout(() => { setActiveProject(null); setIsClosing(false); }, PROJ_ANIM_MS));
   };
 
-  const aiProjects      = projects.filter((p) => !p.categories.includes("Shopify"));
-  const shopifyProjects = projects.filter((p) =>  p.categories.includes("Shopify"));
-  const filteredAll     = allFilter === "tech" ? aiProjects : shopifyProjects;
+  const aiProjects       = projects.filter((p) => !p.categories.includes("Shopify"));
+  const shopifyProjects  = projects.filter((p) =>  p.categories.includes("Shopify"));
+  const researchProjects = projects.filter((p) =>  p.categories.includes("Research"));
+  const filteredAll      = allFilter === "tech" ? aiProjects : allFilter === "shopify" ? shopifyProjects : researchProjects;
 
   const tabBase     = `flex-1 flex items-center gap-2 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200`;
   const tabActive   = isDarkMode ? "bg-[#2a2a2a] text-white shadow-md"       : "bg-white text-slate-900 shadow-md";
@@ -455,12 +456,20 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Projects</span>
               </h2>
             </div>
-            <button
-              onClick={() => { playClick(); setShowAll(true); }}
-              className={`group hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold text-xs transition-all duration-200 ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-slate-900 text-white hover:bg-slate-700"}`}
-            >
-              View All <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => { playClick(); setAllFilter("research"); setShowAll(true); }}
+                className="group hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg font-bold text-xs text-white shadow-lg shadow-amber-500/30 bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 hover:scale-105 transition-all duration-200"
+              >
+                <FlaskConical className="w-3.5 h-3.5" /> Research Projects
+              </button>
+              <button
+                onClick={() => { playClick(); setShowAll(true); }}
+                className={`group hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold text-xs transition-all duration-200 ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-slate-900 text-white hover:bg-slate-700"}`}
+              >
+                View All <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </div>
           </div>
 
           {/* Mobile tabs */}
@@ -514,14 +523,15 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
 
           {/* Filter tabs */}
           <div className={`flex gap-1 px-4 sm:px-6 py-2.5 shrink-0 border-b ${isDarkMode ? "border-white/[0.04]" : "border-slate-100"}`}>
-            {(["tech", "shopify"] as const).map((f) => {
-              const count  = f === "tech" ? aiProjects.length : shopifyProjects.length;
+            {(["tech", "shopify", "research"] as const).map((f) => {
+              const count  = f === "tech" ? aiProjects.length : f === "shopify" ? shopifyProjects.length : researchProjects.length;
               const active = allFilter === f;
+              const label  = f === "tech" ? "AI / ML & Software" : f === "shopify" ? "Shopify" : "Research";
               return (
                 <button key={f} onClick={() => { playClick(); setAllFilter(f); }}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-200 ${active ? isDarkMode ? "bg-white/[0.08] text-white" : "bg-white text-slate-900 shadow-sm border border-slate-200" : isDarkMode ? "text-gray-500 hover:text-gray-300" : "text-slate-400 hover:text-slate-600"}`}
                 >
-                  {f === "tech" ? "AI / ML & Software" : "Shopify"}
+                  {label}
                   <span className={`text-[9px] px-1.5 py-0.5 rounded-full ${active ? isDarkMode ? "bg-white/10 text-gray-400" : "bg-slate-100 text-slate-500" : ""}`}>{count}</span>
                 </button>
               );

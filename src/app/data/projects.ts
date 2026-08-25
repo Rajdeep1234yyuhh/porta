@@ -61,6 +61,87 @@ export const allProjects: Project[] = [
     },
   },
   {
+    id: 27,
+    title: "Travel Grid India - OTA platform",
+    description:
+      "Full-stack OTA (Online Travel Agency) platform for browsing and booking stays and travel packages, with an admin panel for managing property listings, availability, and pricing.",
+    mediaType: "image",
+    tech: ["Next.js", "TypeScript", "Firebase"],
+    categories: ["Web Development"],
+    demo: "https://travelgridindia.com/",
+    github: "#",
+    date: "2026",
+    caseStudy: {
+      overview:
+        "Travel Grid India is a full-stack OTA (Online Travel Agency) platform built for a travel booking business based in Northeast India, letting travelers search and book homestays, hotels, and curated packages across multiple destinations from a single storefront.",
+      challenge:
+        "Small regional travel operators typically rely on manual bookings over phone and WhatsApp, with no centralized way to manage listings, pricing, or availability across multiple properties and packages. The business needed a real booking platform without the overhead of enterprise OTA software.",
+      solution:
+        "Built with Next.js and TypeScript for the storefront, with Firebase powering authentication, listings data, and real-time availability. Implemented a searchable stay browser, package listings, and an admin panel for the property owner to manage listings and bookings without touching code.",
+      results: [
+        "Live at travelgridindia.com with 7+ properties listed across multiple destinations",
+        "Admin panel lets the business owner manage listings, packages, and bookings directly",
+        "Firebase-backed real-time availability across all listed properties",
+        "Unified search across stays and curated travel packages",
+        "Replaces manual phone/WhatsApp booking coordination with a self-serve storefront",
+      ],
+    },
+  },
+  {
+    id: 28,
+    title: "Go Travelz - Travel Agency",
+    description:
+      "Marketing and booking landing page for a travel agency offering curated holiday packages, built to convert visitors into package inquiries and calls.",
+    mediaType: "image",
+    tech: ["Next.js", "TypeScript"],
+    categories: ["Web Development"],
+    demo: "https://gotravelz.com/",
+    github: "#",
+    date: "2026",
+    caseStudy: {
+      overview:
+        "Go Travelz is a travel agency landing page designed to showcase curated holiday packages — like the featured Meghalaya package — and drive direct inquiries and calls from prospective travelers.",
+      challenge:
+        "The agency needed a fast, visually compelling online presence that could present destination packages with pricing and trust signals, and make it effortless for visitors to either explore packages or call the agency directly, without building a full booking engine.",
+      solution:
+        "Built with Next.js and TypeScript, the page leads with a destination-focused hero (featured package, pricing, and duration), backed by trust badges (traveler count, ratings, verification), a testimonial callout, and clear calls to action for exploring packages or calling the agency.",
+      results: [
+        "Live at gotravelz.com",
+        "Destination-led hero section with per-person pricing and trip duration",
+        "Trust signals (5,000+ travelers, ratings, govt.-approved badge) built into the layout",
+        "Dual call-to-action: browse packages or call the agency directly",
+        "Fast, lightweight Next.js build optimized for mobile discovery traffic",
+      ],
+    },
+  },
+  {
+    id: 29,
+    title: "Real Bengal Sweets - ERP system",
+    description:
+      "Lightweight ERP/billing system for a sweets shop, with a fast billing counter for generating bills and a live dashboard of the day's collections.",
+    mediaType: "image",
+    tech: ["Next.js", "Supabase", "Tailwind CSS", "TypeScript"],
+    categories: ["Web Development"],
+    demo: "https://realbangalsweets.vercel.app/",
+    github: "#",
+    date: "2026",
+    caseStudy: {
+      overview:
+        "An ERP and billing system built for Real Bengal Sweets, a sweets shop, to replace manual billing with a fast, keyboard-driven counter workflow and give shop admins live visibility into daily sales.",
+      challenge:
+        "The shop was billing customers manually, with no structured record of daily sales, item-level totals, or multi-shop tracking. Staff needed a billing flow fast enough for a busy counter, while the owner needed prices locked down and a running view of what had been collected.",
+      solution:
+        "Built with Next.js, TypeScript, and Tailwind CSS on the frontend, with Supabase as the backend for items, pricing, and bill records. Designed a keyboard-first billing counter (Enter moves between customer, item, and quantity) where prices are fixed by the admin and can't be edited at checkout, plus a live 'Today's Bills' panel showing per-shop collections as they come in.",
+      results: [
+        "Live billing counter with keyboard-driven flow for fast order entry",
+        "Admin-controlled pricing that counter staff cannot override",
+        "Real-time 'Today's Bills' dashboard showing collections per shop",
+        "Supabase backend for structured item, pricing, and sales records",
+        "Multi-shop support (Shop 1 counter shown, extensible to more locations)",
+      ],
+    },
+  },
+  {
     id: 2,
     title: "Mental Health Assistant Chatbot",
     description:
