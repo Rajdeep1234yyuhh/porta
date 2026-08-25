@@ -66,6 +66,7 @@ export const allProjects: Project[] = [
     description:
       "Full-stack OTA (Online Travel Agency) platform for browsing and booking stays and travel packages, with an admin panel for managing property listings, availability, and pricing.",
     mediaType: "image",
+    image: "/images/travelgridindia-thumbnail.jpg",
     tech: ["Next.js", "TypeScript", "Firebase"],
     categories: ["Web Development"],
     demo: "https://travelgridindia.com/",
@@ -93,6 +94,7 @@ export const allProjects: Project[] = [
     description:
       "Marketing and booking landing page for a travel agency offering curated holiday packages, built to convert visitors into package inquiries and calls.",
     mediaType: "image",
+    image: "/images/gotravelz-thumbnail.jpg",
     tech: ["Next.js", "TypeScript"],
     categories: ["Web Development"],
     demo: "https://gotravelz.com/",
@@ -120,6 +122,7 @@ export const allProjects: Project[] = [
     description:
       "Lightweight ERP/billing system for a sweets shop, with a fast billing counter for generating bills and a live dashboard of the day's collections.",
     mediaType: "image",
+    image: "/images/real.png",
     tech: ["Next.js", "Supabase", "Tailwind CSS", "TypeScript"],
     categories: ["Web Development"],
     demo: "https://realbangalsweets.vercel.app/",
