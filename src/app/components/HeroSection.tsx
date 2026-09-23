@@ -433,7 +433,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
           href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20would%20like%20to%20get%20in%20touch%21`}
           target="_blank"
           rel="noopener noreferrer"
-          onClick={() => { playClick(); setContactOpen(false); }}
+          onClick={() => {
+            playClick();
+            setContactOpen(false);
+          }}
           className="floating-action-option"
           style={{ color: "#25D366" }}
           aria-label="WhatsApp"
@@ -446,7 +449,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         </a>
         <a
           href={`tel:+91${PHONE}`}
-          onClick={() => { playClick(); setContactOpen(false); }}
+          onClick={() => {
+            playClick();
+            setContactOpen(false);
+          }}
           className="floating-action-option"
           style={{ color: "#60a5fa" }}
           aria-label="Call me"
@@ -458,7 +464,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
       </div>
       <button
         className="hero-contact-button"
-        onClick={() => { playClick(); setContactOpen((o) => !o); }}
+        onClick={() => {
+          playClick();
+          setContactOpen((o) => !o);
+        }}
         style={{
           display: "inline-flex",
           alignItems: "center",
@@ -755,7 +764,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   lineHeight: 1,
                 }}
               >
-                <CountUp to={18} interval={40} />
+                <CountUp to={20} interval={40} />
               </div>
               <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>
                 Shopify Stores
@@ -810,7 +819,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             }}
           >
             <button
-              onClick={() => { playClick(); scrollToSection("projects"); }}
+              onClick={() => {
+                playClick();
+                scrollToSection("projects");
+              }}
               style={{
                 display: "inline-flex",
                 alignItems: "center",
@@ -1074,7 +1086,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   }}
                 >
                   <button
-                    onClick={() => { playClick(); scrollToSection("projects"); }}
+                    onClick={() => {
+                      playClick();
+                      scrollToSection("projects");
+                    }}
                     style={{
                       display: "inline-flex",
                       alignItems: "center",
