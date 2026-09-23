@@ -30,18 +30,47 @@ const getYoutubeVideoId = (url: string): string | null => {
   return null;
 };
 
+const ytCommand = (iframe: HTMLIFrameElement | null, func: "playVideo" | "pauseVideo") => {
+  iframe?.contentWindow?.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
+};
+
+// Reports when an element enters/leaves the viewport. Slides sit off-screen
+// via transforms and carousel cards are clipped, so both count as not visible.
+const useInView = (ref: React.RefObject<Element | null>, onChange: (visible: boolean) => void) => {
+  const cb = useRef(onChange);
+  cb.current = onChange;
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => cb.current(entry.isIntersecting));
+    io.observe(el);
+    return () => io.disconnect();
+  }, [ref]);
+};
+
 const YouTubeEmbed = ({ videoId, startTime }: { videoId: string; startTime?: number }) => {
   const { playClick } = useSound();
   const [playing, setPlaying] = useState(true);
+  // The player (and all of YouTube's scripts) only load once the card is on screen
+  const [loaded, setLoaded] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  const hitRef = useRef<HTMLButtonElement>(null);
+  const playingRef = useRef(true);
+
+  useInView(hitRef, (visible) => {
+    if (visible) {
+      setLoaded(true);
+      if (playingRef.current) ytCommand(iframeRef.current, "playVideo");
+    } else {
+      ytCommand(iframeRef.current, "pauseVideo");
+    }
+  });
 
   const toggle = (e: React.MouseEvent) => {
     e.stopPropagation();
     playClick();
-    const func = playing ? "pauseVideo" : "playVideo";
-    iframeRef.current?.contentWindow?.postMessage(
-      JSON.stringify({ event: "command", func, args: [] }), "*"
-    );
+    ytCommand(iframeRef.current, playing ? "pauseVideo" : "playVideo");
+    playingRef.current = !playing;
     setPlaying(!playing);
   };
 
@@ -49,15 +78,25 @@ const YouTubeEmbed = ({ videoId, startTime }: { videoId: string; startTime?: num
 
   return (
     <>
-      <iframe
-        ref={iframeRef}
-        className="absolute inset-0 w-full h-full"
-        src={src}
-        allow="autoplay; encrypted-media"
-        style={{ border: "none", pointerEvents: "none" }}
-        title="project video"
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={`https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`}
+        alt=""
+        loading="lazy"
+        className="absolute inset-0 w-full h-full object-cover"
       />
+      {loaded && (
+        <iframe
+          ref={iframeRef}
+          className="absolute inset-0 w-full h-full"
+          src={src}
+          allow="autoplay; encrypted-media"
+          style={{ border: "none", pointerEvents: "none" }}
+          title="project video"
+        />
+      )}
       <button
+        ref={hitRef}
         onClick={toggle}
         className="absolute inset-0 flex items-center justify-center group"
         style={{ background: "transparent" }}
@@ -69,6 +108,28 @@ const YouTubeEmbed = ({ videoId, startTime }: { videoId: string; startTime?: num
         </div>
       </button>
     </>
+  );
+};
+
+// Muted looping preview that only downloads/plays while it is on screen
+const LazyVideo = ({ src, poster, className }: { src: string; poster?: string; className: string }) => {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useInView(ref, (visible) => {
+    const el = ref.current;
+    if (!el) return;
+    if (visible) {
+      el.muted = true;
+      el.play().catch(() => {});
+    } else {
+      el.pause();
+    }
+  });
+
+  return (
+    <video ref={ref} className={className} muted loop playsInline preload="metadata" poster={poster}>
+      <source src={src} type="video/mp4" />
+    </video>
   );
 };
 
@@ -200,10 +261,7 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
                           {ytId ? (
                             <YouTubeEmbed videoId={ytId} startTime={project.videoStartTime} />
                           ) : project.mediaType === "video" && project.video ? (
-                            <video className="w-full h-full object-cover" muted loop autoPlay playsInline poster={project.image}>
-                              <source src={project.video} type="video/mp4" />
-                              <source src={project.video} type="video/webm" />
-                            </video>
+                            <LazyVideo className="w-full h-full object-cover" src={project.video} poster={project.image} />
                           ) : (
                             <Image src={project.image!} alt={project.title} fill className="object-cover" />
                           )}
@@ -560,9 +618,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
                         {pYtId ? (
                           <YouTubeEmbed videoId={pYtId} startTime={project.videoStartTime} />
                         ) : project.mediaType === "video" && project.video ? (
-                          <video className="absolute inset-0 w-full h-full object-cover" muted loop autoPlay playsInline poster={project.image}>
-                            <source src={project.video} type="video/mp4" />
-                          </video>
+                          <LazyVideo className="absolute inset-0 w-full h-full object-cover" src={project.video} poster={project.image} />
                         ) : project.image ? (
                           <Image src={project.image} alt={project.title} fill className="object-cover" />
                         ) : null}

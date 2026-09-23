@@ -24,21 +24,20 @@ export interface Project {
 export const allProjects: Project[] = [
   {
     id: 1,
-    title: "Career Assessment Tool",
+    title: "DHITI - AI-Powered Human Intelligence Assessment Tool",
     description:
-      "AI-powered career assessment solution built with Next.js and intelligent backend integration. Features include dynamic skill evaluation, personalized career recommendations, real-time analytics dashboard, and secure user profile management.",
+      "Full-stack AI-powered career assessment platform (DHITI – dhiti.ai) built with Next.js and TypeScript. Firebase backend, OpenAI APIs for AI-based career analysis, optimized API caching, and secure Razorpay payment integration for fast performance and reliable transactions.",
     mediaType: "video",
-    video: "https://youtu.be/A_9EQWd8N1A",
-    videoStartTime: 29,
+    video: "https://www.youtube.com/watch?v=aIo-PEiSqQA",
     image: "/images/ecommerce-thumbnail.jpg",
     tech: [
       "Next.js",
+      "TypeScript",
       "Tailwind CSS",
-      "Node.js",
-      "firebase",
-      "python",
-      "AI",
-      "ML",
+      "Tailwind UI",
+      "OpenAI API",
+      "Firebase",
+      "Razorpay",
     ],
     categories: ["AI/ML", "Web Development"],
     demo: "https://dhiti.ai/",
@@ -46,17 +45,17 @@ export const allProjects: Project[] = [
     date: "2025",
     caseStudy: {
       overview:
-        "Built for Dhiti AI, this platform helps students and young professionals navigate career decisions through AI-powered assessments and personalized roadmaps. It replaces one-size-fits-all career counseling with intelligent, data-driven guidance tailored to each individual's strengths.",
+        "DHITI (dhiti.ai) is an AI-powered human intelligence assessment platform that helps students and young professionals make career decisions. It profiles each user's traits, tests their judgment through real-world scenarios, and turns the results into a personalised career plan, replacing one-size-fits-all counseling with data-driven guidance.",
       challenge:
         "Career counseling in India is largely inaccessible, expensive, and generic. Students receive the same advice regardless of their individual strengths, interests, or market realities. Existing digital tools were essentially static questionnaires with no real intelligence behind the recommendations.",
       solution:
-        "Architected a full-stack platform using Next.js for the frontend and Python for the AI/ML backend. Integrated Firebase for real-time user profiles and assessment data. Built a dynamic skill evaluation engine that adapts questions based on responses, and a recommendation system that maps skill gaps to learning pathways across 50+ career domains.",
+        "As Lead Software Developer, built the full-stack platform with Next.js and TypeScript, styled with Tailwind CSS and Tailwind UI. Firebase powers the backend, and OpenAI APIs generate the AI-based career analysis. Optimized API caching keeps responses fast and avoids redundant AI calls, and Razorpay handles secure payments across a smooth, end-to-end user workflow.",
       results: [
         "Deployed at dhiti.ai with live production traffic",
-        "Dynamic skill evaluation engine adapts to each user's responses in real time",
-        "Personalized career roadmaps generated across 50+ career domains",
-        "Analytics dashboard gives counselors visibility into student progress",
-        "Firebase integration enables instant data sync with zero-latency profiles",
+        "OpenAI-powered analysis turns trait scores and scenario answers into a personalised career report",
+        "Trait profiles with radar charts break down strengths and growth areas",
+        "Optimized API caching for fast responses and a smooth user workflow",
+        "Secure Razorpay payment integration for reliable transactions",
       ],
     },
   },
@@ -299,28 +298,56 @@ export const allProjects: Project[] = [
     },
   },
   {
-    id: 8,
-    title: "Travel Package Landing Page",
-    description: "Landing page for a Travel agency.",
+    id: 30,
+    title: "Florine Jewels - Jewellery E-commerce Platform",
+    description:
+      "Shopify jewellery store for Florine Jewels, a brand designing jewellery for modern women, with curated collections and a dedicated customization flow.",
     mediaType: "image",
-    tech: ["Next.js", "Tailwind CSS", "Firebase"],
-    categories: ["Web Development"],
-    demo: "https://anup-ebon.vercel.app/",
-    github: "https://github.com/Rajdeep1234yyuhh/anup",
-    date: "2023",
+    tech: ["Shopify", "Liquid", "JavaScript"],
+    categories: ["Shopify"],
+    demo: "https://florinejewels.com/",
+    github: "#",
+    date: "2026",
     caseStudy: {
       overview:
-        "A conversion-focused landing page for a travel agency, designed to present curated travel packages and drive inquiries through clear calls to action. Built to give the agency a credible, professional online presence that converts browsers into leads.",
+        "A Shopify storefront for Florine Jewels, a jewellery brand made for modern women. The store pairs rich editorial photography with a clean black-and-gold interface so the pieces stay the focus.",
       challenge:
-        "The agency needed an online presence that communicated the quality of their packages and made it easy for potential travelers to reach out, without the complexity of a full booking system. Speed and mobile experience were critical.",
+        "Jewellery sells on detail and trust. Florine needed a storefront that felt premium, showed intricate pieces at their best, and gave customers a way to request customized designs without leaving the site.",
       solution:
-        "Built with Next.js and Tailwind CSS for performance and responsiveness. Firebase powers the contact form with instant inquiry delivery to the agency. The page features animated package cards, a testimonial section, and a mobile-optimized layout with smooth scroll behavior.",
+        "Built on Shopify with custom Liquid sections and JavaScript enhancements: a full-bleed hero leading straight into the collections, collection pages for browsing by style, and a dedicated Customization page for made-to-order requests, all under a minimal black header that keeps search, account, and cart one click away.",
       results: [
-        "Live at anup-ebon.vercel.app",
-        "Firebase-powered contact form for instant lead capture",
-        "Fully responsive across mobile, tablet, and desktop",
-        "Animated package showcase cards driving visual engagement",
-        "Next.js static generation for near-instant page loads",
+        "Live at florinejewels.com",
+        "Editorial full-bleed hero with a direct Shop Collection call to action",
+        "Dedicated Customization page for made-to-order jewellery requests",
+        "Custom Liquid sections and JavaScript enhancements on a Shopify base",
+        "Minimal black-and-gold interface that keeps product photography in focus",
+      ],
+    },
+  },
+  {
+    id: 31,
+    title: "Raheka Studios - Women's Clothing E-commerce Platform",
+    description:
+      "Shopify clothing store for Raheka by Harshita Maheshwari, featuring shirts, blouses, co-ords, and dresses with seasonal collection campaigns.",
+    mediaType: "image",
+    tech: ["Shopify", "Liquid", "JavaScript"],
+    categories: ["Shopify"],
+    demo: "https://rahekastudio.com/",
+    github: "#",
+    date: "2026",
+    caseStudy: {
+      overview:
+        "A Shopify storefront for Raheka Studios (Raheka by Harshita Maheshwari), a women's clothing label selling shirts, blouses, co-ords, and dresses, built around seasonal campaigns like its Summer Collection.",
+      challenge:
+        "A small D2C label has to look as polished as bigger brands while still making it easy for shoppers to ask a question before buying. Raheka needed clear category navigation, room for campaign imagery, and a visible nudge toward prepaid orders.",
+      solution:
+        "Built on Shopify with custom Liquid sections and JavaScript: a scrolling announcement bar promoting free shipping and 5% off prepaid orders, a multi-slide hero carousel for seasonal campaigns, category navigation for Shirts & Blouses, Co-ords, and Dresses, and a floating WhatsApp button that connects shoppers to the brand directly.",
+      results: [
+        "Live at rahekastudio.com",
+        "Scrolling announcement bar promoting free shipping and prepaid-order discounts",
+        "Multi-slide hero carousel for seasonal campaigns like the Summer Collection",
+        "Category navigation across Shirts & Blouses, Co-ords, and Dresses",
+        "Floating WhatsApp button for direct customer support",
       ],
     },
   },

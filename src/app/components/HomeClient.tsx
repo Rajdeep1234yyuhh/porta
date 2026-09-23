@@ -1,16 +1,30 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
-import Contact from "./Contact";
+import React, { useState, useEffect, useRef, useCallback, memo } from "react";
+import dynamic from "next/dynamic";
+import ContactBase from "./Contact";
 import Navbar from "./Navbar";
 import { ViewSwitcherDesktop } from "./ViewSwitcher";
-import HeroSection from "./HeroSection";
-import ProjectSection from "./ProjectSection";
-import ServiceSection from "./ServiceSection";
-import QuickSolutions from "./QuickSolutions";
-import QuickFixFAB from "./QuickFixFAB";
-import TestimonialSection from "./TestimonialSection";
+import HeroSectionBase from "./HeroSection";
+import ProjectSectionBase from "./ProjectSection";
+import ServiceSectionBase from "./ServiceSection";
+import QuickSolutionsBase from "./QuickSolutions";
+import TestimonialSectionBase from "./TestimonialSection";
 import { allProjects } from "../data/projects";
+
+// ← flip to true to mount the quick-fix FAB (it pulls in PrimeReact, so it is
+// loaded lazily and only when enabled). Its wrapper is currently `hidden`.
+const SHOW_QUICK_FIX_FAB = false;
+const QuickFixFAB = dynamic(() => import("./QuickFixFAB"), { ssr: false });
+
+// Slides only re-render when their own props change (e.g. theme), not on every
+// slide change.
+const HeroSection = memo(HeroSectionBase);
+const TestimonialSection = memo(TestimonialSectionBase);
+const ProjectSection = memo(ProjectSectionBase);
+const ServiceSection = memo(ServiceSectionBase);
+const QuickSolutions = memo(QuickSolutionsBase);
+const Contact = memo(ContactBase);
 
 const SECTION_IDS = [
   "home",
@@ -24,7 +38,10 @@ const SECTION_IDS = [
 export default function HomeClient() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [current, setCurrent] = useState(0);
-  const [animating, setAnimating] = useState(false);
+  // Refs (not state) so goTo/scrollToSection stay stable and the memoized
+  // slides don't re-render on every navigation.
+  const currentRef = useRef(0);
+  const animatingRef = useRef(false);
   const touchStartY = useRef<number | null>(null);
   const wheelLock = useRef(false);
 
@@ -46,17 +63,17 @@ export default function HomeClient() {
     localStorage.setItem("theme", next ? "dark" : "light");
   };
 
-  const goTo = useCallback(
-    (index: number) => {
-      if (animating) return;
-      const clamped = Math.max(0, Math.min(index, SECTION_IDS.length - 1));
-      if (clamped === current) return;
-      setAnimating(true);
-      setCurrent(clamped);
-      setTimeout(() => setAnimating(false), 750);
-    },
-    [animating, current],
-  );
+  const goTo = useCallback((index: number) => {
+    if (animatingRef.current) return;
+    const clamped = Math.max(0, Math.min(index, SECTION_IDS.length - 1));
+    if (clamped === currentRef.current) return;
+    animatingRef.current = true;
+    currentRef.current = clamped;
+    setCurrent(clamped);
+    setTimeout(() => {
+      animatingRef.current = false;
+    }, 750);
+  }, []);
 
   const scrollToSection = useCallback(
     (sectionId: string) => {
@@ -78,12 +95,12 @@ export default function HomeClient() {
   // Keyboard
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
-      if (e.key === "ArrowDown") goTo(current + 1);
-      if (e.key === "ArrowUp") goTo(current - 1);
+      if (e.key === "ArrowDown") goTo(currentRef.current + 1);
+      if (e.key === "ArrowUp") goTo(currentRef.current - 1);
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [current, goTo]);
+  }, [goTo]);
 
   // Mouse wheel
   useEffect(() => {
@@ -93,12 +110,12 @@ export default function HomeClient() {
       setTimeout(() => {
         wheelLock.current = false;
       }, 600);
-      if (e.deltaY > 0) goTo(current + 1);
-      else goTo(current - 1);
+      if (e.deltaY > 0) goTo(currentRef.current + 1);
+      else goTo(currentRef.current - 1);
     };
     window.addEventListener("wheel", handler, { passive: true });
     return () => window.removeEventListener("wheel", handler);
-  }, [current, goTo]);
+  }, [goTo]);
 
   const slides = [
     <HeroSection key="hero" isDarkMode={isDarkMode} scrollToSection={scrollToSection} />,
@@ -127,6 +144,16 @@ export default function HomeClient() {
         touchStartY.current = null;
       }}
     >
+      {/* Root typography the PrimeReact theme used to apply on this page. Kept so
+          the page renders identically now that PrimeReact isn't loaded here. */}
+      <style>{`
+        :root {
+          font-family: "Inter var", sans-serif;
+          font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+          font-variation-settings: normal;
+          color-scheme: light;
+        }
+      `}</style>
       <Navbar
         isDarkMode={isDarkMode}
         toggleTheme={toggleTheme}
@@ -159,9 +186,11 @@ export default function HomeClient() {
       })}
 
       {/* Keep FAB on top of everything */}
-      <div className="fixed z-40 bottom-5 right-5">
-        <QuickFixFAB isDarkMode={isDarkMode} scrollToSection={scrollToSection} />
-      </div>
+      {SHOW_QUICK_FIX_FAB && (
+        <div className="fixed z-40 bottom-5 right-5">
+          <QuickFixFAB isDarkMode={isDarkMode} scrollToSection={scrollToSection} />
+        </div>
+      )}
     </div>
   );
 }

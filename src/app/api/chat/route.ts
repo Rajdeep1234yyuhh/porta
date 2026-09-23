@@ -101,7 +101,10 @@ export async function POST(req: NextRequest) {
           Authorization: `Bearer ${groqApiKey}`,
         },
         body: JSON.stringify({
-          model: "llama-3.3-70b-versatile",
+          model: "openai/gpt-oss-120b",
+          // gpt-oss is a reasoning model; reasoning tokens count against
+          // max_tokens, so keep effort low to leave room for the reply.
+          reasoning_effort: "low",
           messages: [
             {
               role: "system",

@@ -144,6 +144,16 @@ const ROOM: Record<number, { dark: string; light: string; accent: string }> = {
     light: "linear-gradient(135deg,#fefce8,#ecfdf5)",
     accent: "#ca8a04",
   },
+  30: {
+    dark: "linear-gradient(135deg,#0d0a00,#1a1405)",
+    light: "linear-gradient(135deg,#fdfaf0,#f5ecd7)",
+    accent: "#c9a227",
+  },
+  31: {
+    dark: "linear-gradient(135deg,#1a0508,#2d0a10)",
+    light: "linear-gradient(135deg,#fff5f5,#fde2e2)",
+    accent: "#9f1d2b",
+  },
 };
 const DEFAULT_ROOM = {
   dark: "linear-gradient(135deg,#0f172a,#1e293b)",

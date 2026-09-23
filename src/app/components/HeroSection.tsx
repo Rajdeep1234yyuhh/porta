@@ -247,12 +247,31 @@ const MINOR_STACK = [
   },
 ];
 
+// Counts up from 0 in its own component so each tick re-renders just the
+// number instead of the whole hero section.
+const CountUp = ({ to, interval }: { to: number; interval: number }) => {
+  const [count, setCount] = React.useState(0);
+
+  React.useEffect(() => {
+    const id = setInterval(
+      () =>
+        setCount((p) => {
+          if (p >= to) {
+            clearInterval(id);
+            return to;
+          }
+          return p + 1;
+        }),
+      interval,
+    );
+    return () => clearInterval(id);
+  }, [to, interval]);
+
+  return <>{count}</>;
+};
+
 const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
   const { playClick } = useSound();
-  const [fullStackCount, setFullStackCount] = React.useState(0);
-  const [shopifyCount, setShopifyCount] = React.useState(0);
-  const [clientCount, setClientCount] = React.useState(0);
-  const [yearsCount, setYearsCount] = React.useState(0);
   const [contactOpen, setContactOpen] = React.useState(false);
   const contactRef = React.useRef<HTMLDivElement>(null);
 
@@ -263,59 +282,6 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
     };
     document.addEventListener("mousedown", handleOutside);
     return () => document.removeEventListener("mousedown", handleOutside);
-  }, []);
-
-  React.useEffect(() => {
-    const fi = setInterval(
-      () =>
-        setFullStackCount((p) => {
-          if (p >= 4) {
-            clearInterval(fi);
-            return 4;
-          }
-          return p + 1;
-        }),
-      180,
-    );
-    const si = setInterval(
-      () =>
-        setShopifyCount((p) => {
-          if (p >= 18) {
-            clearInterval(si);
-            return 18;
-          }
-          return p + 1;
-        }),
-      40,
-    );
-    const ci = setInterval(
-      () =>
-        setClientCount((p) => {
-          if (p >= 25) {
-            clearInterval(ci);
-            return 25;
-          }
-          return p + 1;
-        }),
-      50,
-    );
-    const yi = setInterval(
-      () =>
-        setYearsCount((p) => {
-          if (p >= 5) {
-            clearInterval(yi);
-            return 5;
-          }
-          return p + 1;
-        }),
-      300,
-    );
-    return () => {
-      clearInterval(fi);
-      clearInterval(si);
-      clearInterval(ci);
-      clearInterval(yi);
-    };
   }, []);
 
   /* Color tokens - only colors differ between modes */
@@ -643,6 +609,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                 <img
                   src="/DP.jpg"
                   alt="Rajdeep"
+                  fetchPriority="high"
                   className="w-28 h-36 object-cover rounded-xl"
                 />
               </div>
@@ -769,7 +736,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   lineHeight: 1,
                 }}
               >
-                {fullStackCount}
+                <CountUp to={4} interval={180} />
               </div>
               <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>
                 Full-Stack
@@ -788,7 +755,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   lineHeight: 1,
                 }}
               >
-                {shopifyCount}
+                <CountUp to={18} interval={40} />
               </div>
               <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>
                 Shopify Stores
@@ -807,7 +774,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   lineHeight: 1,
                 }}
               >
-                {clientCount}
+                <CountUp to={25} interval={50} />
                 <sup style={{ color: t.statSup, fontSize: 9 }}>+</sup>
               </div>
               <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>
@@ -824,7 +791,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   lineHeight: 1,
                 }}
               >
-                {yearsCount}
+                <CountUp to={5} interval={300} />
                 <sup style={{ color: t.statSup, fontSize: 9 }}>+</sup>
               </div>
               <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>
@@ -995,7 +962,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                         lineHeight: 1,
                       }}
                     >
-                      {fullStackCount}
+                      <CountUp to={4} interval={180} />
                     </div>
                     <div
                       style={{
@@ -1025,7 +992,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                         lineHeight: 1,
                       }}
                     >
-                      {shopifyCount}
+                      <CountUp to={18} interval={40} />
                     </div>
                     <div
                       style={{
@@ -1055,7 +1022,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                         lineHeight: 1,
                       }}
                     >
-                      {clientCount}
+                      <CountUp to={25} interval={50} />
                       <sup style={{ color: t.statSup, fontSize: 12 }}>+</sup>
                     </div>
                     <div
@@ -1081,7 +1048,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                         lineHeight: 1,
                       }}
                     >
-                      {yearsCount}
+                      <CountUp to={5} interval={300} />
                       <sup style={{ color: t.statSup, fontSize: 12 }}>+</sup>
                     </div>
                     <div
@@ -1193,6 +1160,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                     <img
                       src="/DP.jpg"
                       alt="Professional Photo"
+                      fetchPriority="high"
                       className="w-44 h-56 lg:w-52 lg:h-64 object-cover rounded-xl"
                     />
                   </div>
