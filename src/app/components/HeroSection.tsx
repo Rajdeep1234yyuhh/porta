@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
+import { CONTACT } from "../data/site";
 import React from "react";
 import { useSound } from "../context/SoundContext";
 import {
@@ -34,14 +35,11 @@ import {
 } from "react-icons/si";
 import { MdDesignServices, MdWeb } from "react-icons/md";
 
-const PHONE = "8638752315";
-
 interface HeroSectionProps {
   isDarkMode: boolean;
   scrollToSection: (sectionId: string) => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const MAIN_STACK: Array<{
   name: string;
   Icon: any;
@@ -369,7 +367,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         <div style={{ height: 1, flex: 1, background: t.divider }} />
         <span
           style={{
-            fontFamily: "'JetBrains Mono', monospace",
+            fontFamily: "var(--font-jetbrains-mono), monospace",
             fontSize: 9,
             letterSpacing: "0.22em",
             textTransform: "uppercase" as const,
@@ -430,7 +428,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         }
       >
         <a
-          href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20would%20like%20to%20get%20in%20touch%21`}
+          href={`${CONTACT.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20would%20like%20to%20get%20in%20touch%21`}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => {
@@ -448,7 +446,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
           <span className="floating-action-label">WhatsApp</span>
         </a>
         <a
-          href={`tel:+91${PHONE}`}
+          href={CONTACT.telHref}
           onClick={() => {
             playClick();
             setContactOpen(false);
@@ -677,7 +675,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
           <div className="text-center space-y-1.5">
             <h1
               style={{
-                fontFamily: "'Outfit', sans-serif",
+                fontFamily: "var(--font-outfit), sans-serif",
                 fontWeight: 900,
                 lineHeight: 1.1,
                 letterSpacing: "-0.02em",
@@ -738,7 +736,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             <div className="text-center">
               <div
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
+                  fontFamily: "var(--font-jetbrains-mono), monospace",
                   fontSize: 18,
                   fontWeight: 700,
                   color: t.statNum,
@@ -757,7 +755,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             <div className="text-center">
               <div
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
+                  fontFamily: "var(--font-jetbrains-mono), monospace",
                   fontSize: 18,
                   fontWeight: 700,
                   color: t.statNum,
@@ -776,7 +774,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             <div className="text-center">
               <div
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
+                  fontFamily: "var(--font-jetbrains-mono), monospace",
                   fontSize: 18,
                   fontWeight: 700,
                   color: t.statNum,
@@ -793,7 +791,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
             <div className="text-center">
               <div
                 style={{
-                  fontFamily: "'JetBrains Mono', monospace",
+                  fontFamily: "var(--font-jetbrains-mono), monospace",
                   fontSize: 18,
                   fontWeight: 700,
                   color: t.statNum,
@@ -877,7 +875,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                 {/* Heading */}
                 <h1
                   style={{
-                    fontFamily: "'Outfit', sans-serif",
+                    fontFamily: "var(--font-outfit), sans-serif",
                     fontWeight: 900,
                     lineHeight: 1.08,
                     letterSpacing: "-0.03em",
@@ -967,7 +965,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   <div>
                     <div
                       style={{
-                        fontFamily: "'JetBrains Mono', monospace",
+                        fontFamily: "var(--font-jetbrains-mono), monospace",
                         fontSize: 24,
                         fontWeight: 700,
                         color: t.statNum,
@@ -997,14 +995,14 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   <div>
                     <div
                       style={{
-                        fontFamily: "'JetBrains Mono', monospace",
+                        fontFamily: "var(--font-jetbrains-mono), monospace",
                         fontSize: 24,
                         fontWeight: 700,
                         color: t.statNum,
                         lineHeight: 1,
                       }}
                     >
-                      <CountUp to={18} interval={40} />
+                      <CountUp to={20} interval={40} />
                     </div>
                     <div
                       style={{
@@ -1027,7 +1025,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   <div>
                     <div
                       style={{
-                        fontFamily: "'JetBrains Mono', monospace",
+                        fontFamily: "var(--font-jetbrains-mono), monospace",
                         fontSize: 24,
                         fontWeight: 700,
                         color: t.statNum,
@@ -1053,7 +1051,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   <div>
                     <div
                       style={{
-                        fontFamily: "'JetBrains Mono', monospace",
+                        fontFamily: "var(--font-jetbrains-mono), monospace",
                         fontSize: 24,
                         fontWeight: 700,
                         color: t.statNum,

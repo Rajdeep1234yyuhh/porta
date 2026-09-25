@@ -10,45 +10,23 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useSound } from "../context/SoundContext";
 import { Project } from "../data/projects";
+import { LazyVideo, useInView } from "./LazyVideo";
+import { getYoutubeVideoId } from "../lib/youtube";
 
 interface ProjectSectionProps {
   isDarkMode: boolean;
   projects: Project[];
 }
 
-const getYoutubeVideoId = (url: string): string | null => {
-  const regexes = [
-    /youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,
-    /youtu\.be\/([a-zA-Z0-9_-]+)/,
-    /youtube\.com\/embed\/([a-zA-Z0-9_-]+)/,
-    /youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/,
-  ];
-  for (const regex of regexes) {
-    const match = url.match(regex);
-    if (match) return match[1];
-  }
-  return null;
-};
+// YouTube picks stream quality from the player's pixel size, so a 192px-tall card
+// gets ~240p. Render the player this many times larger and scale it back down.
+const YT_PLAYER_SCALE = 3;
 
 const ytCommand = (iframe: HTMLIFrameElement | null, func: "playVideo" | "pauseVideo") => {
   iframe?.contentWindow?.postMessage(JSON.stringify({ event: "command", func, args: [] }), "*");
 };
 
-// Reports when an element enters/leaves the viewport. Slides sit off-screen
-// via transforms and carousel cards are clipped, so both count as not visible.
-const useInView = (ref: React.RefObject<Element | null>, onChange: (visible: boolean) => void) => {
-  const cb = useRef(onChange);
-  cb.current = onChange;
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(([entry]) => cb.current(entry.isIntersecting));
-    io.observe(el);
-    return () => io.disconnect();
-  }, [ref]);
-};
-
-const YouTubeEmbed = ({ videoId, startTime }: { videoId: string; startTime?: number }) => {
+const YouTubeEmbed = ({ videoId, startTime, title }: { videoId: string; startTime?: number; title: string }) => {
   const { playClick } = useSound();
   const [playing, setPlaying] = useState(true);
   // The player (and all of YouTube's scripts) only load once the card is on screen
@@ -81,18 +59,25 @@ const YouTubeEmbed = ({ videoId, startTime }: { videoId: string; startTime?: num
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={`https://i.ytimg.com/vi/${videoId}/mqdefault.jpg`}
-        alt=""
+        alt={`${title} demo video`}
         loading="lazy"
         className="absolute inset-0 w-full h-full object-cover"
       />
       {loaded && (
         <iframe
           ref={iframeRef}
-          className="absolute inset-0 w-full h-full"
+          className="absolute top-0 left-0"
           src={src}
           allow="autoplay; encrypted-media"
-          style={{ border: "none", pointerEvents: "none" }}
-          title="project video"
+          style={{
+            border: "none",
+            pointerEvents: "none",
+            width: `${YT_PLAYER_SCALE * 100}%`,
+            height: `${YT_PLAYER_SCALE * 100}%`,
+            transform: `scale(${1 / YT_PLAYER_SCALE})`,
+            transformOrigin: "0 0",
+          }}
+          title={`${title} demo video`}
         />
       )}
       <button
@@ -108,28 +93,6 @@ const YouTubeEmbed = ({ videoId, startTime }: { videoId: string; startTime?: num
         </div>
       </button>
     </>
-  );
-};
-
-// Muted looping preview that only downloads/plays while it is on screen
-const LazyVideo = ({ src, poster, className }: { src: string; poster?: string; className: string }) => {
-  const ref = useRef<HTMLVideoElement>(null);
-
-  useInView(ref, (visible) => {
-    const el = ref.current;
-    if (!el) return;
-    if (visible) {
-      el.muted = true;
-      el.play().catch(() => {});
-    } else {
-      el.pause();
-    }
-  });
-
-  return (
-    <video ref={ref} className={className} muted loop playsInline preload="metadata" poster={poster}>
-      <source src={src} type="video/mp4" />
-    </video>
   );
 };
 
@@ -259,7 +222,7 @@ const ProjectCarousel: React.FC<CarouselProps> = ({
                       {((project.mediaType === "video" && project.video) || project.image) && (
                         <div className="relative w-full h-48 overflow-hidden shrink-0">
                           {ytId ? (
-                            <YouTubeEmbed videoId={ytId} startTime={project.videoStartTime} />
+                            <YouTubeEmbed videoId={ytId} startTime={project.videoStartTime} title={project.title} />
                           ) : project.mediaType === "video" && project.video ? (
                             <LazyVideo className="w-full h-full object-cover" src={project.video} poster={project.image} />
                           ) : (
@@ -349,7 +312,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
   const [isClosing,      setIsClosing]      = useState(false);
 
   const goToCaseStudy = useCallback((project: Project) => {
-    router.push(`/casestudies?project=${project.id}`);
+    router.push(`/projects/${project.slug}`);
   }, [router]);
 
   const sectionRef = useRef<HTMLElement>(null);
@@ -387,7 +350,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
     setContentVisible(false);
     setIsClosing(false);
     setActiveProject(project);
-  }, [activeProject, isClosing]);
+  }, [activeProject, isClosing, playClick]);
 
   useEffect(() => {
     if (!activeProject || !overlayRef.current) return;
@@ -616,7 +579,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
                     {hasMedia && !isProjShopify && (
                       <div className="relative w-28 sm:w-32 shrink-0 overflow-hidden">
                         {pYtId ? (
-                          <YouTubeEmbed videoId={pYtId} startTime={project.videoStartTime} />
+                          <YouTubeEmbed videoId={pYtId} startTime={project.videoStartTime} title={project.title} />
                         ) : project.mediaType === "video" && project.video ? (
                           <LazyVideo className="absolute inset-0 w-full h-full object-cover" src={project.video} poster={project.image} />
                         ) : project.image ? (
@@ -698,7 +661,7 @@ const ProjectSection: React.FC<ProjectSectionProps> = ({ isDarkMode, projects })
                 {(projYtId || proj.image || (proj.mediaType === "video" && proj.video)) && (
                   <div className={`sm:w-1/2 shrink-0 relative overflow-hidden ${isDarkMode ? "bg-black" : "bg-slate-900"}`}>
                     {projYtId ? (
-                      <YouTubeEmbed videoId={projYtId} startTime={proj.videoStartTime} />
+                      <YouTubeEmbed videoId={projYtId} startTime={proj.videoStartTime} title={proj.title} />
                     ) : proj.mediaType === "video" && proj.video ? (
                       <video className="absolute inset-0 w-full h-full object-contain" controls muted loop autoPlay playsInline poster={proj.image}>
                         <source src={proj.video} type="video/mp4" />

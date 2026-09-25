@@ -1,5 +1,6 @@
 "use client";
 
+import { CONTACT } from "../data/site";
 import { useState, useEffect, useRef } from "react";
 import { MessageCircle, X, Send, Bot, Phone, Mail, ChevronRight } from "lucide-react";
 import { useSound } from "../context/SoundContext";
@@ -36,6 +37,10 @@ const ACTION_CHOICES: Record<string, Choice[]> = {
     { label: "Go to Contact", navigate: "contact" },
   ],
 };
+
+// The API only reads this many recent messages, so there is no point sending more.
+const MAX_HISTORY = 12;
+const MAX_INPUT_CHARS = 1000;
 
 const WELCOME: Message = {
   role: "assistant",
@@ -98,7 +103,9 @@ export default function ChatWidget() {
     if (!text || loading) return;
     const userMsg: Message = { role: "user", content: text };
     // strip choices from history before sending to API (keep only role+content)
-    const history = [...messages, userMsg].map(({ role, content }) => ({ role, content }));
+    const history = [...messages, userMsg]
+      .slice(-MAX_HISTORY)
+      .map(({ role, content }) => ({ role, content }));
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setLoading(true);
@@ -112,12 +119,12 @@ export default function ChatWidget() {
       const data = await res.json();
       const content: string = data.content ?? data.error ?? "Something went wrong. Please try again.";
       const action: string | null = data.action ?? null;
-      const choices = action && ACTION_CHOICES[action] ? ACTION_CHOICES[action] : undefined;
+      const choices = action && Object.hasOwn(ACTION_CHOICES, action) ? ACTION_CHOICES[action] : undefined;
       setMessages((prev) => [...prev, { role: "assistant", content, choices }]);
     } catch {
       setMessages((prev) => [...prev, {
         role: "assistant",
-        content: "Network error. Please try again or email kotoky10@gmail.com directly.",
+        content: `Network error. Please try again or email ${CONTACT.email} directly.`,
       }]);
     } finally {
       setLoading(false);
@@ -148,6 +155,7 @@ export default function ChatWidget() {
           </div>
           <button
             onClick={() => { playClick(); setOpen(false); }}
+            aria-label="Close chat"
             className={`w-7 h-7 rounded-lg flex items-center justify-center transition-colors ${isDark ? "hover:bg-white/10 text-gray-400" : "hover:bg-slate-200 text-slate-500"}`}
           >
             <X className="w-4 h-4" />
@@ -218,14 +226,14 @@ export default function ChatWidget() {
         {/* quick-contact buttons */}
         <div className={`shrink-0 flex items-center gap-2 px-3 py-2 border-t ${isDark ? "border-white/8" : "border-slate-100"}`}>
           <a
-            href="tel:+918638752315"
+            href={CONTACT.telHref}
             onClick={playClick}
             className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-150 hover:scale-[1.03] active:scale-95 border ${isDark ? "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10" : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"}`}
           >
             <Phone className="w-3 h-3" /> Call
           </a>
           <a
-            href="https://wa.me/918638752315"
+            href={CONTACT.whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
             onClick={playClick}
@@ -235,7 +243,7 @@ export default function ChatWidget() {
             WhatsApp
           </a>
           <a
-            href="mailto:kotoky10@gmail.com"
+            href={CONTACT.mailtoHref}
             onClick={playClick}
             className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-150 hover:scale-[1.03] active:scale-95 border ${isDark ? "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10" : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"}`}
           >
@@ -250,6 +258,8 @@ export default function ChatWidget() {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={onKey}
+            maxLength={MAX_INPUT_CHARS}
+            aria-label="Message Rajdeep's assistant"
             placeholder="Ask me anything…"
             className={`flex-1 text-xs rounded-xl px-3 py-2 outline-none border transition-colors ${
               isDark
@@ -261,6 +271,7 @@ export default function ChatWidget() {
           <button
             onClick={() => { playClick(); send(); }}
             disabled={!input.trim() || loading}
+            aria-label="Send message"
             className="w-8 h-8 rounded-xl bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center shrink-0 transition-all hover:scale-105 active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
           >
             <Send className="w-3.5 h-3.5 text-white" />

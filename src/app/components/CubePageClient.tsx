@@ -2,6 +2,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
+import { CONTACT } from "../data/site";
 import {
   useRef,
   useState,
@@ -1059,12 +1060,12 @@ function ContactRow({ c, yPos }: { c: ContactItem; yPos: number }) {
 function ContactFaceActive() {
   const s = SECTIONS[5];
   const contacts: ContactItem[] = [
-    { icon: "✉",  label: "EMAIL",     value: "kotoky10@gmail.com",       color: "#7c3aed", href: "mailto:kotoky10@gmail.com" },
-    { icon: "☎",  label: "PHONE",     value: "+91 8638752315",            color: "#059669", href: "tel:+918638752315" },
-    { icon: "⌥",  label: "GITHUB",    value: "Rajdeep1234yyuhh",         color: "#e2e8f0", href: "https://github.com/Rajdeep1234yyuhh" },
-    { icon: "in", label: "LINKEDIN",  value: "rajdeep-kotoky-2273561a0", color: "#0891b2", href: "https://www.linkedin.com/in/rajdeep-kotoky-2273561a0/" },
+    { icon: "✉",  label: "EMAIL",     value: CONTACT.email,              color: "#7c3aed", href: CONTACT.mailtoHref },
+    { icon: "☎",  label: "PHONE",     value: CONTACT.phoneDisplay,       color: "#059669", href: CONTACT.telHref },
+    { icon: "⌥",  label: "GITHUB",    value: "Rajdeep1234yyuhh",         color: "#e2e8f0", href: CONTACT.github },
+    { icon: "in", label: "LINKEDIN",  value: "rajdeep-kotoky-2273561a0", color: "#0891b2", href: CONTACT.linkedin },
     { icon: "ig", label: "INSTAGRAM", value: "@radioactive_gigs",        color: "#db2777", href: "https://www.instagram.com/radioactive_gigs/" },
-    { icon: "wa", label: "WHATSAPP",  value: "+91 8638752315",            color: "#25D366", href: "https://wa.me/918638752315" },
+    { icon: "wa", label: "WHATSAPP",  value: CONTACT.phoneDisplay,       color: "#25D366", href: CONTACT.whatsappHref },
   ];
   const rowY = [0.65, 0.27, -0.11, -0.49, -0.87, -1.25];
 
@@ -1864,7 +1865,7 @@ export default function CubePageClient() {
           padding: 9px 16px;
           transition: border-color 0.2s, color 0.2s;
           text-align: left;
-          font-family: 'Outfit', 'Inter', sans-serif;
+          font-family: var(--font-outfit), 'Inter', sans-serif;
         }
         .cube-nav-item:hover {
           border-left-color: rgba(255,255,255,0.22) !important;
@@ -1880,7 +1881,7 @@ export default function CubePageClient() {
           text-transform: uppercase;
           text-decoration: none;
           padding: 9px 16px;
-          font-family: 'Outfit', 'Inter', sans-serif;
+          font-family: var(--font-outfit), 'Inter', sans-serif;
           transition: color 0.2s;
         }
         .cube-back-link:hover { color: rgba(255,255,255,0.65); }
@@ -1984,6 +1985,7 @@ export default function CubePageClient() {
       >
         <Canvas
           camera={{ position: [0, 0, 7.2], fov: 42 }}
+          dpr={[1, 2]}
           gl={{ antialias: true, alpha: true }}
           style={{ position: "absolute", inset: 0, background: "transparent" }}
           shadows

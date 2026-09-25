@@ -1,5 +1,6 @@
 "use client";
 
+import { CONTACT } from "../data/site";
 import React, { useEffect, useRef, useState, Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -10,7 +11,6 @@ import { allProjects } from "../data/projects";
 import { testimonials } from "../data/testimonials";
 
 const PERSPECTIVE = 1400;
-const PHONE       = "918638752315";
 const ANIM_MS     = 2200;
 
 // Room box geometry (px)
@@ -546,13 +546,13 @@ function ContentProjects({ onEnterRoom }: { onEnterRoom?: (id: RoomId) => void }
 
           {/* CTA buttons */}
           <div style={{ marginTop: 36, display: "flex", gap: 16 }}>
-            <a href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep!`} target="_blank" rel="noopener noreferrer" style={{
+            <a href={`${CONTACT.whatsappHref}?text=Hi%20Rajdeep!`} target="_blank" rel="noopener noreferrer" style={{
               flex: 1, textAlign: "center" as const,
               padding: "18px 0", borderRadius: 16, fontSize: 22, fontWeight: 800,
               background: "rgba(37,211,102,0.12)", border: "1.5px solid rgba(37,211,102,0.3)",
               color: "#25D366", textDecoration: "none",
             }}>WhatsApp</a>
-            <a href="mailto:kotoky10@gmail.com" style={{
+            <a href={CONTACT.mailtoHref} style={{
               flex: 1, textAlign: "center" as const,
               padding: "18px 0", borderRadius: 16, fontSize: 22, fontWeight: 800,
               background: "rgba(255,255,255,0.05)", border: "1.5px solid rgba(255,255,255,0.12)",
@@ -903,7 +903,7 @@ function AboutScene() {
           <meshBasicMaterial color="#25D366" transparent opacity={0.28} />
         </mesh>
         <mesh
-          onClick={() => window.open(`https://wa.me/${PHONE}`, "_blank")}
+          onClick={() => window.open(CONTACT.whatsappHref, "_blank")}
           onPointerOver={() => { document.body.style.cursor = "pointer"; }}
           onPointerOut={() => { document.body.style.cursor = "default"; }}
         >
@@ -922,7 +922,7 @@ function AboutScene() {
           <meshBasicMaterial color="#ffffff" transparent opacity={0.1} />
         </mesh>
         <mesh
-          onClick={() => window.open("mailto:kotoky10@gmail.com")}
+          onClick={() => window.open(CONTACT.mailtoHref)}
           onPointerOver={() => { document.body.style.cursor = "pointer"; }}
           onPointerOut={() => { document.body.style.cursor = "default"; }}
         >
@@ -1026,13 +1026,13 @@ function ContentServices() {
         ))}
       </div>
       <div style={{ display: "flex", gap: 12, justifyContent: "center" }}>
-        <a href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20help!`}
+        <a href={`${CONTACT.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20help!`}
           target="_blank" rel="noopener noreferrer" style={{
             padding: "11px 22px", borderRadius: 12, fontSize: 13, fontWeight: 700,
             background: "rgba(37,211,102,0.12)", border: "1px solid rgba(37,211,102,0.3)",
             color: "#25D366", textDecoration: "none",
           }}>WhatsApp</a>
-        <a href="tel:+918638752315" style={{
+        <a href={CONTACT.telHref} style={{
           padding: "11px 22px", borderRadius: 12, fontSize: 13, fontWeight: 700,
           background: "rgba(96,165,250,0.1)", border: "1px solid rgba(96,165,250,0.25)",
           color: "#93c5fd", textDecoration: "none",
@@ -1054,14 +1054,14 @@ function ContentContact() {
       </h2>
       <p style={{ color: "rgba(255,255,255,0.35)", fontSize: 14, marginBottom: 32 }}>Got a project idea? I&apos;m available now.</p>
       <div style={{ display: "flex", flexDirection: "column" as const, gap: 12, maxWidth: 360, margin: "0 auto" }}>
-        <a href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20have%20a%20project!`}
+        <a href={`${CONTACT.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20have%20a%20project!`}
           target="_blank" rel="noopener noreferrer" style={{
             display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
             padding: "14px 24px", borderRadius: 14, fontSize: 14, fontWeight: 700,
             background: "rgba(37,211,102,0.14)", border: "1px solid rgba(37,211,102,0.35)",
             color: "#25D366", textDecoration: "none",
           }}>WhatsApp me</a>
-        <a href="mailto:kotoky10@gmail.com" style={{
+        <a href={CONTACT.mailtoHref} style={{
           display: "flex", alignItems: "center", justifyContent: "center",
           padding: "14px 24px", borderRadius: 14, fontSize: 14, fontWeight: 700,
           background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)",

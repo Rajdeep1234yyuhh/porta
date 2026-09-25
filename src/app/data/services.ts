@@ -1,6 +1,8 @@
 export interface ServiceData {
   slug: string;
   title: string;
+  /** Title tag for the service page, phrased the way clients search. */
+  seoTitle: string;
   shortDescription: string;
   fullDescription: string;
   icon: "globe" | "database" | "code" | "layers" | "shoppingBag" | "package" | "bot" | "cpu" | "monitor";
@@ -12,6 +14,7 @@ export const allServices: ServiceData[] = [
   {
     slug: "custom-saas",
     title: "Custom SaaS Products",
+    seoTitle: "Custom SaaS Development Services",
     shortDescription:
       "End-to-end SaaS platforms with subscription billing, multi-tenant architecture, and admin dashboards.",
     fullDescription:
@@ -30,6 +33,7 @@ export const allServices: ServiceData[] = [
   {
     slug: "web-applications",
     title: "Web Applications",
+    seoTitle: "Web Application Development Services",
     shortDescription:
       "Full-stack web applications, dashboards, portals, and internal tools built for performance and scale.",
     fullDescription:
@@ -48,6 +52,7 @@ export const allServices: ServiceData[] = [
   {
     slug: "ecommerce-solutions",
     title: "E-commerce Solutions",
+    seoTitle: "Shopify & E-commerce Development Services",
     shortDescription:
       "Shopify stores and fully custom e-commerce platforms — built to convert and scale.",
     fullDescription:
@@ -66,6 +71,7 @@ export const allServices: ServiceData[] = [
   {
     slug: "websites",
     title: "Websites",
+    seoTitle: "Website Design & Development Services",
     shortDescription:
       "Portfolio, business, school, company, and personal sites — fast, responsive, and SEO-ready.",
     fullDescription:
@@ -84,6 +90,7 @@ export const allServices: ServiceData[] = [
   {
     slug: "ai-ml-solutions",
     title: "AI / ML Solutions",
+    seoTitle: "AI Chatbot & ML Development Services",
     shortDescription:
       "AI integrations, custom chatbots, NLP pipelines, and ML model development for real-world use.",
     fullDescription:
@@ -102,6 +109,7 @@ export const allServices: ServiceData[] = [
   {
     slug: "technical-solutions",
     title: "Technical Solutions",
+    seoTitle: "Technical Problem-Solving & Consulting",
     shortDescription:
       "Complex technical problem-solving using core CS fundamentals — algorithms, systems, automation, and more.",
     fullDescription:

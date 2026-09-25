@@ -1,5 +1,6 @@
 "use client";
 
+import { CONTACT as SITE_CONTACT } from "../data/site";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 
@@ -81,7 +82,7 @@ const ABOUT: Line[] = [
   o("│  Years      5+    of experience"),
   o("│"),
   s("│  Status     ● Available for new projects"),
-  o("│  Email      kotoky10@gmail.com"),
+  o(`│  Email      ${SITE_CONTACT.email}`),
   o("│  Phone      +91 86387 52315"),
   a("└─────────────────────────────────────────────────────"),
 ];
@@ -376,7 +377,7 @@ const EXPERIENCE: Line[] = [
 const CONTACT: Line[] = [
   a("┌─ Contact ───────────────────────────────────────────"),
   o("│"),
-  h("│  Email      kotoky10@gmail.com"),
+  h(`│  Email      ${SITE_CONTACT.email}`),
   h("│  WhatsApp   +91 86387 52315"),
   h("│  Phone      +91 86387 52315"),
   o("│"),
@@ -384,8 +385,8 @@ const CONTACT: Line[] = [
   o("│  Open for   Freelance · Contract · Full-time"),
   o("│"),
   o("│  Direct links:"),
-  d("│    wa.me/918638752315"),
-  d("│    mailto:kotoky10@gmail.com"),
+  d(`│    ${SITE_CONTACT.whatsappHref.replace("https://", "")}`),
+  d(`│    mailto:${SITE_CONTACT.email}`),
   o("│"),
   a("└─────────────────────────────────────────────────────"),
 ];
@@ -393,8 +394,8 @@ const CONTACT: Line[] = [
 const SOCIAL: Line[] = [
   a("┌─ Social ────────────────────────────────────────────"),
   o("│"),
-  h("│  GitHub      github.com/Rajdeep1234yyuhh"),
-  h("│  LinkedIn    linkedin.com/in/rajdeep-kotoky-2273561a0"),
+  h(`│  GitHub      github.com/${SITE_CONTACT.githubUser}`),
+  h(`│  LinkedIn    linkedin.com/in/${SITE_CONTACT.linkedinUser}`),
   h("│  Instagram   instagram.com/radioactive_gigs"),
   o("│"),
   a("└─────────────────────────────────────────────────────"),
@@ -431,7 +432,7 @@ const LS: Line[] = [
   o("drwxr-xr-x  social/"),
   bl(),
   d("-rw-r--r--  resume.pdf"),
-  d("-rw-r--r--  portfolio.url → rajdeepkotoky.vercel.app"),
+  d("-rw-r--r--  portfolio.url → rajdeepkotoky.com"),
 ];
 
 const NEOFETCH: Line[] = [
@@ -445,7 +446,7 @@ const NEOFETCH: Line[] = [
   o("  rajdeep@portfolio"),
   o("  ─────────────────────────────────────"),
   o("  OS        Portfolio v2.0"),
-  o("  Host      rajdeepkotoky.vercel.app"),
+  o("  Host      rajdeepkotoky.com"),
   o("  Kernel    Next.js 15 (App Router)"),
   o("  Shell     TypeScript"),
   o("  DE        Tailwind CSS v4"),
@@ -612,7 +613,7 @@ export default function TerminalPage() {
 
       <div onClick={focusInput} style={{
         minHeight: "100dvh", background: "#060c09",
-        fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+        fontFamily: "var(--font-jetbrains-mono), 'Fira Code', monospace",
         display: "flex", flexDirection: "column", cursor: "text",
       }}>
 

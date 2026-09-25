@@ -13,7 +13,7 @@ export default function ComingSoonClient() {
       justifyContent: "center",
       position: "relative",
       overflow: "hidden",
-      fontFamily: "'Outfit', 'Inter', sans-serif",
+      fontFamily: "var(--font-outfit), 'Inter', sans-serif",
     }}>
       <style>{`
         @keyframes spin-slow {

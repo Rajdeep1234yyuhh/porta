@@ -1,7 +1,17 @@
 "use client";
 
+import { CONTACT } from "../data/site";
+import Link from "next/link";
 import { Mail, Send, Phone } from "lucide-react";
 import { useSound } from "../context/SoundContext";
+
+const FOOTER_LINKS = [
+  { href: "/projects", label: "Projects" },
+  { href: "/services", label: "Services" },
+  { href: "/zoom", label: "3D Portfolio" },
+  { href: "/cube", label: "3D Cube" },
+  { href: "/terminal", label: "Terminal" },
+];
 
 const GithubIcon = () => (
   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -69,7 +79,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
             <h3 className={`text-sm font-bold mb-3 ${isDarkMode ? "text-white" : "text-slate-900"}`}>Contact Information</h3>
 
             <a
-              href="mailto:kotoky10@gmail.com"
+              href={CONTACT.mailtoHref}
               onClick={playClick}
               className={`flex items-center p-2.5 rounded-lg mb-3 transition-all duration-200 group ${isDarkMode ? "hover:bg-[#242424]" : "hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50"}`}
             >
@@ -79,7 +89,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
               <div>
                 <div className={`text-[10px] font-medium uppercase tracking-wider mb-0.5 ${isDarkMode ? "text-gray-500" : "text-slate-400"}`}>Email</div>
                 <div className={`text-xs font-medium ${isDarkMode ? "text-gray-300 group-hover:text-white" : "text-slate-700 group-hover:text-slate-900"}`}>
-                  kotoky10@gmail.com
+                  {CONTACT.email}
                 </div>
               </div>
             </a>
@@ -88,12 +98,12 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
               <h4 className={`text-[10px] font-semibold uppercase tracking-wider mb-2 ${isDarkMode ? "text-gray-400" : "text-slate-500"}`}>Connect With Me</h4>
               <div className="flex flex-wrap gap-2">
                 {[
-                  { href: "https://github.com/Rajdeep1234yyuhh", icon: <GithubIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-gray-500/50" : "hover:bg-gradient-to-br hover:from-gray-700 hover:to-gray-900 hover:border-gray-400" },
-                  { href: "https://www.linkedin.com/in/rajdeep-kotoky-2273561a0/", icon: <LinkedinIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-blue-500/50" : "hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-700 hover:border-blue-300" },
+                  { href: CONTACT.github, icon: <GithubIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-gray-500/50" : "hover:bg-gradient-to-br hover:from-gray-700 hover:to-gray-900 hover:border-gray-400" },
+                  { href: CONTACT.linkedin, icon: <LinkedinIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-blue-500/50" : "hover:bg-gradient-to-br hover:from-blue-500 hover:to-blue-700 hover:border-blue-300" },
                   { href: "https://www.instagram.com/radioactive_gigs/", icon: <InstagramIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-pink-500/50" : "hover:bg-gradient-to-br hover:from-pink-500 hover:to-orange-400 hover:border-pink-300" },
-                  { href: "tel:+918638752315", icon: <Phone className="w-4 h-4" />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-green-500/50" : "hover:bg-gradient-to-br hover:from-green-500 hover:to-emerald-600 hover:border-green-300" },
-                  { href: "https://wa.me/918638752315", icon: <WhatsAppIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-[#25D366]/50" : "hover:bg-[#25D366] hover:border-[#25D366]" },
-                  { href: "mailto:kotoky10@gmail.com", icon: <GmailIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-red-500/50" : "hover:bg-gradient-to-br hover:from-red-500 hover:to-orange-500 hover:border-red-300" },
+                  { href: CONTACT.telHref, icon: <Phone className="w-4 h-4" />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-green-500/50" : "hover:bg-gradient-to-br hover:from-green-500 hover:to-emerald-600 hover:border-green-300" },
+                  { href: CONTACT.whatsappHref, icon: <WhatsAppIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-[#25D366]/50" : "hover:bg-[#25D366] hover:border-[#25D366]" },
+                  { href: CONTACT.mailtoHref, icon: <GmailIcon />, hoverClass: isDarkMode ? "hover:bg-[#2a2a2a] hover:border-red-500/50" : "hover:bg-gradient-to-br hover:from-red-500 hover:to-orange-500 hover:border-red-300" },
                 ].map(({ href, icon, hoverClass }, i) => (
                   <a
                     key={i}
@@ -142,7 +152,7 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
             </div>
 
             <a
-              href="mailto:kotoky10@gmail.com"
+              href={CONTACT.mailtoHref}
               onClick={playClick}
               className={`group inline-flex items-center w-full justify-center px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 ${isDarkMode ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-gray-900 text-white hover:bg-gray-800"}`}
             >
@@ -151,6 +161,33 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
             </a>
           </div>
         </div>
+
+        {/* Footer: real links so search engines can reach the other pages */}
+        <footer className={`mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] ${isDarkMode ? "text-gray-500" : "text-slate-400"}`}>
+          <nav aria-label="Site pages" className="flex flex-wrap justify-center gap-x-4 gap-y-1">
+            {FOOTER_LINKS.map(({ href, label }) => (
+              <Link
+                key={href}
+                href={href}
+                onClick={playClick}
+                className={`transition-colors ${isDarkMode ? "hover:text-gray-200" : "hover:text-slate-700"}`}
+              >
+                {label}
+              </Link>
+            ))}
+            <a
+              href="/resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={playClick}
+              className={`transition-colors ${isDarkMode ? "hover:text-gray-200" : "hover:text-slate-700"}`}
+            >
+              Résumé
+            </a>
+          </nav>
+          {/* The prerendered year can differ from the visitor's clock on New Year */}
+          <span suppressHydrationWarning>© {new Date().getFullYear()} Rajdeep Kotoky</span>
+        </footer>
       </div>
     </section>
   );

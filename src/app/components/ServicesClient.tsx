@@ -13,6 +13,7 @@ import {
   Bot,
   Cpu,
   Monitor,
+  ArrowRight,
 } from "lucide-react";
 import { allServices } from "../data/services";
 import Navbar from "./Navbar";
@@ -224,6 +225,16 @@ export default function ServicesClient() {
                       ))}
                     </div>
                   </div>
+
+                  <Link
+                    href={`/services/${service.slug}`}
+                    className={`inline-flex items-center gap-1.5 text-sm font-semibold transition-colors ${
+                      isDarkMode ? "text-white hover:text-gray-300" : "text-slate-900 hover:text-slate-600"
+                    }`}
+                  >
+                    {service.seoTitle}
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
                 </div>
               </div>
             </div>

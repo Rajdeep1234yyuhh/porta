@@ -1,11 +1,11 @@
 "use client";
 
+import { CONTACT } from "../data/site";
 import { useEffect, useState } from "react";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import { SpeedDial } from "primereact/speeddial";
 
-const PHONE = "8638752315";
 const HELP_NUDGE_INITIAL_DELAY_MS = 1200;
 const HELP_NUDGE_INTERVAL_MS = 15000;
 const HELP_NUDGE_VISIBLE_MS = 6000;
@@ -70,7 +70,7 @@ const QuickFixFAB = ({ scrollToSection }: QuickFixFABProps) => {
       icon: "pi pi-whatsapp",
       command: () => {
         window.open(
-          `https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`,
+          `${CONTACT.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`,
           "_blank"
         );
       },
@@ -78,7 +78,7 @@ const QuickFixFAB = ({ scrollToSection }: QuickFixFABProps) => {
     {
       label: "Call Me",
       icon: "pi pi-phone",
-      command: () => { window.location.href = `tel:+${PHONE}`; },
+      command: () => { window.location.href = CONTACT.telHref; },
     },
     {
       label: "Message",

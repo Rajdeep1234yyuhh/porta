@@ -7,6 +7,8 @@ export interface CaseStudy {
 
 export interface Project {
   id: number;
+  /** URL segment for /projects/[slug]; keep stable once published. */
+  slug: string;
   title: string;
   description: string;
   image?: string;
@@ -24,12 +26,12 @@ export interface Project {
 export const allProjects: Project[] = [
   {
     id: 1,
+    slug: "dhiti-ai-career-assessment",
     title: "DHITI - AI-Powered Human Intelligence Assessment Tool",
     description:
       "Full-stack AI-powered career assessment platform (DHITI – dhiti.ai) built with Next.js and TypeScript. Firebase backend, OpenAI APIs for AI-based career analysis, optimized API caching, and secure Razorpay payment integration for fast performance and reliable transactions.",
     mediaType: "video",
     video: "https://www.youtube.com/watch?v=aIo-PEiSqQA",
-    image: "/images/ecommerce-thumbnail.jpg",
     tech: [
       "Next.js",
       "TypeScript",
@@ -61,6 +63,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 27,
+    slug: "travel-grid-india-ota-platform",
     title: "Travel Grid India - OTA platform",
     description:
       "Full-stack OTA (Online Travel Agency) platform for browsing and booking stays and travel packages, with an admin panel for managing property listings, availability, and pricing.",
@@ -89,6 +92,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 28,
+    slug: "go-travelz-travel-agency",
     title: "Go Travelz - Travel Agency",
     description:
       "Marketing and booking landing page for a travel agency offering curated holiday packages, built to convert visitors into package inquiries and calls.",
@@ -117,6 +121,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 29,
+    slug: "real-bengal-sweets-erp",
     title: "Real Bengal Sweets - ERP system",
     description:
       "Lightweight ERP/billing system for a sweets shop, with a fast billing counter for generating bills and a live dashboard of the day's collections.",
@@ -145,12 +150,12 @@ export const allProjects: Project[] = [
   },
   {
     id: 2,
+    slug: "mental-health-ai-chatbot",
     title: "Mental Health Assistant Chatbot",
     description:
       "AI-powered mental health assistant chatbot that interacts with users, detects emotions from conversations, and tracks emotional trends over time.",
     mediaType: "video",
-    video: "yeco.mp4",
-    image: "/images/analytics-dashboard-thumbnail.jpg",
+    video: "/yeco.mp4",
     tech: [
       "React",
       "Tailwind CSS",
@@ -183,12 +188,12 @@ export const allProjects: Project[] = [
   },
   {
     id: 3,
+    slug: "shopfruitful-ecommerce-website",
     title: "ShopFruitful E-commerce Website",
     description:
       "Custom Shopify and Liquid storefront with responsive design, optimized product listings, smooth cart and checkout flow, and polished CSS UI enhancements.",
     mediaType: "video",
-    video: "fruitful.mp4",
-    image: "/images/shopfruitful-thumbnail.jpg",
+    video: "/fruitful.mp4",
     tech: ["Shopify", "Liquid", "CSS"],
     categories: ["Shopify"],
     demo: "https://shopfruitful.com/",
@@ -212,6 +217,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 4,
+    slug: "assamese-english-tourism-chatbot",
     title: "Assamese-English Code-Mixed Tourism Chatbot",
     description:
       "A two-stage intelligent dialogue system for Assam tourism, featuring a MuRIL-based intent classifier across 44 intents with ~97% accuracy and a semantic retrieval module over 221,799 Q&A pairs covering 51 destinations - designed for low-resource code-mixed NLP.",
@@ -246,6 +252,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 6,
+    slug: "data-collector-app",
     title: "Data Collector Application",
     description:
       "Collects data for model training. Collects data from users and stores them in a structured format.",
@@ -273,6 +280,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 7,
+    slug: "website-to-video",
     title: "Website to Video",
     description: "Application that converts websites to a showcased video.",
     mediaType: "image",
@@ -299,6 +307,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 30,
+    slug: "florine-jewels-shopify-store",
     title: "Florine Jewels - Jewellery E-commerce Platform",
     description:
       "Shopify jewellery store for Florine Jewels, a brand designing jewellery for modern women, with curated collections and a dedicated customization flow.",
@@ -326,6 +335,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 31,
+    slug: "raheka-studios-shopify-store",
     title: "Raheka Studios - Women's Clothing E-commerce Platform",
     description:
       "Shopify clothing store for Raheka by Harshita Maheshwari, featuring shirts, blouses, co-ords, and dresses with seasonal collection campaigns.",
@@ -353,6 +363,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 9,
+    slug: "zanera-shopify-store",
     title: "Zanera - Imitation Jewellery E-commerce Platform",
     description:
       "Shopify jewellery store for affordable imitation pieces, covering ethnic, traditional, and modern designs for daily wear and special occasions.",
@@ -386,6 +397,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 10,
+    slug: "the-anvik-shopify-store",
     title: "The Anvik - Ethnic Jewellery E-commerce Platform",
     description:
       "Shopify jewellery store for handcrafted earrings, jhumkas, chandbalis, and traditional sets for weddings, festivals, and everyday wear.",
@@ -419,6 +431,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 11,
+    slug: "heer-house-of-jewellery-shopify-store",
     title: "Heer House of Jewellery - Handcrafted Bridal Jewellery Platform",
     description:
       "Shopify bridal jewellery platform featuring handcrafted kundan sets, anklets, earrings, and bespoke accessories with traditional techniques and modern styling.",
@@ -452,6 +465,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 12,
+    slug: "fruitful-skincare-shopify-store",
     title: "Fruitful - Fruit-Based Skincare E-commerce Platform",
     description:
       "Shopify skincare store for fruit-powered, vegan, beginner-friendly products built around clean formulas and simple daily routines.",
@@ -485,6 +499,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 13,
+    slug: "giisha-beauty-shopify-store",
     title: "Giisha Beauty - Ayurvedic Haircare E-commerce Platform",
     description:
       "Shopify haircare store for Ayurvedic-inspired oils, masks, and grooming tools, blending Indian rituals with modern healthy-hair care.",
@@ -518,6 +533,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 14,
+    slug: "roslyn-by-demi-shopify-store",
     title: "Roslyn by Demi - Women's Fashion E-commerce Platform",
     description:
       "Shopify fashion store for modern women's dresses, co-ord sets, tops, and accessories focused on elegance, comfort, and contemporary style.",
@@ -551,6 +567,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 15,
+    slug: "nishorama-shopify-store",
     title: "Nishorama - Gen-Z Ethnic Fashion E-commerce Platform",
     description:
       "Shopify D2C fashion store for Gen-Z ethnic wear, including block-printed kurtis, fusion outfits, and contemporary desi styles.",
@@ -584,6 +601,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 16,
+    slug: "vintage-loom-shopify-store",
     title: "Vintage Loom - Handcrafted Cotton Ethnic Wear Platform",
     description:
       "Shopify ethnic wear store for handcrafted cotton suit sets, kurtas, and sarees rooted in handblock printing and artisan craftsmanship.",
@@ -617,6 +635,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 18,
+    slug: "aekay-shopify-store",
     title: "Aekay - Fashion Accessories & Jewellery E-commerce Platform",
     description:
       "Shopify accessories store for affordable rings, earrings, necklaces, and bracelets, focused on everyday style, durability, and accessibility.",
@@ -650,6 +669,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 19,
+    slug: "the-house-of-hoor-shopify-store",
     title: "The House of Hoor - Handcrafted Ethnic Wear E-commerce Platform",
     description:
       "Shopify ethnic fashion store for handcrafted suit sets, anarkalis, co-ords, and kurtas with handblock prints and modern elegance.",
@@ -683,6 +703,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 20,
+    slug: "gelato-vinto-shopify-store",
     title: "Gelato Vinto - Artisanal Gelato & Dessert E-commerce Platform",
     description:
       "Shopify dessert store for Italian-style artisanal gelato, gelato cakes, sorbets, and sugar-free options made with natural ingredients.",
@@ -716,6 +737,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 21,
+    slug: "homebagh-shopify-store",
     title: "Homebagh - Online Plants & Home Decor E-commerce Platform",
     description:
       "Shopify plants and decor store for indoor/outdoor plants, planters, and gardening accessories that support greener living spaces.",
@@ -749,6 +771,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 22,
+    slug: "the-mesh-store-shopify-store",
     title:
       "The Mesh Store - Trendy Women's Fashion & Accessories E-commerce Platform",
     description:
@@ -783,6 +806,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 23,
+    slug: "kapda-shop-shopify-store",
     title: "Kapda Shop - Online Fabric & Textile Marketplace",
     description:
       "Shopify textile marketplace for premium cotton, silk, linen, velvet, and georgette fabrics across retail and bulk sourcing.",
@@ -816,6 +840,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 24,
+    slug: "bombay-blossom-shopify-store",
     title: "Bombay Blossom - Handcrafted Bags & Jewellery E-commerce Platform",
     description:
       "Shopify handcrafted fashion store for bags, jewellery, and accessories made with Indian textiles, recycled fabrics, and handloom techniques.",
@@ -849,6 +874,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 25,
+    slug: "armor-by-smugglerz-shopify-store",
     title:
       "Armor by Smugglerz - Men's Innerwear & Loungewear E-commerce Platform",
     description:
@@ -883,6 +909,7 @@ export const allProjects: Project[] = [
   },
   {
     id: 26,
+    slug: "diy-by-tok-shopify-store",
     title: "DIY by Tok - Kids DIY Kits & Educational Toys E-commerce Platform",
     description:
       "Shopify kids store for DIY kits and educational toys that encourage hands-on learning, creativity, and activity-based play.",
@@ -918,3 +945,6 @@ export const allProjects: Project[] = [
 
 // Backward-compat alias used by existing imports
 export const featuredProjects = allProjects.slice(0, 3);
+
+export const getProjectBySlug = (slug: string) =>
+  allProjects.find((p) => p.slug === slug);

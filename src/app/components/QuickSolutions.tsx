@@ -1,10 +1,11 @@
 "use client";
 
+import { CONTACT } from "../data/site";
 import { useState, type CSSProperties } from "react";
 import { Zap, CheckCircle, MessageCircle, Phone, ChevronDown, Gift, Wallet } from "lucide-react";
 import { useSound } from "../context/SoundContext";
 
-const PHONE = "919999999999";
+
 
 interface QuickSolutionsProps {
   isDarkMode: boolean;
@@ -68,7 +69,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSec
               }
             >
               <a
-                href={`https://wa.me/${PHONE}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
+                href={`${CONTACT.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
                 target="_blank"
                 rel="noopener noreferrer"
                 onClick={() => { playClick(); setContactOpen(false); }}
@@ -81,7 +82,7 @@ const QuickSolutions: React.FC<QuickSolutionsProps> = ({ isDarkMode, scrollToSec
                 <span className="floating-action-label">WhatsApp</span>
               </a>
               <a
-                href={`tel:+${PHONE}`}
+                href={CONTACT.telHref}
                 onClick={() => { playClick(); setContactOpen(false); }}
                 className="floating-action-option"
                 style={{ color: "#60a5fa" }}

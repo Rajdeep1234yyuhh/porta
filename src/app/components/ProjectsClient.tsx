@@ -1,26 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import { ExternalLink, GitBranch, CheckCircle2 } from "lucide-react";
+import { ArrowRight, ExternalLink, GitBranch, CheckCircle2 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import Navbar from "./Navbar";
 import { allProjects, Project } from "../data/projects";
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-function getYoutubeVideoId(url: string): string | null {
-  const patterns = [
-    /youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,
-    /youtu\.be\/([a-zA-Z0-9_-]+)/,
-    /youtube\.com\/embed\/([a-zA-Z0-9_-]+)/,
-    /youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/,
-  ];
-  for (const re of patterns) {
-    const m = url.match(re);
-    if (m) return m[1];
-  }
-  return null;
-}
+import { LazyVideo } from "./LazyVideo";
+import { getYoutubeVideoId } from "../lib/youtube";
 
 // ─── Per-project room themes ──────────────────────────────────────────────────
 const ROOM: Record<number, { dark: string; light: string; accent: string }> = {
@@ -215,6 +202,10 @@ function RoomCard({
   const visualSrc = youtubeId
     ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`
     : (project.image ?? null);
+  // Self-hosted demo videos without a thumbnail preview the video itself.
+  const localVideo =
+    !youtubeId && project.mediaType === "video" && project.video ? project.video : null;
+  const hasVisual = Boolean(visualSrc || localVideo);
 
   const num = String(index + 1).padStart(2, "0");
 
@@ -252,7 +243,7 @@ function RoomCard({
         style={{ paddingTop: "clamp(90px,12vh,130px)" }}
       >
         {/* Visual panel — desktop only */}
-        {visualSrc && (
+        {hasVisual && (
           <div className="hidden lg:flex w-[40%] flex-shrink-0 items-start justify-center px-10 pt-4">
             <div
               className="relative w-full rounded-3xl overflow-hidden"
@@ -261,13 +252,17 @@ function RoomCard({
                 boxShadow: `0 40px 80px ${accent}35, 0 0 0 1px ${accent}25`,
               }}
             >
-              <Image
-                src={visualSrc}
-                alt={project.title}
-                fill
-                className="object-cover"
-                unoptimized
-              />
+              {visualSrc ? (
+                <Image
+                  src={visualSrc}
+                  alt={project.title}
+                  fill
+                  className="object-cover"
+                  unoptimized
+                />
+              ) : (
+                <LazyVideo src={localVideo!} className="absolute inset-0 w-full h-full object-cover" />
+              )}
               <div
                 className="absolute inset-0"
                 style={{
@@ -282,7 +277,7 @@ function RoomCard({
         {/* Scrollable info + case study */}
         <div
           className={`flex-1 min-w-0 pb-16 px-6 sm:px-10 ${
-            visualSrc ? "lg:pl-2 lg:pr-16" : "lg:max-w-2xl lg:mx-auto lg:px-10"
+            hasVisual ? "lg:pl-2 lg:pr-16" : "lg:max-w-2xl lg:mx-auto lg:px-10"
           }`}
         >
           {/* Category + counter */}
@@ -311,7 +306,7 @@ function RoomCard({
           <h2
             className="font-black leading-[1.08] mb-3"
             style={{
-              fontSize: visualSrc
+              fontSize: hasVisual
                 ? "clamp(1.5rem, 3vw, 2.8rem)"
                 : "clamp(1.7rem, 4vw, 3.8rem)",
               color: isDark ? "#fff" : "#0d0d0d",
@@ -362,6 +357,13 @@ function RoomCard({
 
           {/* Links */}
           <div className="flex flex-wrap gap-3 mb-8">
+            <Link
+              href={`/projects/${project.slug}`}
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:scale-105 active:scale-95"
+              style={{ background: accent }}
+            >
+              Full case study <ArrowRight className="w-4 h-4" />
+            </Link>
             {project.demo !== "#" && (
               <a
                 href={project.demo}
@@ -525,17 +527,17 @@ export default function ProjectsClient() {
       selectedCategory === "All" || p.categories.includes(selectedCategory),
   );
 
-  /* scroll to specific project from URL param ?project=<id> */
-  const searchParams = useSearchParams();
+  /* scroll to specific project from URL param ?project=<id>. Read from
+     window.location rather than useSearchParams, which would stop the page
+     from being prerendered (search engines would get an empty page). */
   useEffect(() => {
-    const id = searchParams.get("project");
+    const id = new URLSearchParams(window.location.search).get("project");
     if (!id) return;
     setTimeout(() => {
       document
         .getElementById(`project-${id}`)
         ?.scrollIntoView({ behavior: "smooth" });
     }, 400);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -1,76 +1,55 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, JetBrains_Mono, Outfit } from "next/font/google";
+import { SITE_URL } from "./data/site";
+import { JsonLd, SITE_NAME, personJsonLd, websiteJsonLd } from "./lib/seo";
 import "./globals.css";
 import LenisProvider from "./components/LenisProvider";
 import ChatWidget from "./components/ChatWidget";
 import { SoundProvider } from "./context/SoundContext";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
+// Self-hosted by next/font (no render-blocking request to Google Fonts).
+// Components reference these as var(--font-outfit) / var(--font-jetbrains-mono).
+const outfit = Outfit({
+  variable: "--font-outfit",
+  subsets: ["latin"],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
+  subsets: ["latin"],
+});
+
+// Site-wide defaults only. Canonical URLs and og:url are set per page (via
+// pageMetadata) so no page inherits the home page's.
 export const metadata: Metadata = {
-  metadataBase: new URL("https://rajdeepkotoky.vercel.app"),
-  title: "Rajdeep Kotoky | Full-Stack Developer & AI Engineer",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Rajdeep Kotoky | Freelance Full-Stack Developer & AI Engineer",
+    template: `%s | ${SITE_NAME}`,
+  },
   description:
-    "Portfolio of Rajdeep Kotoky, a Full-Stack Developer & AI Engineer specializing in Next.js, React, Shopify, and AI/ML integrations.",
-  keywords: [
-    "Rajdeep Kotoky",
-    "Full-Stack Developer",
-    "AI Engineer",
-    "Next.js Developer",
-    "React Developer",
-    "Shopify Developer",
-    "AI ML Engineer",
-    "Portfolio",
-  ],
-  authors: [{ name: "Rajdeep Kotoky" }],
-  alternates: {
-    canonical: "https://rajdeepkotoky.vercel.app",
+    "Freelance full-stack developer & AI engineer building SaaS products, web apps, Shopify stores and AI chatbots with Next.js, React & Python. 28 projects shipped.",
+  applicationName: SITE_NAME,
+  authors: [{ name: SITE_NAME, url: SITE_URL }],
+  creator: SITE_NAME,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1 },
   },
   openGraph: {
-    title: "Rajdeep Kotoky | Full-Stack Developer & AI Engineer",
-    description:
-      "Full-Stack Developer & AI Engineer specializing in Next.js, React, Shopify, and AI/ML integrations.",
-    url: "https://rajdeepkotoky.vercel.app",
-    siteName: "Rajdeep Kotoky Portfolio",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "Rajdeep Kotoky | Full-Stack Developer & AI Engineer",
-      },
-    ],
     type: "website",
+    siteName: SITE_NAME,
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Rajdeep Kotoky | Full-Stack Developer & AI Engineer",
-    description:
-      "Full-Stack Developer & AI Engineer specializing in Next.js, React, Shopify, and AI/ML.",
-    images: ["/og-image.jpg"],
   },
-};
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Person",
-  name: "Rajdeep Kotoky",
-  url: "https://rajdeepkotoky.vercel.app",
-  image: "https://rajdeepkotoky.vercel.app/og-image.jpg",
-  jobTitle: "Full Stack Developer & AI/ML Engineer",
-  sameAs: [
-    "https://github.com/Rajdeep1234yyuhh",
-    "https://www.linkedin.com/in/rajdeep-kotoky-2273561a0/",
-  ],
-  knowsAbout: ["Next.js", "React", "Shopify", "Tailwind CSS", "Python", "Node.js", "AI/ML"],
 };
 
 export default function RootLayout({
@@ -81,12 +60,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistMono.variable} ${outfit.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <JsonLd data={[personJsonLd, websiteJsonLd]} />
         <SoundProvider>
           <LenisProvider>{children}</LenisProvider>
           <ChatWidget />
