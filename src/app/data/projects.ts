@@ -251,34 +251,6 @@ export const allProjects: Project[] = [
     },
   },
   {
-    id: 6,
-    slug: "data-collector-app",
-    title: "Data Collector Application",
-    description:
-      "Collects data for model training. Collects data from users and stores them in a structured format.",
-    mediaType: "image",
-    tech: ["Next.js", "Firebase"],
-    categories: ["Web Development", "AI/ML"],
-    demo: "https://ass-eng-chatbot.vercel.app/",
-    github: "https://github.com/Rajdeep1234yyuhh/ass-eng-chatbot",
-    date: "2023",
-    caseStudy: {
-      overview:
-        "A structured data collection web app built to gather labeled examples for training the Assamese-English NLP model. It enables real speakers to contribute validated Assamese-English query-response pairs through a simple, accessible interface.",
-      challenge:
-        "Training a code-mixed NLP model requires large amounts of labeled data, but no existing dataset existed for Assamese-English tourism queries. Data needed to be collected from real speakers in a structured, validated format that could feed directly into training pipelines.",
-      solution:
-        "Built with Next.js and Firebase, the app presents contributors with tourism-related prompts and collects their natural Assamese-English responses. Data is validated on submission and stored in a structured Firebase format ready for model training pipelines.",
-      results: [
-        "Live at ass-eng-chatbot.vercel.app with active contributor access",
-        "Structured dataset collection enabling NLP model training",
-        "Firebase real-time database for instant, reliable data storage",
-        "Intuitive UI designed for non-technical contributors",
-        "Direct pipeline from user submissions to model training datasets",
-      ],
-    },
-  },
-  {
     id: 7,
     slug: "website-to-video",
     title: "Website to Video",

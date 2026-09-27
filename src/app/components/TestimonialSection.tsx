@@ -74,10 +74,9 @@ function TestimonialCard({ t, isDarkMode }: { t: Testimonial; isDarkMode: boolea
         </div>
       </div>
 
-      {/* Stars + date */}
+      {/* Stars */}
       <div className="flex items-center gap-2">
         <StarRating rating={t.rating} />
-        <span className={`text-[10px] ${isDarkMode ? "text-gray-500" : "text-slate-400"}`}>{t.date}</span>
       </div>
 
       {/* Review text */}

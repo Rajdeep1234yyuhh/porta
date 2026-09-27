@@ -33,6 +33,13 @@ Open http://localhost:3000.
 | Name           | Required | Description                                                      |
 | -------------- | -------- | ---------------------------------------------------------------- |
 | `GROQ_API_KEY` | For chat | Server-only key for the AI assistant. Without it, chat returns a friendly "not configured" message. |
+| `ADMIN_PASSWORD` | For admin | Password for `/admin` (12+ characters). The login stays disabled without it. |
+| `ADMIN_SESSION_SECRET` | For admin | 32+ random characters used to sign admin sessions. Changing it, or the password, signs everyone out. |
+| `BLOB_READ_WRITE_TOKEN` | For uploads | Added by Vercel when a public Blob store is connected to the project. Without it, `/resume.pdf` serves `assets/resume.pdf`. |
+
+### Admin
+
+`/admin` is a password-protected page for updating site content without a redeploy. For now it manages the resume: a PDF uploaded there is stored in Vercel Blob and served at `/resume.pdf` straight away. Until one is uploaded, `/resume.pdf` serves the bundled `assets/resume.pdf`.
 
 ### Scripts
 
