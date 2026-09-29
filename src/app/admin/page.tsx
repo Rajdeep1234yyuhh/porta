@@ -1,8 +1,11 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import { requireAdmin } from "../lib/admin-auth";
 import { RESUME_MAX_BYTES, blobConfigured, getUploadedResumeInfo } from "../lib/resume";
+import { SEARCH_RANGES } from "../lib/search-console";
 import { logout } from "./actions";
 import ResumeForm from "./ResumeForm";
+import SearchPanel from "./SearchPanel";
 
 const formatSize = (bytes: number) =>
   bytes < 1024 * 1024 ? `${Math.round(bytes / 1024)} KB` : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
@@ -10,9 +13,11 @@ const formatSize = (bytes: number) =>
 const formatDate = (date: Date) =>
   date.toLocaleString("en-IN", { timeZone: "Asia/Kolkata", dateStyle: "medium", timeStyle: "short" });
 
-export default async function AdminPage() {
+export default async function AdminPage({ searchParams }: { searchParams: Promise<{ range?: string }> }) {
   await requireAdmin();
 
+  const { range } = await searchParams;
+  const searchRange = SEARCH_RANGES.find((days) => String(days) === range) ?? 28;
   const canUpload = blobConfigured();
   const uploaded = await getUploadedResumeInfo();
 
@@ -73,6 +78,18 @@ export default async function AdminPage() {
 
         <ResumeForm enabled={canUpload} hasUpload={uploaded !== null} maxBytes={RESUME_MAX_BYTES} />
       </section>
+
+      {/* Google can be slow; the rest of the page doesn't wait for it */}
+      <Suspense
+        fallback={
+          <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+            <h2 className="text-lg font-semibold">Search performance</h2>
+            <p className="mt-1 text-sm text-slate-500">Loading Search Console data…</p>
+          </section>
+        }
+      >
+        <SearchPanel range={searchRange} />
+      </Suspense>
     </>
   );
 }
