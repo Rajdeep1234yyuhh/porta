@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { Suspense } from "react";
 import { requireAdmin } from "../lib/admin-auth";
+import { getContactDetails } from "../lib/contact";
 import { RESUME_MAX_BYTES, blobConfigured, getUploadedResumeInfo } from "../lib/resume";
 import { SEARCH_RANGES } from "../lib/search-console";
 import { logout } from "./actions";
+import ContactForm from "./ContactForm";
 import ResumeForm from "./ResumeForm";
 import SearchPanel from "./SearchPanel";
 
@@ -19,7 +21,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
   const { range } = await searchParams;
   const searchRange = SEARCH_RANGES.find((days) => String(days) === range) ?? 28;
   const canUpload = blobConfigured();
-  const uploaded = await getUploadedResumeInfo();
+  const [uploaded, contactDetails] = await Promise.all([getUploadedResumeInfo(), getContactDetails()]);
 
   return (
     <>
@@ -77,6 +79,21 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         )}
 
         <ResumeForm enabled={canUpload} hasUpload={uploaded !== null} maxBytes={RESUME_MAX_BYTES} />
+      </section>
+
+      <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
+        <h2 className="text-lg font-semibold">Contact details</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          Shown everywhere on the site: the navbar, hero and contact buttons, the chat assistant, the terminal and 3D
+          pages, and the details Google reads.
+        </p>
+        {!canUpload && (
+          <p className="mt-4 rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+            Saving needs the same Vercel Blob store as the resume upload. Until it&apos;s connected, the site shows the
+            details below from the code.
+          </p>
+        )}
+        <ContactForm initial={contactDetails} enabled={canUpload} />
       </section>
 
       {/* Google can be slow; the rest of the page doesn't wait for it */}

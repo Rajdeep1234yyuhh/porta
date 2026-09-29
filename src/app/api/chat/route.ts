@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { CONTACT } from "../../data/site";
+import type { Contact } from "../../data/site";
+import { getContact } from "../../lib/contact";
 import { searchKnowledge } from "./knowledge";
 
 export const dynamic = "force-dynamic";
@@ -21,7 +22,7 @@ const ACTIONS = new Set([
   "show_contact",
 ]);
 
-const SYSTEM_PROMPT = `You are an AI assistant for Rajdeep Kotoky's portfolio website. Your job is to help visitors learn about Rajdeep and connect with him. Be friendly, concise, and professional.
+const systemPrompt = (contact: Contact) => `You are an AI assistant for Rajdeep Kotoky's portfolio website. Your job is to help visitors learn about Rajdeep and connect with him. Be friendly, concise, and professional.
 
 ## About Rajdeep Kotoky
 Rajdeep Kotoky is a Full-Stack Developer, Shopify expert & AI/ML Engineer based in India. He specializes in building modern web applications, e-commerce solutions, and AI-powered products. He is passionate about clean code, great UX, and leveraging AI to solve real-world problems.
@@ -46,12 +47,13 @@ Rajdeep Kotoky is a Full-Stack Developer, Shopify expert & AI/ML Engineer based 
 9. **UI/UX & Frontend Engineering** — Pixel-perfect interfaces, animations, design systems, accessibility.
 
 ## Contact Methods
-- **Phone Number:** ${CONTACT.phoneDisplay}
-- **Email:** ${CONTACT.email}
-- **LinkedIn:** ${CONTACT.linkedin}
-- **GitHub:** ${CONTACT.github}
+- **Phone Number:** ${contact.phoneDisplay}
+- **Email:** ${contact.email}
+- **LinkedIn:** ${contact.linkedin}
+- **GitHub:** ${contact.github}
+- **Instagram:** ${contact.instagram}
 - **Contact Form:** Use the contact section on this website (scroll to the bottom or click Contact in the nav)
-- **WhatsApp:** ${CONTACT.phoneDisplay}
+- **WhatsApp:** ${contact.whatsappDisplay}
 
 ## How to Respond
 - Keep answers short and conversational: 2-4 sentences.
@@ -208,11 +210,12 @@ export async function POST(req: NextRequest) {
       return errorResponse("Invalid request.", 400);
     }
 
+    const contact = await getContact();
     const groqApiKey = process.env.GROQ_API_KEY?.trim();
     if (!groqApiKey) {
       console.error("Chat route: GROQ_API_KEY is not set");
       return errorResponse(
-        `Chat is not configured yet. Please contact Rajdeep directly at ${CONTACT.email}`,
+        `Chat is not configured yet. Please contact Rajdeep directly at ${contact.email}`,
         503,
       );
     }
@@ -237,8 +240,8 @@ export async function POST(req: NextRequest) {
             {
               role: "system",
               content: knowledgeContext
-                ? `${SYSTEM_PROMPT}\n\n## Relevant knowledge base sources\nUse the following sources to answer the visitor accurately.\n\n${knowledgeContext}`
-                : SYSTEM_PROMPT,
+                ? `${systemPrompt(contact)}\n\n## Relevant knowledge base sources\nUse the following sources to answer the visitor accurately.\n\n${knowledgeContext}`
+                : systemPrompt(contact),
             },
             ...chatMessages,
           ],

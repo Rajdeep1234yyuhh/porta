@@ -2,7 +2,7 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 "use client";
 
-import { CONTACT } from "../data/site";
+import { useContact } from "../context/ContactContext";
 import {
   useRef,
   useState,
@@ -113,11 +113,7 @@ const SECTION_CARDS: CardItem[][] = [
     { title: "Backend", lines: ["Node.js 80%", "Python 75%"] },
     { title: "AI / ML", lines: ["TF 65%", "LangChain 70%"] },
   ],
-  [
-    { title: "Email", lines: ["rajdeepkotoky@gmail.com"] },
-    { title: "GitHub", lines: ["Rajdeep1234yyuhh"] },
-    { title: "LinkedIn", lines: ["linkedin.com/in/rajdeep"] },
-  ],
+  // The contact cards come from the saved contact details (see InfoPanel)
 ];
 
 // ── Error boundary for texture loading ───────────────────────────────────────
@@ -1058,14 +1054,15 @@ function ContactRow({ c, yPos }: { c: ContactItem; yPos: number }) {
 }
 
 function ContactFaceActive() {
+  const contact = useContact();
   const s = SECTIONS[5];
   const contacts: ContactItem[] = [
-    { icon: "✉",  label: "EMAIL",     value: CONTACT.email,              color: "#7c3aed", href: CONTACT.mailtoHref },
-    { icon: "☎",  label: "PHONE",     value: CONTACT.phoneDisplay,       color: "#059669", href: CONTACT.telHref },
-    { icon: "⌥",  label: "GITHUB",    value: "Rajdeep1234yyuhh",         color: "#e2e8f0", href: CONTACT.github },
-    { icon: "in", label: "LINKEDIN",  value: "rajdeep-kotoky-2273561a0", color: "#0891b2", href: CONTACT.linkedin },
-    { icon: "ig", label: "INSTAGRAM", value: "@radioactive_gigs",        color: "#db2777", href: "https://www.instagram.com/radioactive_gigs/" },
-    { icon: "wa", label: "WHATSAPP",  value: CONTACT.phoneDisplay,       color: "#25D366", href: CONTACT.whatsappHref },
+    { icon: "✉",  label: "EMAIL",     value: contact.email,                color: "#7c3aed", href: contact.mailtoHref },
+    { icon: "☎",  label: "PHONE",     value: contact.phoneDisplay,         color: "#059669", href: contact.telHref },
+    { icon: "⌥",  label: "GITHUB",    value: contact.githubUser,           color: "#e2e8f0", href: contact.github },
+    { icon: "in", label: "LINKEDIN",  value: contact.linkedinUser,         color: "#0891b2", href: contact.linkedin },
+    { icon: "ig", label: "INSTAGRAM", value: `@${contact.instagramUser}`,  color: "#db2777", href: contact.instagram },
+    { icon: "wa", label: "WHATSAPP",  value: contact.whatsappDisplay,      color: "#25D366", href: contact.whatsappHref },
   ];
   const rowY = [0.65, 0.27, -0.11, -0.49, -0.87, -1.25];
 
@@ -1172,7 +1169,7 @@ function InfoCard({
         <meshBasicMaterial color="rgba(255,255,255,0.12)" />
       </mesh>
       {card.lines.map((line, j) => (
-        <Text key={j} position={[0, 0.14 - j * 0.2, 0.042]} fontSize={0.082} color="#94a3b8" anchorX="center" anchorY="middle" maxWidth={0.78} textAlign="center">
+        <Text key={j} position={[0, 0.14 - j * 0.2, 0.042]} fontSize={0.082} color="#94a3b8" anchorX="center" anchorY="middle" maxWidth={0.78} textAlign="center" overflowWrap="break-word">
           {line}
         </Text>
       ))}
@@ -1191,6 +1188,7 @@ function InfoPanel({
   active: number;
   onClose: () => void;
 }) {
+  const contact = useContact();
   const ref = useRef<THREE.Group>(null);
   // Z: starts at cube face position (-0.7 = cube back z + face offset), ends at 2.2 (in front of camera)
   const posZ = useRef({ val: -0.7, vel: 0 });
@@ -1227,7 +1225,14 @@ function InfoPanel({
   });
 
   const s = SECTIONS[active];
-  const cards = SECTION_CARDS[active] ?? [];
+  const cards =
+    active === 5
+      ? [
+          { title: "Email", lines: [contact.email] },
+          { title: "GitHub", lines: [contact.githubUser] },
+          { title: "LinkedIn", lines: [contact.linkedinUser] },
+        ]
+      : (SECTION_CARDS[active] ?? []);
 
   return (
     <group ref={ref} position={[0, 0, -0.7]}>

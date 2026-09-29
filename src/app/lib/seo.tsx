@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { CONTACT, SITE_URL } from "../data/site";
+import { SITE_URL, type Contact } from "../data/site";
 
 export const SITE_NAME = "Rajdeep Kotoky";
 
@@ -64,15 +64,15 @@ const PERSON_ID = `${SITE_URL}/#person`;
 
 export const personRef = { "@id": PERSON_ID };
 
-export const personJsonLd = {
+export const personJsonLd = (contact: Contact) => ({
   "@type": "Person",
   "@id": PERSON_ID,
   name: "Rajdeep Kotoky",
   url: SITE_URL,
   image: `${SITE_URL}/DP.jpg`,
   jobTitle: "Freelance Full-Stack Developer & AI/ML Engineer",
-  email: CONTACT.email,
-  sameAs: [CONTACT.github, CONTACT.linkedin],
+  email: contact.email,
+  sameAs: [contact.github, contact.linkedin],
   knowsAbout: [
     "Next.js",
     "React",
@@ -86,7 +86,7 @@ export const personJsonLd = {
     "LLM chatbots",
     "RAG pipelines",
   ],
-};
+});
 
 export const websiteJsonLd = {
   "@type": "WebSite",

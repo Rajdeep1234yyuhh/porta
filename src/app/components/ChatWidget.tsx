@@ -1,8 +1,8 @@
 "use client";
 
-import { CONTACT } from "../data/site";
 import { useState, useEffect, useRef } from "react";
 import { MessageCircle, X, Send, Bot, Phone, Mail, ChevronRight } from "lucide-react";
+import { useContact } from "../context/ContactContext";
 import { useSound } from "../context/SoundContext";
 
 interface Choice {
@@ -48,6 +48,7 @@ const WELCOME: Message = {
 };
 
 export default function ChatWidget() {
+  const contact = useContact();
   const { playClick } = useSound();
   const [open, setOpen]       = useState(false);
   const [messages, setMessages] = useState<Message[]>([WELCOME]);
@@ -124,7 +125,7 @@ export default function ChatWidget() {
     } catch {
       setMessages((prev) => [...prev, {
         role: "assistant",
-        content: `Network error. Please try again or email ${CONTACT.email} directly.`,
+        content: `Network error. Please try again or email ${contact.email} directly.`,
       }]);
     } finally {
       setLoading(false);
@@ -226,14 +227,14 @@ export default function ChatWidget() {
         {/* quick-contact buttons */}
         <div className={`shrink-0 flex items-center gap-2 px-3 py-2 border-t ${isDark ? "border-white/8" : "border-slate-100"}`}>
           <a
-            href={CONTACT.telHref}
+            href={contact.telHref}
             onClick={playClick}
             className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-150 hover:scale-[1.03] active:scale-95 border ${isDark ? "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10" : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"}`}
           >
             <Phone className="w-3 h-3" /> Call
           </a>
           <a
-            href={CONTACT.whatsappHref}
+            href={contact.whatsappHref}
             target="_blank"
             rel="noopener noreferrer"
             onClick={playClick}
@@ -243,7 +244,7 @@ export default function ChatWidget() {
             WhatsApp
           </a>
           <a
-            href={CONTACT.mailtoHref}
+            href={contact.mailtoHref}
             onClick={playClick}
             className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg text-[11px] font-semibold transition-all duration-150 hover:scale-[1.03] active:scale-95 border ${isDark ? "bg-white/5 border-white/10 text-gray-300 hover:bg-white/10" : "bg-slate-50 border-slate-200 text-slate-600 hover:bg-slate-100"}`}
           >

@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Geist_Mono, JetBrains_Mono, Outfit } from "next/font/google";
 import { SITE_URL } from "./data/site";
+import { getContact } from "./lib/contact";
 import { JsonLd, SITE_NAME, personJsonLd, websiteJsonLd } from "./lib/seo";
 import "./globals.css";
 import LenisProvider from "./components/LenisProvider";
 import ChatWidget from "./components/ChatWidget";
+import { ContactProvider } from "./context/ContactContext";
 import { SoundProvider } from "./context/SoundContext";
 
 const geistMono = Geist_Mono({
@@ -52,21 +54,25 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const contact = await getContact();
+
   return (
     <html lang="en">
       <body
         className={`${geistMono.variable} ${outfit.variable} ${jetbrainsMono.variable} antialiased`}
       >
-        <JsonLd data={[personJsonLd, websiteJsonLd]} />
-        <SoundProvider>
-          <LenisProvider>{children}</LenisProvider>
-          <ChatWidget />
-        </SoundProvider>
+        <JsonLd data={[personJsonLd(contact), websiteJsonLd]} />
+        <ContactProvider contact={contact}>
+          <SoundProvider>
+            <LenisProvider>{children}</LenisProvider>
+            <ChatWidget />
+          </SoundProvider>
+        </ContactProvider>
       </body>
     </html>
   );

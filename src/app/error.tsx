@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { CONTACT } from "./data/site";
+import { useContact } from "./context/ContactContext";
 
 export default function Error({
   error,
@@ -11,6 +11,8 @@ export default function Error({
   error: Error & { digest?: string };
   reset: () => void;
 }) {
+  const contact = useContact();
+
   useEffect(() => {
     console.error(error);
   }, [error]);
@@ -26,8 +28,8 @@ export default function Error({
       </h1>
       <p className="mt-3 max-w-md text-sm md:text-base text-slate-600">
         Try again, or head back home. If it keeps happening, email{" "}
-        <a href={CONTACT.mailtoHref} className="text-purple-600 font-medium hover:underline">
-          {CONTACT.email}
+        <a href={contact.mailtoHref} className="text-purple-600 font-medium hover:underline">
+          {contact.email}
         </a>
         .
       </p>

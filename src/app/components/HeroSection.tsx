@@ -2,8 +2,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
-import { CONTACT } from "../data/site";
 import React from "react";
+import { useContact } from "../context/ContactContext";
 import { useSound } from "../context/SoundContext";
 import {
   Download,
@@ -269,6 +269,7 @@ const CountUp = ({ to, interval }: { to: number; interval: number }) => {
 };
 
 const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
+  const contact = useContact();
   const { playClick } = useSound();
   const [contactOpen, setContactOpen] = React.useState(false);
   const contactRef = React.useRef<HTMLDivElement>(null);
@@ -428,7 +429,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         }
       >
         <a
-          href={`${CONTACT.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20would%20like%20to%20get%20in%20touch%21`}
+          href={`${contact.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20would%20like%20to%20get%20in%20touch%21`}
           target="_blank"
           rel="noopener noreferrer"
           onClick={() => {
@@ -446,7 +447,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
           <span className="floating-action-label">WhatsApp</span>
         </a>
         <a
-          href={CONTACT.telHref}
+          href={contact.telHref}
           onClick={() => {
             playClick();
             setContactOpen(false);

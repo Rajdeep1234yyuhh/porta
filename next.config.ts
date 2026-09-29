@@ -30,6 +30,10 @@ const nextConfig: NextConfig = {
     // Served by /resume.pdf until a resume is uploaded from /admin
     "/resume.pdf": ["./assets/resume.pdf"],
   },
+  // Bundled into the /admin server actions, the undici fetch that @vercel/blob
+  // uploads with comes out undefined ("a is not a function"); load it from
+  // node_modules instead
+  serverExternalPackages: ["@vercel/blob"],
   experimental: {
     // Resume uploads from /admin (the 1 MB default is too small for a PDF)
     serverActions: { bodySizeLimit: "5mb" },

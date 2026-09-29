@@ -1,7 +1,8 @@
 "use client";
 
-import { CONTACT as SITE_CONTACT } from "../data/site";
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useContact } from "../context/ContactContext";
+import type { Contact } from "../data/site";
 import Link from "next/link";
 
 const PROMPT = "visitor@rajdeep:~$";
@@ -64,7 +65,7 @@ const HELP: Line[] = [
   d("  ↑ ↓  history   Tab  autocomplete"),
 ];
 
-const ABOUT: Line[] = [
+const about = (contact: Contact): Line[] => [
   a("┌─ Rajdeep Kotoky ────────────────────────────────────"),
   o("│"),
   o("│  Name       Rajdeep Kotoky"),
@@ -82,8 +83,8 @@ const ABOUT: Line[] = [
   o("│  Years      5+    of experience"),
   o("│"),
   s("│  Status     ● Available for new projects"),
-  o(`│  Email      ${SITE_CONTACT.email}`),
-  o("│  Phone      +91 86387 52315"),
+  o(`│  Email      ${contact.email}`),
+  o(`│  Phone      ${contact.phoneDisplay}`),
   a("└─────────────────────────────────────────────────────"),
 ];
 
@@ -374,29 +375,29 @@ const EXPERIENCE: Line[] = [
   a("└─────────────────────────────────────────────────────"),
 ];
 
-const CONTACT: Line[] = [
+const contactLines = (contact: Contact): Line[] => [
   a("┌─ Contact ───────────────────────────────────────────"),
   o("│"),
-  h(`│  Email      ${SITE_CONTACT.email}`),
-  h("│  WhatsApp   +91 86387 52315"),
-  h("│  Phone      +91 86387 52315"),
+  h(`│  Email      ${contact.email}`),
+  h(`│  WhatsApp   ${contact.whatsappDisplay}`),
+  h(`│  Phone      ${contact.phoneDisplay}`),
   o("│"),
   s("│  Response   Usually within 24 hours"),
   o("│  Open for   Freelance · Contract · Full-time"),
   o("│"),
   o("│  Direct links:"),
-  d(`│    ${SITE_CONTACT.whatsappHref.replace("https://", "")}`),
-  d(`│    mailto:${SITE_CONTACT.email}`),
+  d(`│    ${contact.whatsappHref.replace("https://", "")}`),
+  d(`│    mailto:${contact.email}`),
   o("│"),
   a("└─────────────────────────────────────────────────────"),
 ];
 
-const SOCIAL: Line[] = [
+const social = (contact: Contact): Line[] => [
   a("┌─ Social ────────────────────────────────────────────"),
   o("│"),
-  h(`│  GitHub      github.com/${SITE_CONTACT.githubUser}`),
-  h(`│  LinkedIn    linkedin.com/in/${SITE_CONTACT.linkedinUser}`),
-  h("│  Instagram   instagram.com/radioactive_gigs"),
+  h(`│  GitHub      github.com/${contact.githubUser}`),
+  h(`│  LinkedIn    linkedin.com/in/${contact.linkedinUser}`),
+  h(`│  Instagram   instagram.com/${contact.instagramUser}`),
   o("│"),
   a("└─────────────────────────────────────────────────────"),
 ];
@@ -461,7 +462,7 @@ const NEOFETCH: Line[] = [
 ];
 
 /* ── command router ── */
-function runCommand(raw: string): { lines: Line[]; shouldClear?: boolean; shouldExit?: boolean } {
+function runCommand(raw: string, contact: Contact): { lines: Line[]; shouldClear?: boolean; shouldExit?: boolean } {
   const trimmed = raw.trim();
   const lower   = trimmed.toLowerCase();
   const [cmd, ...args] = lower.split(/\s+/);
@@ -470,7 +471,7 @@ function runCommand(raw: string): { lines: Line[]; shouldClear?: boolean; should
   switch (cmd) {
     case "help":       return { lines: HELP };
     case "about":
-    case "whoami":     return { lines: ABOUT };
+    case "whoami":     return { lines: about(contact) };
     case "skills":     return { lines: SKILLS };
     case "projects":
       if (flag === "shopify")   return { lines: PROJECTS_SHOPIFY };
@@ -480,8 +481,8 @@ function runCommand(raw: string): { lines: Line[]; shouldClear?: boolean; should
     case "services":   return { lines: SERVICES };
     case "experience":
     case "exp":        return { lines: EXPERIENCE };
-    case "contact":    return { lines: CONTACT };
-    case "social":     return { lines: SOCIAL };
+    case "contact":    return { lines: contactLines(contact) };
+    case "social":     return { lines: social(contact) };
     case "hire":       return { lines: HIRE };
     case "banner":     return { lines: BANNER };
     case "neofetch":   return { lines: NEOFETCH };
@@ -500,7 +501,7 @@ function runCommand(raw: string): { lines: Line[]; shouldClear?: boolean; should
       return { lines: [o(`  Portfolio Terminal v${VERSION} — Next.js 15`)] };
     case "cat":
       if (!flag) return { lines: [e("  Usage: cat [section]  e.g. cat skills")] };
-      return runCommand(flag);
+      return runCommand(flag, contact);
     case "open":
     case "resume":
       return { lines: [s("  Opening resume.pdf..."), d("  → /resume.pdf")] };
@@ -538,6 +539,7 @@ const Cursor = () => (
 );
 
 export default function TerminalPage() {
+  const contact = useContact();
   const [history, setHistory]     = useState<Entry[]>([]);
   const [input, setInput]         = useState("");
   const [cmdHistory, setCmdHist]  = useState<string[]>([]);
@@ -563,7 +565,7 @@ export default function TerminalPage() {
 
   const submit = useCallback(() => {
     const raw    = input.trim();
-    const result = runCommand(raw);
+    const result = runCommand(raw, contact);
 
     if (result.shouldExit) { window.location.href = "/"; return; }
     if (result.shouldClear) { setHistory([]); setInput(""); return; }
@@ -572,7 +574,7 @@ export default function TerminalPage() {
 
     setHistory((h) => [...h, { id: idRef.current++, input: raw, lines: result.lines }]);
     setInput("");
-  }, [input]);
+  }, [input, contact]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {

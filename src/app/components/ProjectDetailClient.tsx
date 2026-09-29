@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import Navbar from "./Navbar";
 import type { Project } from "../data/projects";
-import { CONTACT } from "../data/site";
+import { useContact } from "../context/ContactContext";
 
 export type ProjectLink = { slug: string; title: string; category: string };
 
@@ -99,6 +99,7 @@ interface Props {
 }
 
 export default function ProjectDetailClient({ project, youtubeId, prev, next, related }: Props) {
+  const contact = useContact();
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
@@ -124,7 +125,7 @@ export default function ProjectDetailClient({ project, youtubeId, prev, next, re
     !youtubeId && project.mediaType === "video" && project.video ? project.video : null;
   const hasMedia = Boolean(youtubeId || localVideo || project.image);
   const isShopify = project.categories.includes("Shopify");
-  const whatsappHref = `${CONTACT.whatsappHref}?text=${encodeURIComponent(
+  const whatsappHref = `${contact.whatsappHref}?text=${encodeURIComponent(
     `Hi Rajdeep, I saw your "${project.title}" project and would like to discuss something similar.`,
   )}`;
 

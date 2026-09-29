@@ -1,11 +1,27 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
+import type { ContactDetails } from "../data/site";
 import { adminConfigured, checkPassword, endSession, requireAdmin, startSession } from "../lib/admin-auth";
-import { RESUME_MAX_BYTES, deleteUploadedResume, saveResume } from "../lib/resume";
+import {
+  CONTACT_FIELDS,
+  CONTACT_TAG,
+  saveContactDetails,
+  validateContactDetails,
+  type ContactField,
+} from "../lib/contact";
+import { RESUME_MAX_BYTES, blobConfigured, deleteUploadedResume, saveResume } from "../lib/resume";
 
 export type FormState = { ok: boolean; message: string } | null;
+
+// Echoes the submitted values so a rejected form keeps what was typed
+export type ContactFormState = {
+  ok: boolean;
+  message: string;
+  values: ContactDetails;
+  errors?: Partial<Record<ContactField, string>>;
+} | null;
 
 export async function login(_prev: FormState, formData: FormData): Promise<FormState> {
   if (!adminConfigured()) {
@@ -54,4 +70,30 @@ export async function revertResume() {
   await requireAdmin();
   await deleteUploadedResume();
   revalidatePath("/admin");
+}
+
+export async function updateContact(_prev: ContactFormState, formData: FormData): Promise<ContactFormState> {
+  await requireAdmin();
+
+  const values = Object.fromEntries(
+    CONTACT_FIELDS.map((field) => [field, String(formData.get(field) ?? "")]),
+  ) as ContactDetails;
+  if (!blobConfigured()) {
+    return { ok: false, message: "Saving needs a Vercel Blob store (see the note above).", values };
+  }
+  const result = validateContactDetails(values);
+  if (!result.ok) {
+    return { ok: false, message: "Fix the highlighted fields and save again.", values, errors: result.errors };
+  }
+
+  try {
+    await saveContactDetails(result.details);
+  } catch (error) {
+    console.error("Saving contact details failed:", error);
+    return { ok: false, message: "Saving failed. Check the Blob store connection and try again.", values };
+  }
+  // Every page shows these details, so rebuild them all
+  revalidateTag(CONTACT_TAG);
+  revalidatePath("/", "layout");
+  return { ok: true, message: "Saved. The whole site now shows these details.", values: result.details };
 }

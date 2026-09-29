@@ -1,7 +1,7 @@
 "use client";
 
-import { CONTACT } from "../data/site";
 import { useEffect, useState } from "react";
+import { useContact } from "../context/ContactContext";
 import "primeicons/primeicons.css";
 import "primereact/resources/themes/lara-light-blue/theme.css";
 import { SpeedDial } from "primereact/speeddial";
@@ -16,6 +16,7 @@ interface QuickFixFABProps {
 }
 
 const QuickFixFAB = ({ scrollToSection }: QuickFixFABProps) => {
+  const contact = useContact();
   const [showHelpNudge, setShowHelpNudge] = useState(false);
 
   useEffect(() => {
@@ -70,7 +71,7 @@ const QuickFixFAB = ({ scrollToSection }: QuickFixFABProps) => {
       icon: "pi pi-whatsapp",
       command: () => {
         window.open(
-          `${CONTACT.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`,
+          `${contact.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`,
           "_blank"
         );
       },
@@ -78,7 +79,7 @@ const QuickFixFAB = ({ scrollToSection }: QuickFixFABProps) => {
     {
       label: "Call Me",
       icon: "pi pi-phone",
-      command: () => { window.location.href = CONTACT.telHref; },
+      command: () => { window.location.href = contact.telHref; },
     },
     {
       label: "Message",

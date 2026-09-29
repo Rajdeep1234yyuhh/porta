@@ -1,6 +1,5 @@
 "use client";
 
-import { CONTACT } from "../data/site";
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
@@ -21,6 +20,7 @@ import {
   Box,
   Terminal,
 } from "lucide-react";
+import { useContact } from "../context/ContactContext";
 import { useSoundEffects } from "../hooks/useSoundEffects";
 
 
@@ -56,6 +56,7 @@ const Navbar = ({
   scrollToSection,
   activeSection = "home",
 }) => {
+  const contact = useContact();
   const [quickOpen, setQuickOpen] = useState(false);
   const [socialOpen, setSocialOpen] = useState(false);
   const quickRefDesktop = useRef(null);
@@ -154,7 +155,7 @@ const Navbar = ({
             }}
           >
             <a
-              href={`${CONTACT.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
+              href={`${contact.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => { playClick(); setQuickOpen(false); }}
@@ -168,7 +169,7 @@ const Navbar = ({
               <span className="floating-action-label">WhatsApp</span>
             </a>
             <a
-              href={CONTACT.telHref}
+              href={contact.telHref}
               onClick={() => { playClick(); setQuickOpen(false); }}
               onMouseEnter={playHover}
               className="floating-action-option"
@@ -251,7 +252,7 @@ const Navbar = ({
         {/* Contact pill */}
         <div className={`flex items-center gap-1 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 overflow-visible ${isDarkMode ? "bg-[#141414]/95 border-white/[0.08]" : "bg-white/90 border-gray-200/80 shadow-gray-200/60"}`}>
           {/* WhatsApp */}
-          <a href={`${CONTACT.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20would%20like%20to%20get%20in%20touch%21`} target="_blank" rel="noopener noreferrer"
+          <a href={`${contact.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20would%20like%20to%20get%20in%20touch%21`} target="_blank" rel="noopener noreferrer"
             onClick={playClick} onMouseEnter={playHover}
             className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-[#25D366] hover:bg-white/10" : "text-gray-500 hover:text-[#25D366] hover:bg-gray-100"}`}>
             <svg className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" fill="currentColor" viewBox="0 0 24 24">
@@ -263,7 +264,7 @@ const Navbar = ({
           <div className={`w-px h-5 ${isDarkMode ? "bg-white/10" : "bg-gray-200"}`} />
 
           {/* SMS */}
-          <a href={`sms:${CONTACT.phoneE164}`}
+          <a href={`sms:${contact.phoneE164}`}
             onClick={playClick} onMouseEnter={playHover}
             className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-blue-400 hover:bg-white/10" : "text-gray-500 hover:text-blue-500 hover:bg-gray-100"}`}>
             <MessageSquare className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" />
@@ -273,7 +274,7 @@ const Navbar = ({
           <div className={`w-px h-5 ${isDarkMode ? "bg-white/10" : "bg-gray-200"}`} />
 
           {/* Phone */}
-          <a href={CONTACT.telHref}
+          <a href={contact.telHref}
             onClick={playClick} onMouseEnter={playHover}
             className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-emerald-400 hover:bg-white/10" : "text-gray-500 hover:text-emerald-600 hover:bg-gray-100"}`}>
             <Phone className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" />
@@ -283,7 +284,7 @@ const Navbar = ({
           <div className={`w-px h-5 ${isDarkMode ? "bg-white/10" : "bg-gray-200"}`} />
 
           {/* Email */}
-          <a href={CONTACT.mailtoHref}
+          <a href={contact.mailtoHref}
             onClick={playClick} onMouseEnter={playHover}
             className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-violet-400 hover:bg-white/10" : "text-gray-500 hover:text-violet-600 hover:bg-gray-100"}`}>
             <Mail className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" />
@@ -294,7 +295,7 @@ const Navbar = ({
         {/* Social pill */}
         <div className={`flex items-center gap-1 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 overflow-visible ${isDarkMode ? "bg-[#141414]/95 border-white/[0.08]" : "bg-white/90 border-gray-200/80 shadow-gray-200/60"}`}>
           {/* GitHub */}
-          <a href={CONTACT.github} target="_blank" rel="noopener noreferrer"
+          <a href={contact.github} target="_blank" rel="noopener noreferrer"
             onClick={playClick} onMouseEnter={playHover}
             className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-gray-500 hover:text-gray-900 hover:bg-gray-100"}`}>
             <svg className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" fill="currentColor" viewBox="0 0 24 24">
@@ -306,7 +307,7 @@ const Navbar = ({
           <div className={`w-px h-5 ${isDarkMode ? "bg-white/10" : "bg-gray-200"}`} />
 
           {/* LinkedIn */}
-          <a href={CONTACT.linkedin} target="_blank" rel="noopener noreferrer"
+          <a href={contact.linkedin} target="_blank" rel="noopener noreferrer"
             onClick={playClick} onMouseEnter={playHover}
             className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-[#0A66C2] hover:bg-white/10" : "text-gray-500 hover:text-[#0A66C2] hover:bg-gray-100"}`}>
             <svg className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" fill="currentColor" viewBox="0 0 24 24">
@@ -318,7 +319,7 @@ const Navbar = ({
           <div className={`w-px h-5 ${isDarkMode ? "bg-white/10" : "bg-gray-200"}`} />
 
           {/* Instagram */}
-          <a href="https://www.instagram.com/radioactive_gigs/" target="_blank" rel="noopener noreferrer"
+          <a href={contact.instagram} target="_blank" rel="noopener noreferrer"
             onClick={playClick} onMouseEnter={playHover}
             className={`group relative flex flex-col items-center justify-center w-10 h-10 rounded-xl transition-all duration-200 ${isDarkMode ? "text-gray-400 hover:text-[#E1306C] hover:bg-white/10" : "text-gray-500 hover:text-[#E1306C] hover:bg-gray-100"}`}>
             <svg className="w-4 h-4 transition-transform duration-200 group-hover:-translate-y-2" fill="currentColor" viewBox="0 0 24 24">
@@ -403,7 +404,7 @@ const Navbar = ({
             }}
           >
             <a
-              href={`${CONTACT.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
+              href={`${contact.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20need%20quick%20tech%20help%20with%3A%20`}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => { playClick(); setQuickOpen(false); }}
@@ -417,7 +418,7 @@ const Navbar = ({
               <span className="floating-action-label">WhatsApp</span>
             </a>
             <a
-              href={CONTACT.telHref}
+              href={contact.telHref}
               onClick={() => { playClick(); setQuickOpen(false); }}
               onMouseEnter={playHover}
               className="floating-action-option"
@@ -536,7 +537,7 @@ const Navbar = ({
               <span className="floating-action-label">Terminal</span>
             </Link>
             <a
-              href={CONTACT.github}
+              href={contact.github}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => { playClick(); setSocialOpen(false); }}
@@ -550,7 +551,7 @@ const Navbar = ({
               <span className="floating-action-label">GitHub</span>
             </a>
             <a
-              href={CONTACT.linkedin}
+              href={contact.linkedin}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => { playClick(); setSocialOpen(false); }}
@@ -565,7 +566,7 @@ const Navbar = ({
               <span className="floating-action-label">LinkedIn</span>
             </a>
             <a
-              href="https://www.instagram.com/radioactive_gigs/"
+              href={contact.instagram}
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => { playClick(); setSocialOpen(false); }}
