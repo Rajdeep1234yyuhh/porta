@@ -19,6 +19,7 @@ import {
   VolumeX,
   Box,
   Terminal,
+  ShoppingBag,
 } from "lucide-react";
 import { useContact } from "../context/ContactContext";
 import { useSoundEffects } from "../hooks/useSoundEffects";
@@ -535,6 +536,17 @@ const Navbar = ({
             >
               <Terminal className="w-4 h-4" />
               <span className="floating-action-label">Terminal</span>
+            </Link>
+            <Link
+              href="/ecom"
+              onClick={() => { playClick(); setSocialOpen(false); }}
+              className="floating-action-option"
+              style={{ color: "#8b5cf6" }}
+              aria-label="Store View"
+              title="Store View"
+            >
+              <ShoppingBag className="w-4 h-4" />
+              <span className="floating-action-label">Store</span>
             </Link>
             <a
               href={contact.github}

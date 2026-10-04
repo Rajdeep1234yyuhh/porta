@@ -11,6 +11,7 @@ const FOOTER_LINKS = [
   { href: "/zoom", label: "3D Portfolio" },
   { href: "/cube", label: "3D Cube" },
   { href: "/terminal", label: "Terminal" },
+  { href: "/ecom", label: "Store" },
 ];
 
 const GithubIcon = () => (

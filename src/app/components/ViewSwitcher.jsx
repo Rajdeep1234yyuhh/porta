@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Box, Terminal } from "lucide-react";
+import { Box, ShoppingBag, Terminal } from "lucide-react";
 import { useSound } from "../context/SoundContext";
 
 const VIEWS = [
@@ -21,6 +21,15 @@ const VIEWS = [
     hoverClass: {
       dark: "hover:text-emerald-400 hover:bg-white/10",
       light: "hover:text-emerald-600 hover:bg-gray-100",
+    },
+  },
+  {
+    href: "/ecom",
+    label: "Store",
+    icon: ShoppingBag,
+    hoverClass: {
+      dark: "hover:text-violet-400 hover:bg-white/10",
+      light: "hover:text-violet-600 hover:bg-gray-100",
     },
   },
 ];
