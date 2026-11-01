@@ -151,7 +151,9 @@ body {
    accent colours (data/views.ts), cut down to a 1px ring with a mask, plus a
    blurred copy behind the element as a soft halo. The angle is a registered
    property so the gradient itself turns; browsers without @property show it
-   standing still. */
+   standing still. Animating a property repaints (and re-blurs the halo) on
+   the main thread every frame, so it turns in 5° steps at 12fps instead of
+   60; at this speed the steps don't show. */
 @property --neon-angle {
   syntax: "<angle>";
   inherits: false;
@@ -164,7 +166,7 @@ body {
 
 .neon-ring::before,
 .neon-halo {
-  animation: neon-spin 6s linear infinite;
+  animation: neon-spin 6s steps(72) infinite;
   background: conic-gradient(from var(--neon-angle), #a78bfa, #f472b6, #38bdf8, #34d399, #fbbf24, #a78bfa);
   pointer-events: none;
 }

@@ -99,10 +99,10 @@ const Navbar = ({
     <>
       {/* ── Desktop: floating dock ── */}
       <div
-        className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 hidden lg:flex items-center gap-0.5 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 overflow-visible ${
+        className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 hidden lg:flex items-center gap-0.5 px-2 py-2 rounded-2xl shadow-2xl border transition-colors duration-300 overflow-visible ${
           isDarkMode
             ? "bg-[#141414]/95 border-white/[0.08]"
-            : "bg-white/90 border-gray-200/80 shadow-gray-200/60"
+            : "bg-white/95 border-gray-200/80 shadow-gray-200/60"
         }`}
       >
         {/* Nav icons */}
@@ -244,7 +244,7 @@ const Navbar = ({
       <div className="fixed top-5 right-8 z-50 hidden lg:flex items-center gap-3">
 
         {/* Contact pill */}
-        <div className={`flex items-center gap-1 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 overflow-visible ${isDarkMode ? "bg-[#141414]/95 border-white/[0.08]" : "bg-white/90 border-gray-200/80 shadow-gray-200/60"}`}>
+        <div className={`flex items-center gap-1 px-2 py-2 rounded-2xl shadow-2xl border transition-colors duration-300 overflow-visible ${isDarkMode ? "bg-[#141414]/95 border-white/[0.08]" : "bg-white/95 border-gray-200/80 shadow-gray-200/60"}`}>
           {/* WhatsApp */}
           <a href={`${contact.whatsappHref}?text=Hi%20Rajdeep%2C%20I%20would%20like%20to%20get%20in%20touch%21`} target="_blank" rel="noopener noreferrer"
             onClick={playClick} onMouseEnter={playHover}
@@ -287,7 +287,7 @@ const Navbar = ({
         </div>
 
         {/* Social pill */}
-        <div className={`flex items-center gap-1 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 overflow-visible ${isDarkMode ? "bg-[#141414]/95 border-white/[0.08]" : "bg-white/90 border-gray-200/80 shadow-gray-200/60"}`}>
+        <div className={`flex items-center gap-1 px-2 py-2 rounded-2xl shadow-2xl border transition-colors duration-300 overflow-visible ${isDarkMode ? "bg-[#141414]/95 border-white/[0.08]" : "bg-white/95 border-gray-200/80 shadow-gray-200/60"}`}>
           {/* GitHub */}
           <a href={contact.github} target="_blank" rel="noopener noreferrer"
             onClick={playClick} onMouseEnter={playHover}
@@ -327,10 +327,10 @@ const Navbar = ({
 
       {/* ── Mobile: floating dock (same style as desktop, top-center) ── */}
       <div
-        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 flex lg:hidden items-center gap-0.5 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 ${
+        className={`fixed top-4 left-1/2 -translate-x-1/2 z-50 flex lg:hidden items-center gap-0.5 px-2 py-2 rounded-2xl shadow-2xl border transition-colors duration-300 ${
           isDarkMode
             ? "bg-[#141414]/95 border-white/[0.08]"
-            : "bg-white/90 border-gray-200/80 shadow-gray-200/60"
+            : "bg-white/95 border-gray-200/80 shadow-gray-200/60"
         }`}
       >
         {navItems.map(({ label, icon: Icon, section }) => {

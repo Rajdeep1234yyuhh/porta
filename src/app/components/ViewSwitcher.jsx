@@ -59,10 +59,10 @@ export function ViewSwitcherDesktop({ isDarkMode }) {
       />
       <nav
         aria-label="Other views of this portfolio"
-        className={`neon-ring relative flex items-center gap-1 px-2 py-2 rounded-2xl backdrop-blur-xl shadow-2xl border transition-colors duration-300 ${
+        className={`neon-ring relative flex items-center gap-1 px-2 py-2 rounded-2xl shadow-2xl border transition-colors duration-300 ${
           isDarkMode
             ? "bg-[#141414]/95 border-white/[0.08]"
-            : "bg-white/90 border-gray-200/80 shadow-gray-200/60"
+            : "bg-white/95 border-gray-200/80 shadow-gray-200/60"
         }`}
       >
         {/* Label and dividers only fit beside the navbar dock from xl up */}

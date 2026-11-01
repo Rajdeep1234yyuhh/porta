@@ -269,6 +269,10 @@ export function SlideDeck({ deck, className, style, children }: {
       {children.map((slide, i) => {
         const isCurrent = i === current;
         const moving = !settled && (isCurrent || i === from);
+        // Only slides that are showing, moving or one step away keep a GPU
+        // layer and get painted; the rest would each hold a full-screen layer
+        // for nothing. A far jump has the enter delay to paint its target.
+        const active = isCurrent || i === from || Math.abs(i - current) === 1;
         return (
           <div
             key={i}
@@ -288,7 +292,8 @@ export function SlideDeck({ deck, className, style, children }: {
               zIndex: isCurrent ? 11 : 10,
               transform: isCurrent ? "translateY(0)" : `translateY(${i < current ? "-100vh" : "100vh"})`,
               transition: moving ? `transform ${MOVE_MS}ms ${EASE} ${isCurrent ? ENTER_DELAY_MS : 0}ms` : "none",
-              willChange: "transform",
+              willChange: active ? "transform" : "auto",
+              visibility: active ? "visible" : "hidden",
             }}
           >
             <MediaGate load={loaded.has(i)} play={isCurrent && settled}>
