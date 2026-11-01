@@ -1,8 +1,11 @@
 "use client";
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { useContact } from "../context/ContactContext";
 import type { Contact } from "../data/site";
+import { PORTFOLIO_VIEWS, type ViewId } from "../data/views";
+import ViewsMenu from "../components/ViewsMenu";
 import Link from "next/link";
 
 const PROMPT = "visitor@rajdeep:~$";
@@ -10,7 +13,7 @@ const VERSION = "2.0.1";
 
 type LineType = "cmd" | "out" | "success" | "error" | "warn" | "dim" | "blank" | "accent" | "highlight";
 
-interface Line { type: LineType; text: string; }
+interface Line { type: LineType; text: string; href?: string; }
 interface Entry { id: number; input: string; lines: Line[]; }
 
 /* ── helpers ── */
@@ -36,6 +39,7 @@ const BANNER: Line[] = [
   bl(),
   h("  Rajdeep Kotoky — Full-Stack Developer & AI Engineer"),
   d(`  Portfolio Terminal v${VERSION}  ·  Type 'help' to explore`),
+  s("  ✦ Type 'views' for 3D & other versions"),
   bl(),
 ];
 
@@ -53,6 +57,8 @@ const HELP: Line[] = [
   o("  contact      Email · WhatsApp · phone"),
   o("  social       GitHub · LinkedIn · Instagram"),
   o("  hire         Why work with me"),
+  o("  views        Other versions of this portfolio"),
+  o("    open cube         → switch to one (or: cd cube)"),
   o("─────────────────────────────────────────────────"),
   o("  neofetch     System info panel"),
   o("  banner       ASCII welcome art"),
@@ -423,6 +429,41 @@ const HIRE: Line[] = [
   a("└─────────────────────────────────────────────────────"),
 ];
 
+// Every other version of the portfolio; each first line is a clickable link
+const VIEWS: Line[] = [
+  a("┌─ Other views ───────────────────────────────────────"),
+  o("│"),
+  ...PORTFOLIO_VIEWS.flatMap((view): Line[] =>
+    view.id === "terminal"
+      ? [d(`│  ▸ ${view.label.padEnd(13)} you are here`), o("│")]
+      : [
+          { type: "highlight", text: `│  ▸ ${view.label.padEnd(13)} open ${view.id}`, href: view.href },
+          d(`│    ${view.blurb}`),
+          o("│"),
+        ],
+  ),
+  d("│  Click one, or type its command"),
+  a("└─────────────────────────────────────────────────────"),
+];
+
+// Names people are likely to try besides the view ids
+const VIEW_ALIASES: Record<string, ViewId> = {
+  home: "classic",
+  portfolio: "classic",
+  journey: "zoom",
+  ecom: "store",
+  shop: "store",
+};
+
+const findView = (name: string) => PORTFOLIO_VIEWS.find((view) => view.id === (VIEW_ALIASES[name] ?? name));
+
+function openView(name: string): { lines: Line[]; navigateTo?: string } {
+  const view = findView(name);
+  if (!view) return { lines: [e(`  no such view: ${name}`), d("  Type 'views' to list them.")] };
+  if (view.id === "terminal") return { lines: [d("  You're already in the terminal.")] };
+  return { lines: [s(`  Opening ${view.label}...`), d(`  → ${view.href}`)], navigateTo: view.href };
+}
+
 const LS: Line[] = [
   o("drwxr-xr-x  about/"),
   o("drwxr-xr-x  skills/"),
@@ -431,6 +472,7 @@ const LS: Line[] = [
   o("drwxr-xr-x  experience/"),
   o("drwxr-xr-x  contact/"),
   o("drwxr-xr-x  social/"),
+  o("drwxr-xr-x  views/"),
   bl(),
   d("-rw-r--r--  resume.pdf"),
   d("-rw-r--r--  portfolio.url → rajdeepkotoky.com"),
@@ -462,7 +504,10 @@ const NEOFETCH: Line[] = [
 ];
 
 /* ── command router ── */
-function runCommand(raw: string, contact: Contact): { lines: Line[]; shouldClear?: boolean; shouldExit?: boolean } {
+function runCommand(
+  raw: string,
+  contact: Contact,
+): { lines: Line[]; shouldClear?: boolean; shouldExit?: boolean; navigateTo?: string } {
   const trimmed = raw.trim();
   const lower   = trimmed.toLowerCase();
   const [cmd, ...args] = lower.split(/\s+/);
@@ -484,6 +529,8 @@ function runCommand(raw: string, contact: Contact): { lines: Line[]; shouldClear
     case "contact":    return { lines: contactLines(contact) };
     case "social":     return { lines: social(contact) };
     case "hire":       return { lines: HIRE };
+    case "views":
+    case "versions":   return { lines: VIEWS };
     case "banner":     return { lines: BANNER };
     case "neofetch":   return { lines: NEOFETCH };
     case "ls":
@@ -503,8 +550,13 @@ function runCommand(raw: string, contact: Contact): { lines: Line[]; shouldClear
       if (!flag) return { lines: [e("  Usage: cat [section]  e.g. cat skills")] };
       return runCommand(flag, contact);
     case "open":
+      if (flag && flag !== "resume" && flag !== "resume.pdf") return openView(flag);
+      return { lines: [s("  Opening resume.pdf..."), d("  → /resume.pdf")] };
     case "resume":
       return { lines: [s("  Opening resume.pdf..."), d("  → /resume.pdf")] };
+    case "cd":
+      if (!flag) return { lines: [d("  Usage: cd [view]  e.g. cd cube  ·  type 'views' to list them")] };
+      return openView(flag === ".." || flag === "~" ? "classic" : flag);
     case "":
       return { lines: [] };
     default:
@@ -540,6 +592,7 @@ const Cursor = () => (
 
 export default function TerminalPage() {
   const contact = useContact();
+  const router = useRouter();
   const [history, setHistory]     = useState<Entry[]>([]);
   const [input, setInput]         = useState("");
   const [cmdHistory, setCmdHist]  = useState<string[]>([]);
@@ -574,7 +627,11 @@ export default function TerminalPage() {
 
     setHistory((h) => [...h, { id: idRef.current++, input: raw, lines: result.lines }]);
     setInput("");
-  }, [input, contact]);
+
+    // Leaves the "Opening..." line up for a moment before switching views
+    const target = result.navigateTo;
+    if (target) setTimeout(() => router.push(target), 450);
+  }, [input, contact, router]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -591,7 +648,8 @@ export default function TerminalPage() {
       else { setHistIdx(next); setInput(cmdHistory[next] ?? ""); }
     } else if (e.key === "Tab") {
       e.preventDefault();
-      const cmds = ["help","about","whoami","skills","projects","services","experience","contact","social","hire","neofetch","banner","ls","date","echo","clear","exit","resume","pwd","uname","cat","projects shopify","projects ai","projects web"];
+      const cmds = ["help","about","whoami","skills","projects","services","experience","contact","social","hire","views","neofetch","banner","ls","date","echo","clear","exit","resume","pwd","uname","cat","projects shopify","projects ai","projects web",
+        ...PORTFOLIO_VIEWS.filter((v) => v.id !== "terminal").map((v) => `open ${v.id}`)];
       const match = cmds.find((c) => c.startsWith(input.toLowerCase()));
       if (match) setInput(match);
     } else if (e.key === "l" && e.ctrlKey) {
@@ -607,7 +665,12 @@ export default function TerminalPage() {
         @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
         @keyframes fadeIn { from{opacity:0;transform:translateY(3px)} to{opacity:1;transform:translateY(0)} }
         .entry { animation: fadeIn 0.1s ease both; }
-        *{box-sizing:border-box;margin:0;padding:0}
+        .term-link { display: block; text-decoration: none; transition: color 0.15s ease, text-shadow 0.15s ease; }
+        .term-link:hover { color: #00ffcc !important; text-shadow: 0 0 10px rgba(0,255,204,0.45); }
+        @media (max-width: 640px) { .term-title, .term-hint-views { display: none; } }
+        /* In Tailwind's base layer, so it doesn't override the utility classes
+           of shared components on this page (views menu, chat widget) */
+        @layer base { *{box-sizing:border-box;margin:0;padding:0} }
         ::-webkit-scrollbar{width:4px}
         ::-webkit-scrollbar-track{background:transparent}
         ::-webkit-scrollbar-thumb{background:#1a3a2a;border-radius:2px}
@@ -630,19 +693,23 @@ export default function TerminalPage() {
               <span key={bg} style={{ width: 12, height: 12, borderRadius: "50%", background: bg, display: "block" }} />
             ))}
           </div>
-          <span style={{ fontSize: 11, color: "#2a5a40", letterSpacing: "0.08em" }}>
+          <span className="term-title" style={{ fontSize: 11, color: "#2a5a40", letterSpacing: "0.08em" }}>
             rajdeep@portfolio — terminal v{VERSION}
           </span>
-          <Link href="/" onClick={(e) => e.stopPropagation()}
-            style={{ fontSize: 11, color: "#00ccaa", textDecoration: "none",
-              padding: "4px 12px", border: "1px solid rgba(0,204,170,0.35)",
-              borderRadius: 5, fontWeight: 600, letterSpacing: "0.06em",
-              background: "rgba(0,204,170,0.08)",
-              transition: "all 0.15s ease", display: "inline-flex", alignItems: "center", gap: 5 }}
-            onMouseEnter={(e) => { const el = e.currentTarget; el.style.background="rgba(0,204,170,0.18)"; el.style.borderColor="rgba(0,204,170,0.7)"; el.style.color="#00ffcc"; el.style.boxShadow="0 0 12px rgba(0,204,170,0.25)"; }}
-            onMouseLeave={(e) => { const el = e.currentTarget; el.style.background="rgba(0,204,170,0.08)"; el.style.borderColor="rgba(0,204,170,0.35)"; el.style.color="#00ccaa"; el.style.boxShadow="none"; }}>
-            ← Portfolio
-          </Link>
+          {/* Clicks here mustn't reach the page's focus-the-prompt handler */}
+          <div onClick={(e) => e.stopPropagation()} style={{ display: "flex", alignItems: "center", gap: 10 }}>
+            <ViewsMenu current="terminal" />
+            <Link href="/" onClick={(e) => e.stopPropagation()}
+              style={{ fontSize: 11, color: "#00ccaa", textDecoration: "none",
+                padding: "4px 12px", border: "1px solid rgba(0,204,170,0.35)",
+                borderRadius: 5, fontWeight: 600, letterSpacing: "0.06em",
+                background: "rgba(0,204,170,0.08)",
+                transition: "all 0.15s ease", display: "inline-flex", alignItems: "center", gap: 5 }}
+              onMouseEnter={(e) => { const el = e.currentTarget; el.style.background="rgba(0,204,170,0.18)"; el.style.borderColor="rgba(0,204,170,0.7)"; el.style.color="#00ffcc"; el.style.boxShadow="0 0 12px rgba(0,204,170,0.25)"; }}
+              onMouseLeave={(e) => { const el = e.currentTarget; el.style.background="rgba(0,204,170,0.08)"; el.style.borderColor="rgba(0,204,170,0.35)"; el.style.color="#00ccaa"; el.style.boxShadow="none"; }}>
+              ← Portfolio
+            </Link>
+          </div>
         </div>
 
         {/* Output */}
@@ -660,14 +727,20 @@ export default function TerminalPage() {
                   <span style={{ color: "#00ffcc", fontSize: 13 }}>{entry.input}</span>
                 </div>
               )}
-              {entry.lines.map((line, i) => (
-                <div key={i} style={{
+              {entry.lines.map((line, i) => {
+                const style: React.CSSProperties = {
                   fontSize: 13, lineHeight: 1.7, color: C[line.type],
                   whiteSpace: "pre", minHeight: line.type === "blank" ? "0.7em" : undefined,
-                }}>
-                  {line.text}
-                </div>
-              ))}
+                };
+                return line.href ? (
+                  <Link key={i} href={line.href} prefetch={false} className="term-link" style={style}
+                    onClick={(e) => e.stopPropagation()}>
+                    {line.text}
+                  </Link>
+                ) : (
+                  <div key={i} style={style}>{line.text}</div>
+                );
+              })}
             </div>
           ))}
 
@@ -696,8 +769,8 @@ export default function TerminalPage() {
           padding: "7px 28px", background: "#0a1410", borderTop: "1px solid #0d2a1a",
           display: "flex", gap: 28, flexShrink: 0, flexWrap: "wrap",
         }}>
-          {[["Enter","run"],["↑ ↓","history"],["Tab","autocomplete"],["Ctrl+L","clear"],["exit","← portfolio"]].map(([k, l]) => (
-            <span key={k} style={{ fontSize: 11, color: "#1a4a30" }}>
+          {[["Enter","run"],["↑ ↓","history"],["Tab","autocomplete"],["Ctrl+L","clear"],["views","other versions"],["exit","← portfolio"]].map(([k, l]) => (
+            <span key={k} className={k === "views" ? "term-hint-views" : undefined} style={{ fontSize: 11, color: "#1a4a30" }}>
               <span style={{ color: "#2a6a44" }}>{k}</span>{" "}{l}
             </span>
           ))}

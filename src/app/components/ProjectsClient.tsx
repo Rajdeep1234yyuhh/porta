@@ -7,7 +7,7 @@ import Link from "next/link";
 import Navbar from "./Navbar";
 import { allProjects, Project } from "../data/projects";
 import { LazyVideo } from "./LazyVideo";
-import { getYoutubeVideoId } from "../lib/youtube";
+import { projectMedia } from "../lib/project-media";
 
 // ─── Per-project room themes ──────────────────────────────────────────────────
 const ROOM: Record<number, { dark: string; light: string; accent: string }> = {
@@ -198,14 +198,9 @@ function RoomCard({
   const accent = theme.accent;
   const cs = project.caseStudy ?? null;
 
-  const youtubeId = project.video ? getYoutubeVideoId(project.video) : null;
-  const visualSrc = youtubeId
-    ? `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`
-    : (project.image ?? null);
-  // Self-hosted demo videos without a thumbnail preview the video itself.
-  const localVideo =
-    !youtubeId && project.mediaType === "video" && project.video ? project.video : null;
-  const hasVisual = Boolean(visualSrc || localVideo);
+  // YouTube videos show their poster; self-hosted ones play their preview loop
+  const media = projectMedia(project);
+  const hasVisual = media !== null;
 
   const num = String(index + 1).padStart(2, "0");
 
@@ -252,17 +247,21 @@ function RoomCard({
                 boxShadow: `0 40px 80px ${accent}35, 0 0 0 1px ${accent}25`,
               }}
             >
-              {visualSrc ? (
+              {media?.kind === "file" ? (
+                <LazyVideo
+                  src={media.preview}
+                  poster={media.poster}
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              ) : media ? (
                 <Image
-                  src={visualSrc}
+                  src={media.kind === "image" ? media.src : media.poster}
                   alt={project.title}
                   fill
+                  sizes="36vw"
                   className="object-cover"
-                  unoptimized
                 />
-              ) : (
-                <LazyVideo src={localVideo!} className="absolute inset-0 w-full h-full object-cover" />
-              )}
+              ) : null}
               <div
                 className="absolute inset-0"
                 style={{

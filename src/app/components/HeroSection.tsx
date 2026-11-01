@@ -3,9 +3,12 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { useContact } from "../context/ContactContext";
 import { useSound } from "../context/SoundContext";
 import {
+  ArrowRight,
+  BookOpen,
   Download,
   ExternalLink,
   Mail,
@@ -13,6 +16,8 @@ import {
   FileText,
   Braces,
 } from "lucide-react";
+import { STORY } from "../data/profile";
+import StoryDialog from "./StoryDialog";
 import {
   SiNextdotjs,
   SiShopify,
@@ -245,6 +250,10 @@ const MINOR_STACK = [
   },
 ];
 
+// The photo appears in both the mobile and desktop layouts. Identical `sizes`
+// make both pick the same file, so it downloads once.
+const PHOTO_SIZES = "(min-width: 1024px) 208px, (min-width: 768px) 176px, 112px";
+
 // Counts up from 0 in its own component so each tick re-renders just the
 // number instead of the whole hero section.
 const CountUp = ({ to, interval }: { to: number; interval: number }) => {
@@ -272,7 +281,13 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
   const contact = useContact();
   const { playClick } = useSound();
   const [contactOpen, setContactOpen] = React.useState(false);
+  const [storyOpen, setStoryOpen] = React.useState(false);
   const contactRef = React.useRef<HTMLDivElement>(null);
+
+  const openStory = () => {
+    playClick();
+    setStoryOpen(true);
+  };
 
   React.useEffect(() => {
     const handleOutside = (e: MouseEvent) => {
@@ -495,6 +510,79 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
     </div>
   );
 
+  /* "My story" teaser (desktop, under the core stack); the button opens the full story */
+  const storyCard = (
+    <div
+      className="shadow-sm"
+      style={{
+        width: "100%",
+        maxWidth: 400,
+        background: t.cardBg,
+        border: `1px solid ${t.cardBorder}`,
+        borderRadius: 12,
+        padding: "12px 16px",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 6 }}>
+        <BookOpen size={13} color={t.eyebrow} aria-hidden="true" />
+        <span
+          style={{
+            fontFamily: "var(--font-jetbrains-mono), monospace",
+            fontSize: 9,
+            letterSpacing: "0.22em",
+            textTransform: "uppercase" as const,
+            color: t.eyebrow,
+          }}
+        >
+          My Story
+        </span>
+      </div>
+      <p style={{ fontSize: 13, lineHeight: 1.6, color: t.bioBody }}>
+        {STORY.teaser}{" "}
+        <button
+          type="button"
+          onClick={openStory}
+          className="hero-story-link"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 4,
+            fontWeight: 600,
+            color: t.eyebrow,
+            cursor: "pointer",
+            whiteSpace: "nowrap",
+          }}
+        >
+          Read my story <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+        </button>
+      </p>
+    </div>
+  );
+
+  /* Mobile: the story opens from a button next to the other calls to action */
+  const storyButton = (
+    <button
+      type="button"
+      onClick={openStory}
+      style={{
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        fontSize: 12,
+        fontWeight: 500,
+        padding: "8px 16px",
+        borderRadius: 4,
+        cursor: "pointer",
+        border: `1px solid ${t.btn2Border}`,
+        background: t.btn2Bg,
+        color: t.btn2Text,
+      }}
+    >
+      <BookOpen className="w-3 h-3" aria-hidden="true" />
+      My Story
+    </button>
+  );
+
   return (
     <>
       <style jsx>{`
@@ -551,6 +639,10 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         .hero-contact-button:active {
           transform: translateY(0) scale(0.98);
         }
+        .hero-story-link:hover {
+          text-decoration: underline;
+          text-underline-offset: 3px;
+        }
         .speech-bubble::after {
           content: "";
           position: absolute;
@@ -581,7 +673,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
         />
 
         {/* MOBILE layout */}
-        <div className="md:hidden flex-1 flex flex-col justify-center px-5 py-4 relative z-10 gap-3">
+        <div className="md:hidden flex-1 flex flex-col justify-center px-5 py-4 tiny:py-3 relative z-10 gap-3 tiny:gap-2">
           {/* Photo */}
           <div className="flex justify-center">
             <div className="relative mx-12">
@@ -614,11 +706,14 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                 }}
                 className="rounded-2xl p-2 shadow-xl"
               >
-                <img
+                <Image
                   src="/DP.jpg"
                   alt="Rajdeep"
-                  fetchPriority="high"
-                  className="w-28 h-36 object-cover rounded-xl"
+                  width={517}
+                  height={622}
+                  sizes={PHOTO_SIZES}
+                  priority
+                  className="w-28 h-36 tiny:w-24 tiny:h-28 object-cover rounded-xl"
                 />
               </div>
               <div className="absolute -top-2 -right-2 bg-green-500 text-white px-2 py-0.5 rounded-full text-[10px] font-semibold shadow flex items-center gap-1">
@@ -749,7 +844,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>
                 Full-Stack
               </div>
-              <div style={{ fontSize: 9, color: t.bioBody, marginTop: 1 }}>
+              <div className="tiny:hidden" style={{ fontSize: 9, color: t.bioBody, marginTop: 1 }}>
                 incl. AI
               </div>
             </div>
@@ -768,7 +863,7 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               <div style={{ fontSize: 10, color: t.statLabel, marginTop: 3 }}>
                 Shopify Stores
               </div>
-              <div style={{ fontSize: 9, color: t.bioBody, marginTop: 1 }}>
+              <div className="tiny:hidden" style={{ fontSize: 9, color: t.bioBody, marginTop: 1 }}>
                 & many more
               </div>
             </div>
@@ -862,9 +957,11 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
               <Download className="w-3 h-3" aria-hidden="true" />
             </a>
             {contactDropdown}
+            {storyButton}
           </div>
 
-          {techStack}
+          {/* Decorative; the badges around the photo already show the stack */}
+          <div className="short:hidden">{techStack}</div>
         </div>
 
         {/* DESKTOP layout */}
@@ -1135,8 +1232,8 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                 </div>
               </div>
 
-              {/* Right - Photo + Core Stack */}
-              <div className="flex flex-col items-center gap-6">
+              {/* Right - Photo + Core Stack + story */}
+              <div className="flex flex-col items-center gap-6 short:gap-4">
                 <div className="relative">
                   {/* Speech bubble */}
                   <div
@@ -1171,11 +1268,14 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                     }}
                     className="rounded-2xl p-3 shadow-2xl transition-all duration-500 hover:scale-[1.02]"
                   >
-                    <img
+                    <Image
                       src="/DP.jpg"
                       alt="Professional Photo"
-                      fetchPriority="high"
-                      className="w-44 h-56 lg:w-52 lg:h-64 object-cover rounded-xl"
+                      width={517}
+                      height={622}
+                      sizes={PHOTO_SIZES}
+                      priority
+                      className="w-44 h-56 lg:w-52 lg:h-64 short:w-40 short:h-48 object-cover rounded-xl"
                     />
                   </div>
                   <div className="absolute -top-3 -right-3 bg-green-500 text-white px-3 py-1 rounded-full text-xs font-semibold shadow-lg flex items-center gap-1.5">
@@ -1261,10 +1361,21 @@ const HeroSection = ({ isDarkMode, scrollToSection }: HeroSectionProps) => {
                   />
                 </div>
                 {techStack}
+                {storyCard}
               </div>
             </div>
           </div>
         </div>
+
+        <StoryDialog
+          open={storyOpen}
+          onClose={() => setStoryOpen(false)}
+          isDarkMode={isDarkMode}
+          onNavigate={(sectionId) => {
+            setStoryOpen(false);
+            scrollToSection(sectionId);
+          }}
+        />
       </section>
     </>
   );

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowLeft, Search, ShoppingBag, ShoppingCart, User } from "lucide-react";
+import ViewsMenu from "../../components/ViewsMenu";
 import { DEPARTMENTS } from "../catalog";
 import { useCart } from "./cart";
 
@@ -60,6 +61,7 @@ export default function StoreHeader() {
         <SearchForm id="store-search" className="hidden flex-1 md:flex" />
 
         <nav aria-label="Account" className="ml-auto flex items-center gap-1 sm:gap-2">
+          <ViewsMenu current="store" tone="light" />
           <Link
             href="/"
             className="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 lg:flex"

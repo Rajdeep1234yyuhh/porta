@@ -9,6 +9,7 @@ import * as THREE from "three";
 import { allProjects } from "../data/projects";
 import { testimonials } from "../data/testimonials";
 import { useContact } from "../context/ContactContext";
+import ViewsMenu from "../components/ViewsMenu";
 
 const PERSPECTIVE = 1400;
 const ANIM_MS     = 2200;
@@ -1444,6 +1445,9 @@ export default function ZoomClient() {
           ← BACK TO PORTFOLIO
         </Link>
       )}
+
+      {/* ── Other views of the portfolio ── */}
+      <ViewsMenu current="zoom" className="fixed bottom-4 left-4 z-50" align="left" up />
 
       {/* ── Room name chip ── */}
       <div style={{

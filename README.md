@@ -6,7 +6,7 @@ Personal portfolio of Rajdeep Kotoky, Full-Stack Developer & AI/ML Engineer.
 
 ## Highlights
 
-- **Slide-based home page** — hero, testimonials, projects, services, quick solutions and contact, navigated by wheel, swipe or keyboard.
+- **Slide-based home page** — hero, three project slides (live client work, personal AI/ML projects and Shopify stores), testimonials, services, quick solutions and contact, navigated by wheel, swipe or keyboard. A project's `showcase` field in `src/app/data/projects.ts` picks the slide it appears on.
 - **AI assistant** — a chat widget backed by a Groq-hosted LLM that answers questions about my work and routes visitors to projects, services or contact. The API route validates input, rate-limits per IP, and never exposes the API key to the browser.
 - **3D experiences** — an interactive cube (`/cube`) and a 3D scroll tour (`/zoom`) built with React Three Fiber.
 - **Terminal mode** — a command-line style version of the portfolio at `/terminal`.
@@ -65,6 +65,17 @@ src/app/
 ```
 
 Contact details and the site URL live in `src/app/data/site.ts`; update them there and every page, link and the chat assistant pick up the change.
+
+### Project videos
+
+A self-hosted demo plays in full (with controls) on its case-study page, and as a small muted loop on cards. Give each one a `preview` and a `poster` next to `video` in `src/app/data/projects.ts`; without them, cards stream the full file. To make them (960px wide, no audio, ~1 MB):
+
+```bash
+ffmpeg -i public/demo.mp4 -an -vf "fps=30,scale=960:-2" -c:v libx264 -preset veryslow -crf 28 -pix_fmt yuv420p -movflags +faststart public/videos/demo-preview.mp4
+ffmpeg -i public/videos/demo-preview.mp4 -frames:v 1 -c:v libwebp -quality 72 public/videos/demo-poster.webp
+```
+
+Files in `public/videos/` are cached for 30 days, so give a replaced file a new name. YouTube projects need neither field; set `poster` to a sharper thumbnail (e.g. `https://i.ytimg.com/vi_webp/<id>/maxresdefault.webp`) if the video has one.
 
 ## Deployment
 

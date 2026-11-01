@@ -9,9 +9,12 @@ import ChatWidget from "./components/ChatWidget";
 import { ContactProvider } from "./context/ContactContext";
 import { SoundProvider } from "./context/SoundContext";
 
+// Tailwind's font-mono; only a few secondary pages use it, so it isn't
+// preloaded on every page (it still loads wherever it's used)
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  preload: false,
 });
 
 // Self-hosted by next/font (no render-blocking request to Google Fonts).

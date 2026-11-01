@@ -12,8 +12,13 @@ export interface Project {
   title: string;
   description: string;
   image?: string;
+  /** YouTube URL, or a self-hosted file played in full on the case study page. */
   video?: string;
   videoStartTime?: number;
+  /** Small muted loop of a self-hosted `video` for cards (960px, no audio). */
+  preview?: string;
+  /** Still shown before a video plays; the first frame of `preview`, or a YouTube thumbnail. */
+  poster?: string;
   mediaType: "image" | "video";
   tech: string[];
   categories: string[];
@@ -21,6 +26,16 @@ export interface Project {
   github: string;
   date: string;
   caseStudy?: CaseStudy;
+  /** Home-page slide that features the project. Without one, it is only listed on /projects. */
+  showcase?: "live" | "personal" | "shopify";
+  /** Short name for home-page cards, e.g. "DHITI". */
+  name?: string;
+  /** What the project is, in a few words, e.g. "ERP & billing system". */
+  kind?: string;
+  /** One plain-language sentence on what it does, for home-page cards. */
+  summary?: string;
+  /** Up to three short feature points for home-page cards. */
+  highlights?: string[];
 }
 
 export const allProjects: Project[] = [
@@ -28,10 +43,21 @@ export const allProjects: Project[] = [
     id: 1,
     slug: "dhiti-ai-career-assessment",
     title: "DHITI - AI-Powered Human Intelligence Assessment Tool",
+    showcase: "live",
+    name: "DHITI",
+    kind: "AI career assessment platform",
+    summary:
+      "Profiles a student's traits and judgment, then turns the results into a personalised AI career plan.",
+    highlights: [
+      "AI career reports built on the OpenAI API",
+      "Trait profiles with radar charts",
+      "Razorpay payments on a Firebase backend",
+    ],
     description:
       "Full-stack AI-powered career assessment platform (DHITI – dhiti.ai) built with Next.js and TypeScript. Firebase backend, OpenAI APIs for AI-based career analysis, optimized API caching, and secure Razorpay payment integration for fast performance and reliable transactions.",
     mediaType: "video",
     video: "https://www.youtube.com/watch?v=aIo-PEiSqQA",
+    poster: "https://i.ytimg.com/vi_webp/aIo-PEiSqQA/maxresdefault.webp",
     tech: [
       "Next.js",
       "TypeScript",
@@ -65,6 +91,16 @@ export const allProjects: Project[] = [
     id: 27,
     slug: "travel-grid-india-ota-platform",
     title: "Travel Grid India - OTA platform",
+    showcase: "live",
+    name: "Travel Grid India",
+    kind: "Travel booking platform (OTA)",
+    summary:
+      "Lets travellers search and book homestays, hotels and holiday packages from a single storefront.",
+    highlights: [
+      "One search across stays and packages",
+      "Real-time availability with Firebase",
+      "Admin panel for listings, pricing and bookings",
+    ],
     description:
       "Full-stack OTA (Online Travel Agency) platform for browsing and booking stays and travel packages, with an admin panel for managing property listings, availability, and pricing.",
     mediaType: "image",
@@ -94,6 +130,16 @@ export const allProjects: Project[] = [
     id: 28,
     slug: "go-travelz-travel-agency",
     title: "Go Travelz - Travel Agency",
+    showcase: "live",
+    name: "Go Travelz",
+    kind: "Travel agency website",
+    summary:
+      "Promotes curated holiday packages with clear prices and trust signals, turning visitors into calls.",
+    highlights: [
+      "Destination hero with price and trip length",
+      "Trust badges, ratings and reviews",
+      "Browse-packages and call-now buttons",
+    ],
     description:
       "Marketing and booking landing page for a travel agency offering curated holiday packages, built to convert visitors into package inquiries and calls.",
     mediaType: "image",
@@ -123,6 +169,16 @@ export const allProjects: Project[] = [
     id: 29,
     slug: "real-bengal-sweets-erp",
     title: "Real Bengal Sweets - ERP system",
+    showcase: "live",
+    name: "Real Bengal Sweets",
+    kind: "ERP & billing system",
+    summary:
+      "Replaced manual billing at a sweets shop with a fast billing counter and a live view of daily sales.",
+    highlights: [
+      "Keyboard-first billing counter",
+      "Admin-set prices staff can't change",
+      "Live dashboard of today's bills per shop",
+    ],
     description:
       "Lightweight ERP/billing system for a sweets shop, with a fast billing counter for generating bills and a live dashboard of the day's collections.",
     mediaType: "image",
@@ -152,10 +208,22 @@ export const allProjects: Project[] = [
     id: 2,
     slug: "mental-health-ai-chatbot",
     title: "Mental Health Assistant Chatbot",
+    showcase: "personal",
+    name: "Yeco",
+    kind: "AI mental health chatbot",
+    summary:
+      "An anonymous, judgment-free chat companion that detects emotions and tracks your mood over time.",
+    highlights: [
+      "Empathetic replies powered by the LLaMA API",
+      "Sentiment analysis on every message",
+      "Mood trends over 30-day windows",
+    ],
     description:
       "AI-powered mental health assistant chatbot that interacts with users, detects emotions from conversations, and tracks emotional trends over time.",
     mediaType: "video",
     video: "/yeco.mp4",
+    preview: "/videos/yeco-preview.mp4",
+    poster: "/videos/yeco-poster.webp",
     tech: [
       "React",
       "Tailwind CSS",
@@ -190,10 +258,16 @@ export const allProjects: Project[] = [
     id: 3,
     slug: "shopfruitful-ecommerce-website",
     title: "ShopFruitful E-commerce Website",
+    showcase: "shopify",
+    name: "Fruitful",
+    kind: "Fruit-based skincare",
     description:
       "Custom Shopify and Liquid storefront with responsive design, optimized product listings, smooth cart and checkout flow, and polished CSS UI enhancements.",
     mediaType: "video",
     video: "/fruitful.mp4",
+    preview: "/videos/fruitful-preview.mp4",
+    poster: "/videos/fruitful-poster.webp",
+    image: "/images/shopify/shopfruitful-ecommerce-website.webp",
     tech: ["Shopify", "Liquid", "CSS"],
     categories: ["Shopify"],
     demo: "https://shopfruitful.com/",
@@ -219,6 +293,16 @@ export const allProjects: Project[] = [
     id: 4,
     slug: "assamese-english-tourism-chatbot",
     title: "Assamese-English Code-Mixed Tourism Chatbot",
+    showcase: "personal",
+    name: "Assamese-English Chatbot",
+    kind: "NLP research project",
+    summary:
+      "Understands Assam tourism questions typed in a mix of Assamese and English, and answers them.",
+    highlights: [
+      "~97% intent accuracy across 44 intents",
+      "Semantic search over 221,799 Q&A pairs",
+      "Covers 51 tourist destinations in Assam",
+    ],
     description:
       "A two-stage intelligent dialogue system for Assam tourism, featuring a MuRIL-based intent classifier across 44 intents with ~97% accuracy and a semantic retrieval module over 221,799 Q&A pairs covering 51 destinations - designed for low-resource code-mixed NLP.",
     mediaType: "image",
@@ -254,6 +338,16 @@ export const allProjects: Project[] = [
     id: 7,
     slug: "website-to-video",
     title: "Website to Video",
+    showcase: "personal",
+    name: "Website to Video",
+    kind: "URL-to-video generator",
+    summary:
+      "Turns any website URL into a polished showcase video, with no screen recording or editing.",
+    highlights: [
+      "Captures the site in a headless browser",
+      "ffmpeg video-processing pipeline",
+      "Configurable length, resolution and format",
+    ],
     description: "Application that converts websites to a showcased video.",
     mediaType: "image",
     tech: ["React", "Node.js", "Express", "ffmpeg"],
@@ -281,9 +375,13 @@ export const allProjects: Project[] = [
     id: 30,
     slug: "florine-jewels-shopify-store",
     title: "Florine Jewels - Jewellery E-commerce Platform",
+    showcase: "shopify",
+    name: "Florine Jewels",
+    kind: "Women's jewellery",
     description:
       "Shopify jewellery store for Florine Jewels, a brand designing jewellery for modern women, with curated collections and a dedicated customization flow.",
     mediaType: "image",
+    image: "/images/shopify/florine-jewels-shopify-store.webp",
     tech: ["Shopify", "Liquid", "JavaScript"],
     categories: ["Shopify"],
     demo: "https://florinejewels.com/",
@@ -309,9 +407,13 @@ export const allProjects: Project[] = [
     id: 31,
     slug: "raheka-studios-shopify-store",
     title: "Raheka Studios - Women's Clothing E-commerce Platform",
+    showcase: "shopify",
+    name: "Raheka Studios",
+    kind: "Women's clothing",
     description:
       "Shopify clothing store for Raheka by Harshita Maheshwari, featuring shirts, blouses, co-ords, and dresses with seasonal collection campaigns.",
     mediaType: "image",
+    image: "/images/shopify/raheka-studios-shopify-store.webp",
     tech: ["Shopify", "Liquid", "JavaScript"],
     categories: ["Shopify"],
     demo: "https://rahekastudio.com/",
@@ -337,9 +439,13 @@ export const allProjects: Project[] = [
     id: 9,
     slug: "zanera-shopify-store",
     title: "Zanera - Imitation Jewellery E-commerce Platform",
+    showcase: "shopify",
+    name: "Zanera",
+    kind: "Imitation jewellery",
     description:
       "Shopify jewellery store for affordable imitation pieces, covering ethnic, traditional, and modern designs for daily wear and special occasions.",
     mediaType: "image",
+    image: "/images/shopify/zanera-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -371,9 +477,13 @@ export const allProjects: Project[] = [
     id: 10,
     slug: "the-anvik-shopify-store",
     title: "The Anvik - Ethnic Jewellery E-commerce Platform",
+    showcase: "shopify",
+    name: "The Anvik",
+    kind: "Ethnic jewellery",
     description:
       "Shopify jewellery store for handcrafted earrings, jhumkas, chandbalis, and traditional sets for weddings, festivals, and everyday wear.",
     mediaType: "image",
+    image: "/images/shopify/the-anvik-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -405,9 +515,13 @@ export const allProjects: Project[] = [
     id: 11,
     slug: "heer-house-of-jewellery-shopify-store",
     title: "Heer House of Jewellery - Handcrafted Bridal Jewellery Platform",
+    showcase: "shopify",
+    name: "Heer House of Jewellery",
+    kind: "Bridal jewellery",
     description:
       "Shopify bridal jewellery platform featuring handcrafted kundan sets, anklets, earrings, and bespoke accessories with traditional techniques and modern styling.",
     mediaType: "image",
+    image: "/images/shopify/heer-house-of-jewellery-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -436,12 +550,15 @@ export const allProjects: Project[] = [
     },
   },
   {
+    // Same store as "shopfruitful-ecommerce-website", which is the one featured
+    // on the home page.
     id: 12,
     slug: "fruitful-skincare-shopify-store",
     title: "Fruitful - Fruit-Based Skincare E-commerce Platform",
     description:
       "Shopify skincare store for fruit-powered, vegan, beginner-friendly products built around clean formulas and simple daily routines.",
     mediaType: "image",
+    image: "/images/shopify/shopfruitful-ecommerce-website.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -473,9 +590,13 @@ export const allProjects: Project[] = [
     id: 13,
     slug: "giisha-beauty-shopify-store",
     title: "Giisha Beauty - Ayurvedic Haircare E-commerce Platform",
+    showcase: "shopify",
+    name: "Giisha Beauty",
+    kind: "Ayurvedic haircare",
     description:
       "Shopify haircare store for Ayurvedic-inspired oils, masks, and grooming tools, blending Indian rituals with modern healthy-hair care.",
     mediaType: "image",
+    image: "/images/shopify/giisha-beauty-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -507,9 +628,13 @@ export const allProjects: Project[] = [
     id: 14,
     slug: "roslyn-by-demi-shopify-store",
     title: "Roslyn by Demi - Women's Fashion E-commerce Platform",
+    showcase: "shopify",
+    name: "Roslyn by Demi",
+    kind: "Women's fashion",
     description:
       "Shopify fashion store for modern women's dresses, co-ord sets, tops, and accessories focused on elegance, comfort, and contemporary style.",
     mediaType: "image",
+    image: "/images/shopify/roslyn-by-demi-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -541,9 +666,13 @@ export const allProjects: Project[] = [
     id: 15,
     slug: "nishorama-shopify-store",
     title: "Nishorama - Gen-Z Ethnic Fashion E-commerce Platform",
+    showcase: "shopify",
+    name: "Nishorama",
+    kind: "Gen-Z ethnic fashion",
     description:
       "Shopify D2C fashion store for Gen-Z ethnic wear, including block-printed kurtis, fusion outfits, and contemporary desi styles.",
     mediaType: "image",
+    image: "/images/shopify/nishorama-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -575,9 +704,13 @@ export const allProjects: Project[] = [
     id: 16,
     slug: "vintage-loom-shopify-store",
     title: "Vintage Loom - Handcrafted Cotton Ethnic Wear Platform",
+    showcase: "shopify",
+    name: "Vintage Loom",
+    kind: "Cotton ethnic wear",
     description:
       "Shopify ethnic wear store for handcrafted cotton suit sets, kurtas, and sarees rooted in handblock printing and artisan craftsmanship.",
     mediaType: "image",
+    image: "/images/shopify/vintage-loom-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -609,9 +742,13 @@ export const allProjects: Project[] = [
     id: 18,
     slug: "aekay-shopify-store",
     title: "Aekay - Fashion Accessories & Jewellery E-commerce Platform",
+    showcase: "shopify",
+    name: "Aekay",
+    kind: "Fashion accessories",
     description:
       "Shopify accessories store for affordable rings, earrings, necklaces, and bracelets, focused on everyday style, durability, and accessibility.",
     mediaType: "image",
+    image: "/images/shopify/aekay-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -643,9 +780,13 @@ export const allProjects: Project[] = [
     id: 19,
     slug: "the-house-of-hoor-shopify-store",
     title: "The House of Hoor - Handcrafted Ethnic Wear E-commerce Platform",
+    showcase: "shopify",
+    name: "The House of Hoor",
+    kind: "Handcrafted ethnic wear",
     description:
       "Shopify ethnic fashion store for handcrafted suit sets, anarkalis, co-ords, and kurtas with handblock prints and modern elegance.",
     mediaType: "image",
+    image: "/images/shopify/the-house-of-hoor-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -677,9 +818,13 @@ export const allProjects: Project[] = [
     id: 20,
     slug: "gelato-vinto-shopify-store",
     title: "Gelato Vinto - Artisanal Gelato & Dessert E-commerce Platform",
+    showcase: "shopify",
+    name: "Gelato Vinto",
+    kind: "Gelato & desserts",
     description:
       "Shopify dessert store for Italian-style artisanal gelato, gelato cakes, sorbets, and sugar-free options made with natural ingredients.",
     mediaType: "image",
+    image: "/images/shopify/gelato-vinto-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -711,9 +856,13 @@ export const allProjects: Project[] = [
     id: 21,
     slug: "homebagh-shopify-store",
     title: "Homebagh - Online Plants & Home Decor E-commerce Platform",
+    showcase: "shopify",
+    name: "Homebagh",
+    kind: "Plants & home decor",
     description:
       "Shopify plants and decor store for indoor/outdoor plants, planters, and gardening accessories that support greener living spaces.",
     mediaType: "image",
+    image: "/images/shopify/homebagh-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -746,9 +895,13 @@ export const allProjects: Project[] = [
     slug: "the-mesh-store-shopify-store",
     title:
       "The Mesh Store - Trendy Women's Fashion & Accessories E-commerce Platform",
+    showcase: "shopify",
+    name: "The Mesh Store",
+    kind: "Women's fashion & bags",
     description:
       "Shopify fashion store for women's clothing, bags, and accessories, from everyday basics to party looks with bold cruelty-free styling.",
     mediaType: "image",
+    image: "/images/shopify/the-mesh-store-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -780,9 +933,13 @@ export const allProjects: Project[] = [
     id: 23,
     slug: "kapda-shop-shopify-store",
     title: "Kapda Shop - Online Fabric & Textile Marketplace",
+    showcase: "shopify",
+    name: "Kapda Shop",
+    kind: "Fabrics & textiles",
     description:
       "Shopify textile marketplace for premium cotton, silk, linen, velvet, and georgette fabrics across retail and bulk sourcing.",
     mediaType: "image",
+    image: "/images/shopify/kapda-shop-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -814,9 +971,13 @@ export const allProjects: Project[] = [
     id: 24,
     slug: "bombay-blossom-shopify-store",
     title: "Bombay Blossom - Handcrafted Bags & Jewellery E-commerce Platform",
+    showcase: "shopify",
+    name: "Bombay Blossom",
+    kind: "Handmade bags & jewellery",
     description:
       "Shopify handcrafted fashion store for bags, jewellery, and accessories made with Indian textiles, recycled fabrics, and handloom techniques.",
     mediaType: "image",
+    image: "/images/shopify/bombay-blossom-shopify-store.webp",
     tech: [
       "Shopify",
       "JavaScript",
@@ -845,10 +1006,15 @@ export const allProjects: Project[] = [
     },
   },
   {
+    // Not featured on the home page: armorbysmugglerz.com stopped resolving
+    // (non-existent domain, October 2026). Add `showcase: "shopify"` back once
+    // the store has a working address.
     id: 25,
     slug: "armor-by-smugglerz-shopify-store",
     title:
       "Armor by Smugglerz - Men's Innerwear & Loungewear E-commerce Platform",
+    name: "Armor by Smugglerz",
+    kind: "Men's innerwear",
     description:
       "Shopify men's innerwear store for boxers, trunks, and loungewear with bold prints, performance fabrics, and everyday comfort.",
     mediaType: "image",
@@ -880,9 +1046,14 @@ export const allProjects: Project[] = [
     },
   },
   {
+    // Not featured on the home page: diybytok.com stopped resolving
+    // (non-existent domain, October 2026). Add `showcase: "shopify"` back once
+    // the store has a working address.
     id: 26,
     slug: "diy-by-tok-shopify-store",
     title: "DIY by Tok - Kids DIY Kits & Educational Toys E-commerce Platform",
+    name: "DIY by Tok",
+    kind: "Kids' DIY kits & toys",
     description:
       "Shopify kids store for DIY kits and educational toys that encourage hands-on learning, creativity, and activity-based play.",
     mediaType: "image",

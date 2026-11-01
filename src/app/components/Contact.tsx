@@ -5,11 +5,13 @@ import { Mail, Send, Phone } from "lucide-react";
 import { useContact } from "../context/ContactContext";
 import { useSound } from "../context/SoundContext";
 
+// The 3D pages aren't prefetched: that would download three.js (~180 KB) as
+// soon as this footer is on screen
 const FOOTER_LINKS = [
   { href: "/projects", label: "Projects" },
   { href: "/services", label: "Services" },
-  { href: "/zoom", label: "3D Portfolio" },
-  { href: "/cube", label: "3D Cube" },
+  { href: "/zoom", label: "3D Portfolio", prefetch: false },
+  { href: "/cube", label: "3D Cube", prefetch: false },
   { href: "/terminal", label: "Terminal" },
   { href: "/ecom", label: "Store" },
 ];
@@ -167,10 +169,11 @@ const Contact: React.FC<ContactProps> = ({ isDarkMode }) => {
         {/* Footer: real links so search engines can reach the other pages */}
         <footer className={`mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-[11px] ${isDarkMode ? "text-gray-500" : "text-slate-400"}`}>
           <nav aria-label="Site pages" className="flex flex-wrap justify-center gap-x-4 gap-y-1">
-            {FOOTER_LINKS.map(({ href, label }) => (
+            {FOOTER_LINKS.map(({ href, label, prefetch }) => (
               <Link
                 key={href}
                 href={href}
+                prefetch={prefetch}
                 onClick={playClick}
                 className={`transition-colors ${isDarkMode ? "hover:text-gray-200" : "hover:text-slate-700"}`}
               >

@@ -2,11 +2,14 @@
 
 import Link from "next/link";
 import { useContact } from "../../context/ContactContext";
+import { PORTFOLIO_VIEWS } from "../../data/views";
 import { DEPARTMENTS } from "../catalog";
+
+type FooterLink = { href: string; label: string; external?: boolean; prefetch?: boolean };
 
 export default function StoreFooter() {
   const contact = useContact();
-  const columns = [
+  const columns: { title: string; links: FooterLink[] }[] = [
     {
       title: "Shop",
       links: [
@@ -35,12 +38,12 @@ export default function StoreFooter() {
     },
     {
       title: "Other views",
-      links: [
-        { href: "/", label: "Portfolio" },
-        { href: "/zoom", label: "3D Portfolio" },
-        { href: "/cube", label: "3D Cube" },
-        { href: "/terminal", label: "Terminal" },
-      ],
+      links: PORTFOLIO_VIEWS.filter((view) => view.id !== "store").map((view) => ({
+        href: view.href,
+        label: view.label,
+        // The 3D views load three.js
+        prefetch: view.heavy ? false : undefined,
+      })),
     },
   ];
 
@@ -58,7 +61,11 @@ export default function StoreFooter() {
                       {link.label}
                     </a>
                   ) : link.href.startsWith("/") ? (
-                    <Link href={link.href} className="text-sm text-slate-600 hover:text-violet-700 hover:underline">
+                    <Link
+                      href={link.href}
+                      prefetch={link.prefetch}
+                      className="text-sm text-slate-600 hover:text-violet-700 hover:underline"
+                    >
                       {link.label}
                     </Link>
                   ) : (

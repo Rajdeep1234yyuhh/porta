@@ -16,6 +16,7 @@ import { RoundedBox, Text, Float, useTexture } from "@react-three/drei";
 import * as THREE from "three";
 import { allProjects } from "../data/projects";
 import { allServices } from "../data/services";
+import ViewsMenu from "./ViewsMenu";
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 
@@ -145,9 +146,13 @@ const SKILL_INITIALS = ["N", "R", "S", "T", "P", "N"];
 // Key changes whenever logo paths change — forces error boundary reset in dev
 const LOGOS_KEY = SKILL_LOGOS.join("|");
 
-// Preload into useTexture cache so texture survives face switches
-useTexture.preload("/DP.jpg");
-SKILL_LOGOS.forEach((p) => useTexture.preload(p));
+// Fills the useTexture cache so textures survive face switches. Called from
+// the page component, not at module level: other pages prefetch this module,
+// and a module-level preload made them download the textures too.
+function preloadTextures() {
+  useTexture.preload("/DP.jpg");
+  SKILL_LOGOS.forEach((p) => useTexture.preload(p));
+}
 
 function SkillBadge({
   x,
@@ -1683,6 +1688,7 @@ function Scene({
 // ── Export ────────────────────────────────────────────────────────────────────
 
 export default function CubePageClient() {
+  useEffect(() => preloadTextures(), []);
   const [active, setActive] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const dragDelta = useRef({ x: 0, y: 0 });
@@ -1891,6 +1897,9 @@ export default function CubePageClient() {
         }
         .cube-back-link:hover { color: rgba(255,255,255,0.65); }
       `}</style>
+
+      {/* Other views of the portfolio */}
+      <ViewsMenu current="cube" className="fixed top-4 right-4 z-50" />
 
       {/* Left-side nav */}
       <div

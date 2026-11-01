@@ -2,7 +2,6 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import Lenis from "lenis";
 
 export default function LenisProvider({
   children,
@@ -10,29 +9,36 @@ export default function LenisProvider({
   children: React.ReactNode;
 }) {
   // The home page is a fixed, slide-based layout that never scrolls the
-  // window, so smooth scrolling there only costs a per-frame loop.
+  // window, so smooth scrolling there only costs a per-frame loop. Lenis
+  // itself is only downloaded on pages that use it.
   const enabled = usePathname() !== "/";
 
   useEffect(() => {
     if (!enabled) return;
 
-    const lenis = new Lenis({
-      lerp: 0.1,
-      smoothWheel: true,
-      touchMultiplier: 1.5,
+    let cancelled = false;
+    let rafId = 0;
+    let destroy = () => {};
+
+    import("lenis").then(({ default: Lenis }) => {
+      if (cancelled) return;
+      const lenis = new Lenis({
+        lerp: 0.1,
+        smoothWheel: true,
+        touchMultiplier: 1.5,
+      });
+      const raf = (time: number) => {
+        lenis.raf(time);
+        rafId = requestAnimationFrame(raf);
+      };
+      rafId = requestAnimationFrame(raf);
+      destroy = () => lenis.destroy();
     });
 
-    let rafId: number;
-
-    function raf(time: number) {
-      lenis.raf(time);
-      rafId = requestAnimationFrame(raf);
-    }
-
-    rafId = requestAnimationFrame(raf);
     return () => {
+      cancelled = true;
       cancelAnimationFrame(rafId);
-      lenis.destroy();
+      destroy();
     };
   }, [enabled]);
 

@@ -15,6 +15,8 @@ import {
 import Navbar from "./Navbar";
 import type { Project } from "../data/projects";
 import { useContact } from "../context/ContactContext";
+import { projectStill } from "../lib/project-media";
+import { youtubeThumbnail } from "../lib/youtube";
 
 export type ProjectLink = { slug: string; title: string; category: string };
 
@@ -42,6 +44,9 @@ const ACCENTS = {
 const accentFor = (category: string) =>
   category === "Shopify" ? ACCENTS.shopify : category === "Web Development" ? ACCENTS.web : ACCENTS.ai;
 
+// The media box spans the 896px content column
+const MEDIA_SIZES = "(min-width: 896px) 896px, 100vw";
+
 const hostOf = (url: string) => {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
@@ -51,7 +56,7 @@ const hostOf = (url: string) => {
 };
 
 // Shows the thumbnail and only loads YouTube's player once it's clicked.
-function YouTubeFacade({ id, title }: { id: string; title: string }) {
+function YouTubeFacade({ id, title, poster }: { id: string; title: string; poster: string }) {
   const [playing, setPlaying] = useState(false);
 
   if (playing) {
@@ -75,10 +80,11 @@ function YouTubeFacade({ id, title }: { id: string; title: string }) {
       aria-label={`Play ${title} demo video`}
     >
       <Image
-        src={`https://i.ytimg.com/vi/${id}/hqdefault.jpg`}
+        src={poster}
         alt={`${title} demo video`}
         fill
-        unoptimized
+        priority
+        sizes={MEDIA_SIZES}
         className="object-cover"
       />
       <span className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/30 transition-colors">
@@ -124,6 +130,7 @@ export default function ProjectDetailClient({ project, youtubeId, prev, next, re
   const localVideo =
     !youtubeId && project.mediaType === "video" && project.video ? project.video : null;
   const hasMedia = Boolean(youtubeId || localVideo || project.image);
+  const poster = projectStill(project);
   const isShopify = project.categories.includes("Shopify");
   const whatsappHref = `${contact.whatsappHref}?text=${encodeURIComponent(
     `Hi Rajdeep, I saw your "${project.title}" project and would like to discuss something similar.`,
@@ -229,15 +236,16 @@ export default function ProjectDetailClient({ project, youtubeId, prev, next, re
             }`}
           >
             {youtubeId ? (
-              <YouTubeFacade id={youtubeId} title={project.title} />
+              <YouTubeFacade id={youtubeId} title={project.title} poster={poster ?? youtubeThumbnail(youtubeId)} />
             ) : localVideo ? (
+              // The full-quality file: nothing downloads until it's played
               <video
                 className="absolute inset-0 w-full h-full object-contain"
                 controls
                 muted
                 playsInline
-                preload="metadata"
-                poster={project.image}
+                preload="none"
+                poster={poster}
                 aria-label={`${project.title} demo video`}
               >
                 <source src={localVideo} type="video/mp4" />
@@ -248,7 +256,7 @@ export default function ProjectDetailClient({ project, youtubeId, prev, next, re
                 alt={`${project.title} screenshot`}
                 fill
                 priority
-                sizes="(min-width: 896px) 896px, 100vw"
+                sizes={MEDIA_SIZES}
                 className="object-cover"
               />
             )}

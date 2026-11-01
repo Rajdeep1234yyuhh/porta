@@ -3,7 +3,7 @@ import { Bot, Code, Cpu, Database, Globe, Layers, Monitor, Package, ShoppingBag 
 import type { Project } from "../../data/projects";
 import type { ServiceData } from "../../data/services";
 import { LazyVideo } from "../../components/LazyVideo";
-import { getYoutubeVideoId } from "../../lib/youtube";
+import { projectMedia } from "../../lib/project-media";
 import { projectHost, projectName } from "../catalog";
 
 export const SERVICE_ICONS = {
@@ -48,13 +48,13 @@ export function ProjectVisual({
   /** Set on the page's main (above-the-fold) image */
   priority?: boolean;
 }) {
-  const youtubeId = project.video ? getYoutubeVideoId(project.video) : null;
-  const src = youtubeId ? `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg` : project.image;
-  if (src) {
-    return <Image src={src} alt="" fill sizes={sizes} priority={priority} className="object-cover" unoptimized={Boolean(youtubeId)} />;
+  const media = projectMedia(project);
+  if (media?.kind === "file") {
+    return <LazyVideo src={media.preview} poster={media.poster} className="absolute inset-0 h-full w-full object-cover" />;
   }
-  if (project.mediaType === "video" && project.video) {
-    return <LazyVideo src={project.video} className="absolute inset-0 h-full w-full object-cover" />;
+  if (media) {
+    const src = media.kind === "image" ? media.src : media.poster;
+    return <Image src={src} alt="" fill sizes={sizes} priority={priority} className="object-cover" />;
   }
 
   const { name } = projectName(project);

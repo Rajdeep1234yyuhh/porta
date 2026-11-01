@@ -20,6 +20,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     entry("/zoom", 0.4, "yearly"),
     entry("/cube", 0.4, "yearly"),
     entry("/terminal", 0.3, "yearly"),
+    entry("/minimal", 0.4, "yearly"),
     entry("/ecom", 0.4, "monthly"),
   ];
 }

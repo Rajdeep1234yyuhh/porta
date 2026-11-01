@@ -1,0 +1,44 @@
+/* Tokens for the /minimal page only. The page root carries data-theme, set
+   before paint by an inline script, so these never leak into other routes. */
+.minimal {
+  --m-bg: #ffffff;
+  --m-fg: #09090b;
+  --m-muted: #71717a;
+  --m-line: #e4e4e7;
+  --m-card: #f4f4f5;
+  --m-card-hover: #e4e4e7;
+  --m-dots: rgb(0 0 0 / 0.13);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  color-scheme: light;
+}
+
+.minimal[data-theme="dark"] {
+  --m-bg: #09090b;
+  --m-fg: #fafafa;
+  --m-muted: #a1a1aa;
+  --m-line: #27272a;
+  --m-card: #18181b;
+  --m-card-hover: #27272a;
+  --m-dots: rgb(255 255 255 / 0.11);
+  color-scheme: dark;
+}
+
+/* Dotted bands between sections */
+.minimal-dots {
+  background-image: radial-gradient(var(--m-dots) 1px, transparent 1px);
+  background-size: 8px 8px;
+  background-position: center;
+}
+
+/* Thin scrollbar on the horizontal card rails */
+.minimal-rail {
+  scrollbar-width: thin;
+  scrollbar-color: var(--m-line) transparent;
+}
+.minimal-rail::-webkit-scrollbar {
+  height: 6px;
+}
+.minimal-rail::-webkit-scrollbar-thumb {
+  background: var(--m-line);
+  border-radius: 9999px;
+}

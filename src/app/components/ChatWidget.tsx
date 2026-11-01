@@ -7,8 +7,8 @@ import { useSound } from "../context/SoundContext";
 
 interface Choice {
   label: string;
+  /** Home page section to jump to */
   navigate?: string;
-  tab?: string;
 }
 
 interface Message {
@@ -20,15 +20,17 @@ interface Message {
 
 const ACTION_CHOICES: Record<string, Choice[]> = {
   ask_projects: [
-    { label: "Tech / AI Projects", navigate: "projects", tab: "tech" },
-    { label: "Shopify Stores",      navigate: "projects", tab: "shopify" },
+    { label: "Live Projects",    navigate: "projects" },
+    { label: "AI / ML Projects", navigate: "personal-projects" },
+    { label: "Shopify Stores",   navigate: "shopify-projects" },
     { label: "No thanks" },
   ],
   show_tech: [
-    { label: "View Tech Projects",   navigate: "projects", tab: "tech" },
+    { label: "View Live Projects",    navigate: "projects" },
+    { label: "View AI / ML Projects", navigate: "personal-projects" },
   ],
   show_shopify: [
-    { label: "View Shopify Stores",  navigate: "projects", tab: "shopify" },
+    { label: "View Shopify Stores", navigate: "shopify-projects" },
   ],
   show_services: [
     { label: "See Services", navigate: "services" },
@@ -76,11 +78,8 @@ export default function ChatWidget() {
     }
   }, [open, messages]);
 
-  const navigateTo = (navigate?: string, tab?: string) => {
+  const navigateTo = (navigate?: string) => {
     if (!navigate) return;
-    if (tab) {
-      window.dispatchEvent(new CustomEvent("set-project-tab", { detail: tab }));
-    }
     // portfolio uses a slide system — trigger HomeClient's goTo via event
     window.dispatchEvent(new CustomEvent("navigate-to-section", { detail: navigate }));
   };
@@ -94,7 +93,7 @@ export default function ChatWidget() {
     setMessages((prev) => [...prev, { role: "user", content: choice.label }]);
     // navigate if applicable
     if (choice.navigate) {
-      navigateTo(choice.navigate, choice.tab);
+      navigateTo(choice.navigate);
       setOpen(false);
     }
   };
@@ -138,8 +137,9 @@ export default function ChatWidget() {
 
   return (
     <>
-      {/* panel */}
+      {/* panel — inert while closed so its controls can't be tabbed to */}
       <div
+        inert={!open}
         className={`fixed bottom-24 left-4 right-4 sm:left-auto sm:w-96 sm:right-6 z-50 flex flex-col rounded-2xl shadow-2xl border overflow-hidden transition-all duration-300 origin-bottom-right ${
           open ? "scale-100 opacity-100 pointer-events-auto" : "scale-90 opacity-0 pointer-events-none"
         } ${isDark ? "bg-[#1c1c1e] border-white/10" : "bg-white border-slate-200"}`}

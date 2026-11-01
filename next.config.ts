@@ -38,8 +38,20 @@ const nextConfig: NextConfig = {
     // Resume uploads from /admin (the 1 MB default is too small for a PDF)
     serverActions: { bodySizeLimit: "5mb" },
   },
+  images: {
+    // YouTube thumbnails, used as video posters
+    remotePatterns: [{ protocol: "https", hostname: "i.ytimg.com" }],
+  },
   async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
+    return [
+      { source: "/:path*", headers: securityHeaders },
+      // Preview videos and their posters (public/ files are otherwise
+      // revalidated on every view). Give a replaced file a new name.
+      {
+        source: "/videos/:path*",
+        headers: [{ key: "Cache-Control", value: "public, max-age=2592000, stale-while-revalidate=86400" }],
+      },
+    ];
   },
   async redirects() {
     return [

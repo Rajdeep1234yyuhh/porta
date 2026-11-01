@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+/* Viewport-height variants: the home page slides have a fixed height, so they
+   trim secondary details on short screens instead of overflowing */
+@custom-variant short (@media (max-height: 720px));
+@custom-variant tiny (@media (max-height: 600px));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -140,6 +145,56 @@ body {
 .floating-action-option:hover .floating-action-label {
   opacity: 1;
   transform: translate(-50%, 0);
+}
+
+/* Neon border for the view switchers: a conic gradient through the views'
+   accent colours (data/views.ts), cut down to a 1px ring with a mask, plus a
+   blurred copy behind the element as a soft halo. The angle is a registered
+   property so the gradient itself turns; browsers without @property show it
+   standing still. */
+@property --neon-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes neon-spin {
+  to { --neon-angle: 360deg; }
+}
+
+.neon-ring::before,
+.neon-halo {
+  animation: neon-spin 6s linear infinite;
+  background: conic-gradient(from var(--neon-angle), #a78bfa, #f472b6, #38bdf8, #34d399, #fbbf24, #a78bfa);
+  pointer-events: none;
+}
+
+/* Needs a positioned element with a border radius and no overflow clipping */
+.neon-ring::before {
+  border-radius: inherit;
+  content: "";
+  inset: -1px;
+  padding: 1px;
+  position: absolute;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+/* A sibling placed before the element, so the halo sits behind it */
+.neon-halo {
+  filter: blur(12px);
+  inset: 0;
+  opacity: var(--neon-opacity, 0.4);
+  position: absolute;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .neon-ring::before,
+  .neon-halo {
+    animation: none;
+  }
 }
 
 /* Case study modal slide-up */

@@ -95,6 +95,20 @@ export default function ServiceSection({ isDarkMode }: ServiceSectionProps) {
       setIsClosing(false);
     }, ANIM_MS));
   };
+  const closeRef = useRef(closeCard);
+  closeRef.current = closeCard;
+
+  // Escape closes the details like the X button does
+  useEffect(() => {
+    if (activeIdx === null) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      playClick();
+      closeRef.current();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [activeIdx, playClick]);
 
   const service = activeIdx !== null ? allServices[activeIdx] : null;
   const cfg     = activeIdx !== null ? configs[activeIdx] : configs[0];
@@ -172,7 +186,7 @@ export default function ServiceSection({ isDarkMode }: ServiceSectionProps) {
       </div>
 
       {/* ── grid ── */}
-      <div className="max-w-4xl mx-auto px-2 sm:px-6 w-full relative z-10 py-2 sm:py-4">
+      <div className="max-w-4xl mx-auto px-2 sm:px-6 w-full relative z-10 py-2 sm:py-4" inert={activeIdx !== null}>
         <div className="mb-2 sm:mb-4">
           <h2 className={`text-lg sm:text-xl font-bold ${isDarkMode ? "text-white" : "text-slate-900"}`}>
             Professional{" "}
@@ -215,10 +229,11 @@ export default function ServiceSection({ isDarkMode }: ServiceSectionProps) {
         </div>
       </div>
 
-      {/* ── flip overlay ── */}
+      {/* ── flip overlay (holds the slide deck on this slide while open) ── */}
       {activeIdx !== null && (
         <div
           ref={overlayRef}
+          data-slide-lock
           className="absolute inset-0 z-20 overflow-hidden"
           style={{
             background: isDarkMode ? "#1c1c1e" : "#ffffff",

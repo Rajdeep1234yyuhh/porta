@@ -1,6 +1,6 @@
 // About Rajdeep, as the hero section and the terminal page describe him.
-// The /ecom store's seller page reads it from here; the terminal page still
-// keeps its own formatted copy.
+// The /ecom store's seller page and the /minimal page read it from here; the
+// terminal page still keeps its own formatted copy.
 
 export const PROFILE = {
   name: "Rajdeep Kotoky",
@@ -52,6 +52,7 @@ export const EXPERIENCE = [
       "Projects: Dhiti (dhiti.ai) · Yeco · Tourism Chatbot",
       "17+ Shopify stores delivered in this period",
     ],
+    tech: ["Next.js", "TypeScript", "OpenAI API", "LLaMA", "Firebase", "Shopify"],
   },
   {
     period: "2022 – 2024",
@@ -60,6 +61,7 @@ export const EXPERIENCE = [
       "Custom theme development with Liquid, Shopify CLI.",
       "App integrations, performance optimisation, payment gateway setups for 10+ live stores.",
     ],
+    tech: ["Shopify", "Liquid", "Shopify CLI", "JavaScript", "Razorpay"],
   },
   {
     period: "2020 – 2022",
@@ -68,6 +70,7 @@ export const EXPERIENCE = [
       "React + Node.js full-stack applications.",
       "REST API design, MongoDB / Firebase databases, deployment pipelines, responsive UIs.",
     ],
+    tech: ["React", "Node.js", "Express", "MongoDB", "Firebase"],
   },
 ];
 
@@ -77,3 +80,43 @@ export const RESEARCH = {
 };
 
 export const EDUCATION = { degree: "B.Tech", field: "Computer Science" };
+
+/** Rajdeep's story, from his resume: the hero shows `teaser`, the "My story" dialog the rest. */
+export const STORY = {
+  teaser:
+    "I started in 2021 building Shopify stores for 20+ clients. In 2024 I went freelance, and now I build AI products like DHITI.",
+  intro:
+    "I'm a developer based in Guwahati, Assam. Here's how I got from my first client websites to building AI products.",
+  chapters: [
+    {
+      year: "2017",
+      title: "Computer Science in Guwahati",
+      text: "Started a B.Tech in Computer Science and Engineering at Assam Don Bosco University, graduating in 2021.",
+    },
+    {
+      year: "2021",
+      title: "First job: websites for real clients",
+      text: "Joined Bloomegg as a remote web developer. Over a year and a half I delivered 30+ web projects for 20+ clients, mostly Shopify stores built with Liquid, HTML, CSS and JavaScript, including Aekay, Vintage Loom and Giisha Beauty.",
+    },
+    {
+      year: "2023",
+      title: "Building products in React",
+      text: "Moved to Senseio as a front-end developer, working on the company's products in React and JavaScript and connecting them to backend APIs.",
+    },
+    {
+      year: "2024",
+      title: "Going freelance",
+      text: "Went freelance and built DHITI (dhiti.ai), an AI career-assessment platform, end to end with Next.js, Firebase, the OpenAI API and Razorpay payments. The same year I started an M.Tech in Information Technology at Gauhati University.",
+    },
+    {
+      year: "2025",
+      title: "AI and NLP research",
+      text: "Built an Assamese-English chatbot for Assam tourism that understands code-mixed questions, with ~97% intent accuracy across 44 intents and semantic search over 221,799 Q&A pairs, plus Yeco, an AI mental-health companion on the LLaMA API.",
+    },
+    {
+      year: "Today",
+      title: "What I do now",
+      text: "I build SaaS products, AI tools and Shopify stores for clients, from booking platforms and ERP systems to brand storefronts. I'm open to freelance, contract and full-time work.",
+    },
+  ],
+};
