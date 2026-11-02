@@ -9,7 +9,7 @@ import {
 import { FaGithub } from "react-icons/fa";
 import { useSound } from "../context/SoundContext";
 import { allProjects, type Project } from "../data/projects";
-import { projectMedia } from "../lib/project-media";
+import { projectMedia, projectStill } from "../lib/project-media";
 import { LazyVideo } from "./LazyVideo";
 import { GatedImage } from "./MediaGate";
 import { YouTubePreview } from "./YouTubePreview";
@@ -150,8 +150,8 @@ const ProjectLinks = ({ project, demoLabel, isDarkMode }: { project: Project; de
   );
 };
 
-/* Live projects lay out side by side (media | text) on desktop; personal
-   projects stack, with the media on top. */
+/* Cards stack the media on top of the text. Live cards are only used below lg
+   (desktop shows LiveShowcase instead), so their media keeps a video shape. */
 const ProjectCard = ({ project, variant, isDarkMode }: { project: Project; variant: "live" | "personal"; isDarkMode: boolean }) => {
   const { playHover } = useSound();
   const live = variant === "live";
@@ -178,14 +178,14 @@ const ProjectCard = ({ project, variant, isDarkMode }: { project: Project; varia
   return (
     <article
       onMouseEnter={playHover}
-      className={`group h-full flex flex-col ${live ? "lg:flex-row" : ""} rounded-2xl border overflow-hidden transition-[border-color,box-shadow] duration-300 hover:shadow-xl ${isDarkMode ? "bg-[#1c1c1e] border-white/[0.08]" : "bg-white border-slate-200"} ${hoverCls}`}
+      className={`group h-full flex flex-col rounded-2xl border overflow-hidden transition-[border-color,box-shadow] duration-300 hover:shadow-xl ${isDarkMode ? "bg-[#1c1c1e] border-white/[0.08]" : "bg-white border-slate-200"} ${hoverCls}`}
     >
-      <div className={`group/media relative shrink-0 overflow-hidden bg-slate-900 h-[clamp(84px,20vh,180px)] lg:h-auto ${live ? "lg:w-[42%]" : "lg:flex-1 lg:min-h-[72px]"}`}>
+      <div className={`group/media relative shrink-0 overflow-hidden bg-slate-900 ${live ? "w-full aspect-video max-h-[28vh]" : "h-[clamp(84px,20vh,180px)] lg:h-auto lg:flex-1 lg:min-h-[72px]"}`}>
         <CardMedia project={project} isDarkMode={isDarkMode} sizes="(min-width: 1024px) 30vw, 90vw" />
         {badge && <MediaBadge>{badge}</MediaBadge>}
       </div>
 
-      <div className={`flex flex-col gap-2 p-4 lg:px-5 short:gap-1.5 short:py-3 ${live ? "flex-1 min-w-0 justify-center" : "shrink-0"}`}>
+      <div className={`flex flex-col gap-2 p-4 lg:px-5 short:gap-1.5 short:py-3 ${live ? "flex-1 min-w-0" : "shrink-0"}`}>
         <div>
           <p className={`text-[10px] font-semibold tracking-widest uppercase ${kindCls}`}>{project.kind}</p>
           <h3 className={`mt-0.5 text-base lg:text-lg font-bold leading-tight ${isDarkMode ? "text-white" : "text-slate-900"}`}>
@@ -202,12 +202,7 @@ const ProjectCard = ({ project, variant, isDarkMode }: { project: Project; varia
             textCls={isDarkMode ? "text-gray-300" : "text-slate-700"}
           />
         )}
-        <TechChips
-          tech={project.tech}
-          chipCls={chipCls}
-          // Live cards share their height with a second row, so only tall screens fit the chips
-          visibleCls={live ? "hidden [@media(min-height:821px)]:flex" : "flex short:hidden"}
-        />
+        <TechChips tech={project.tech} chipCls={chipCls} visibleCls="flex short:hidden" />
         <ProjectLinks project={project} demoLabel={live ? "Visit site" : "Live demo"} isDarkMode={isDarkMode} />
       </div>
     </article>
@@ -322,6 +317,111 @@ const SlideShell = ({ id, glows, header, isDarkMode, children }: {
   </section>
 );
 
+/* Desktop view of the live projects: the selected one plays on a large stage
+   framed as a browser window, with its details and a picker for the others
+   beside it. Only the selected project's media is mounted. */
+const LiveShowcase = ({ projects, isDarkMode }: { projects: Project[]; isDarkMode: boolean }) => {
+  const { playClick, playHover } = useSound();
+  const [selected, setSelected] = useState(0);
+  const project = projects[selected];
+  const name = project.name ?? project.title;
+  const host = hostOf(project.demo);
+
+  const panel = isDarkMode ? "bg-[#1c1c1e] border-white/[0.08]" : "bg-white border-slate-200";
+  const muted = isDarkMode ? "text-gray-400" : "text-slate-500";
+
+  return (
+    <div className="hidden lg:grid flex-1 min-h-0 max-h-[720px] grid-cols-[minmax(0,1.6fr)_minmax(0,1fr)] gap-5">
+      {/* Stage */}
+      <div className={`group flex flex-col min-h-0 rounded-2xl border overflow-hidden shadow-2xl ${isDarkMode ? "shadow-black/40" : "shadow-slate-300/60"} ${panel}`}>
+        <div className={`shrink-0 h-10 grid grid-cols-[1fr_auto_1fr] items-center gap-3 px-4 border-b ${isDarkMode ? "border-white/[0.08]" : "border-slate-200 bg-slate-50"}`}>
+          <span className="flex gap-1.5" aria-hidden="true">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#ff5f57]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#febc2e]" />
+            <span className="w-2.5 h-2.5 rounded-full bg-[#28c840]" />
+          </span>
+          <span className={`flex items-center gap-1.5 min-w-0 max-w-[340px] px-3 h-6 rounded-md text-[11px] font-medium ${isDarkMode ? "bg-white/[0.06] text-gray-300" : "bg-white border border-slate-200 text-slate-600"}`}>
+            {host ? <><LiveDot /><span className="truncate">{host}</span></> : <span className="truncate">{name}</span>}
+          </span>
+          {isLink(project.demo) && (
+            <a
+              href={project.demo} target="_blank" rel="noopener noreferrer" onClick={playClick}
+              aria-label={`Open ${name} in a new tab`} title="Open site"
+              className={`justify-self-end w-7 h-7 rounded-md flex items-center justify-center transition-colors ${isDarkMode ? "text-gray-400 hover:text-white hover:bg-white/10" : "text-slate-500 hover:text-slate-900 hover:bg-slate-200/70"}`}
+            >
+              <ArrowUpRight className="w-4 h-4" aria-hidden="true" />
+            </a>
+          )}
+        </div>
+        <div key={project.id} className="group/media relative flex-1 min-h-0 overflow-hidden bg-slate-900 motion-safe:animate-[stage-in_0.45s_ease-out]">
+          <CardMedia project={project} isDarkMode={isDarkMode} sizes="(min-width: 1024px) 60vw, 90vw" />
+        </div>
+      </div>
+
+      {/* Details and picker */}
+      <div className="flex flex-col min-h-0 gap-4">
+        <div key={project.id} className={`flex-1 min-h-0 flex flex-col justify-center gap-3 rounded-2xl border p-6 xl:p-7 short:gap-2 short:p-5 motion-safe:animate-[fade-up_0.35s_ease-out] ${panel}`}>
+          <div className="flex items-center justify-between gap-3">
+            <p className={`text-[10px] font-semibold tracking-widest uppercase truncate ${isDarkMode ? "text-blue-400" : "text-blue-600"}`}>{project.kind}</p>
+            <p className={`shrink-0 text-xs font-semibold tabular-nums ${muted}`}>
+              {String(selected + 1).padStart(2, "0")}
+              <span className="opacity-50"> / {String(projects.length).padStart(2, "0")}</span>
+            </p>
+          </div>
+          <h3 className={`text-2xl xl:text-[28px] font-bold leading-tight tracking-tight ${isDarkMode ? "text-white" : "text-slate-900"}`}>{name}</h3>
+          <p className={`text-sm leading-relaxed line-clamp-3 short:line-clamp-2 ${isDarkMode ? "text-gray-400" : "text-slate-600"}`}>
+            {project.summary ?? project.description}
+          </p>
+          {project.highlights && (
+            <Highlights items={project.highlights} iconCls="text-emerald-500" textCls={isDarkMode ? "text-gray-300" : "text-slate-700"} />
+          )}
+          <TechChips
+            tech={project.tech}
+            chipCls={isDarkMode ? "bg-blue-500/10 text-blue-300 border-blue-500/20" : "bg-blue-50 text-blue-700 border-blue-200"}
+            visibleCls="flex short:hidden"
+          />
+          <div className="pt-1">
+            <ProjectLinks project={project} demoLabel="Visit site" isDarkMode={isDarkMode} />
+          </div>
+        </div>
+
+        <div role="group" aria-label="Choose a project" className="shrink-0 grid grid-cols-2 gap-2">
+          {projects.map((p, i) => {
+            const active = i === selected;
+            const still = projectStill(p);
+            return (
+              <button
+                key={p.id}
+                type="button"
+                aria-pressed={active}
+                onClick={() => { if (!active) { playClick(); setSelected(i); } }}
+                onMouseEnter={playHover}
+                className={`flex items-center gap-3 p-2 rounded-xl border text-left transition-[border-color,background-color,box-shadow] duration-200 ${
+                  active
+                    ? isDarkMode ? "bg-blue-500/10 border-blue-500/50 shadow-lg shadow-blue-500/10" : "bg-blue-50 border-blue-400 shadow-md shadow-blue-500/10"
+                    : isDarkMode ? `${panel} hover:border-white/20` : `${panel} hover:border-slate-300`
+                }`}
+              >
+                <span className="relative shrink-0 w-16 h-10 rounded-md overflow-hidden bg-slate-900">
+                  {still ? (
+                    <GatedImage src={still} alt="" fill sizes="64px" className="object-cover object-left-top" />
+                  ) : (
+                    <span className="absolute inset-0 bg-gradient-to-br from-violet-500 to-fuchsia-600" />
+                  )}
+                </span>
+                <span className="min-w-0">
+                  <span className={`block text-[13px] font-semibold leading-tight truncate ${isDarkMode ? "text-white" : "text-slate-900"}`}>{p.name ?? p.title}</span>
+                  <span className={`block mt-0.5 text-[11px] leading-tight truncate ${muted}`}>{p.kind}</span>
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const MONOGRAM_GRADIENTS = [
   "from-emerald-500 to-teal-600",
   "from-teal-500 to-cyan-600",
@@ -418,9 +518,11 @@ export function LiveProjects({ isDarkMode, scrollToSection }: SlideProps) {
         />
       }
     >
-      <CardRow className="lg:max-h-[680px]" gridCls="lg:grid-cols-2 lg:grid-rows-2" isDarkMode={isDarkMode}>
+      {/* Swipeable cards below lg, the showcase from lg up */}
+      <CardRow className="lg:hidden" gridCls="" isDarkMode={isDarkMode}>
         {liveProjects.map((p) => <ProjectCard key={p.id} project={p} variant="live" isDarkMode={isDarkMode} />)}
       </CardRow>
+      <LiveShowcase projects={liveProjects} isDarkMode={isDarkMode} />
     </SlideShell>
   );
 }
